@@ -167,3 +167,12 @@ export const SettedTwitchTagsResponse = async(env, channelId, auth_list, filtere
   })))).filter(users_keys => users_keys);
   return response[0];
 };
+
+export const isoToSeconds = (iso) => {
+  return iso.match(/\d+[HMS]/g).reduce((total, time) => {
+    const unit = time.charAt(time.length - 1);
+    const value = parseInt(time);
+    const formatter = { "H": 3600, "M": 60, "S": 1 };
+    return total + (value * formatter[unit]);
+  }, 0);
+};

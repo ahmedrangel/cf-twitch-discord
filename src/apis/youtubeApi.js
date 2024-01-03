@@ -4,7 +4,7 @@ class youtubeApi {
   }
 
   async getVideoInfo(id) {
-    const url = `https://youtube.googleapis.com/youtube/v3/videos?part=snippet&id=${id}&key=${this.youtube_token}`;
+    const url = `https://youtube.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails&id=${id}&key=${this.youtube_token}`;
     const response = await fetch(url, {
       method: "GET",
     });

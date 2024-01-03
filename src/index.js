@@ -1,5 +1,5 @@
 import { Router } from "itty-router";
-import { generateUniqueId, getDateAgoFromTimeStamp, getRandom, obtenerIDDesdeURL, obtenerDiscordUserIdFromAvatarsCdn, getTimeUnitsFromISODate, KVSorterByValue, jsonCustomSorterByProperty, SettedTwitchTagsResponse } from "./utils/helpers";
+import { generateUniqueId, getDateAgoFromTimeStamp, getRandom, obtenerIDDesdeURL, obtenerDiscordUserIdFromAvatarsCdn, getTimeUnitsFromISODate, KVSorterByValue, jsonCustomSorterByProperty, SettedTwitchTagsResponse, isoToSeconds } from "./utils/helpers";
 import twitchApi from "./apis/twitchApi";
 import JsResponse from "./response";
 import JsonResponse from "./jsonResponse";
@@ -2254,11 +2254,13 @@ router.get("/dc/yt-info?", async (req, env) => {
   console.log(id);
   try {
     const { items } = await youtube.getVideoInfo(id);
-    const { snippet } = items[0];
+    const { snippet, contentDetails } = items[0];
+    const duration = isoToSeconds(contentDetails.duration);
     const short_url = "https://youtu.be/" + id;
     return new JsonResponse({
       caption: snippet.title,
       short_url: short_url,
+      duration: duration,
       status: 200
     });
   } catch(e) {
