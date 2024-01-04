@@ -619,7 +619,7 @@ router.get("/dc/ai/:user/:prompt", async (req, env) => {
     frequency_penalty: 0,
     presence_penalty: 0,
   });
-  const completion = (String.raw`${(response.choices[0].text).replaceAll(/"/g,"").replaceAll(/\n/g," ")}${separator}`).replaceAll(/\\/g,"\\\\");;
+  const completion = (String.raw`${(response.choices[0].text)}${separator}`).replaceAll(/\\/g,"\\\\");;
   const value = historyRaw + completion;
 
   // Put R2
