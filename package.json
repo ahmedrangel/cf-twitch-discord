@@ -9,6 +9,7 @@
     "lint": "eslint --ext .ts,.js,.vue --fix --ignore-path .gitignore ."
   },
   "dependencies": {
+    "@ahmedrangel/rand-user-agent": "^1.0.1",
     "buffer": "^6.0.3",
     "cheerio": "1.0.0-rc.12",
     "detectlanguage": "^2.1.0",

@@ -12,6 +12,7 @@ import * as cheerio from "cheerio";
 import { lolChampTagAdder } from "./crons/lolChampTagAdder";
 import { nbCum, nbFuck, nbFuckAngar, nbHug, nbHugAngar, nbKiss, nbKissAngar, nbKissChino } from "./utils/nightbotEmotes";
 import youtubeApi from "./apis/youtubeApi";
+import { randUA } from "@ahmedrangel/rand-user-agent";
 // import twitterApi from "./twitterApi";
 
 const router = Router();
@@ -1643,7 +1644,6 @@ router.get("/dc/instagram-video-scrapper?", async (req, env) => {
   const scrap = async () => {
     const { query } = req;
     const _cookie = env.ig_cookie;
-    const _userAgent = env.user_agent;
     const _xIgAppId = "936619743392459";
     const url = decodeURIComponent(query.url);
     const getInstagramId = (url) => {
@@ -1662,6 +1662,9 @@ router.get("/dc/instagram-video-scrapper?", async (req, env) => {
       console.log("Invalid url");
       return JSON.stringify({status: 400});
     } else {
+      const uaData = await (await env.R2cdn.get("user-agents.json")).json();
+      const _userAgent = randUA(uaData, "desktop");
+      console.log(_userAgent);
       const response = await fetch(`https://www.instagram.com/p/${idUrl}?__a=1&__d=dis`, {
         headers: {
           "cookie": _cookie,
@@ -1723,7 +1726,8 @@ router.get("/dc/facebook-video-scrapper?", async (req, env) => {
   const scrap = async () => {
     const { query } = req;
     const _cookie = env.fb_cookie;
-    const _userAgent = env.user_agent;
+    const uaData = await (await env.R2cdn.get("user-agents.json")).json();
+    const _userAgent = randUA(uaData, "desktop");
     const url = decodeURIComponent(query.url);
     const dataFetch = async (URL, is_reel) => {
       const response = await fetch(URL, {
@@ -1897,6 +1901,8 @@ router.get("/dc/twitter-video-scrapper?", async (req, env) => {
   const url = decodeURIComponent(query.url);
   const graphql = "https://twitter.com/i/api/graphql/xOhkmRac04YFZmOzU9PJHg";
   if (url.includes("twitter.com/") || url.includes("x.com/")) {
+    const uaData = await (await env.R2cdn.get("user-agents.json")).json();
+    const _userAgent = randUA(uaData, "desktop");
     console.log("es link de twitter");
     const id = obtenerIDDesdeURL(url);
     const tweetQuery = `TweetDetail?variables={"focalTweetId":"${id}","with_rux_injections":false,"includePromotedContent":true,"withCommunity":true,"withQuickPromoteEligibilityTweetFields":true,"withBirdwatchNotes":true,"withVoice":true,"withV2Timeline":true}&features={"rweb_lists_timeline_redesign_enabled":true,"responsive_web_graphql_exclude_directive_enabled":true,"verified_phone_label_enabled":false,"creator_subscriptions_tweet_preview_api_enabled":true,"responsive_web_graphql_timeline_navigation_enabled":true,"responsive_web_graphql_skip_user_profile_image_extensions_enabled":false,"tweetypie_unmention_optimization_enabled":true,"responsive_web_edit_tweet_api_enabled":true,"graphql_is_translatable_rweb_tweet_is_translatable_enabled":true,"view_counts_everywhere_api_enabled":true,"longform_notetweets_consumption_enabled":true,"responsive_web_twitter_article_tweet_consumption_enabled":false,"tweet_awards_web_tipping_enabled":false,"freedom_of_speech_not_reach_fetch_enabled":true,"standardized_nudges_misinfo":true,"tweet_with_visibility_results_prefer_gql_limited_actions_policy_enabled":true,"longform_notetweets_rich_text_read_enabled":true,"longform_notetweets_inline_media_enabled":true,"responsive_web_media_download_video_enabled":false,"responsive_web_enhance_cards_enabled":false}&fieldToggles={"withArticleRichContentState":false}`;
@@ -1904,7 +1910,7 @@ router.get("/dc/twitter-video-scrapper?", async (req, env) => {
     const fetchTweet = await fetch(`${graphql}/${eTweetQuery}`, {
       headers: {
         "cookie": env.x_cookie,
-        "user-agent": env.user_agent,
+        "user-agent": _userAgent,
         ["sec-fetch-site"]: "same-origin",
         "Authorization": `Bearer ${env.twitter_bearer_token}`,
         "X-Twitter-Active-User": "yes",

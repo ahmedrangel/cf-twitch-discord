@@ -34,8 +34,5 @@ binding = "NB"
 database_name = "nightbot"
 database_id = "584dd3e0-b9f8-40ed-b8a9-d4598da372de"
 
-[vars]
-user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36"
-
 
 

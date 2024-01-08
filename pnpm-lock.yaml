@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@ahmedrangel/rand-user-agent':
+    specifier: ^1.0.1
+    version: 1.0.1
   buffer:
     specifier: ^6.0.3
     version: 6.0.3
@@ -37,6 +40,11 @@ packages:
   /@aashutoshrathi/word-wrap@1.2.6:
     resolution: {integrity: sha512-1Yjs2SvM8TflER/OD3cOjhWWOZb58A2t7wpE2S9XfBYTiIl+XFhQG2bjy4Pu1I+EAlCNUzRDYDdFwFYUKvXcIA==}
     engines: {node: '>=0.10.0'}
+    dev: false
+
+  /@ahmedrangel/rand-user-agent@1.0.1:
+    resolution: {integrity: sha512-QUchBaQUjbcmnP+aYtkIIdh+TbBVncnNXFnFbGe08lZ0CsCIi+W7rguVGDWKiziUr6455Y3Yx4yAdOxg2mUGzQ==}
+    engines: {node: '>=14.16'}
     dev: false
 
   /@cloudflare/kv-asset-handler@0.2.0:
