@@ -9,7 +9,7 @@
     "lint": "eslint --ext .ts,.js,.vue --fix --ignore-path .gitignore ."
   },
   "dependencies": {
-    "@ahmedrangel/rand-user-agent": "^1.0.1",
+    "@ahmedrangel/rand-user-agent": "^2.0.1",
     "buffer": "^6.0.3",
     "cheerio": "1.0.0-rc.12",
     "detectlanguage": "^2.1.0",
@@ -19,6 +19,6 @@
     "openai": "^4.24.2"
   },
   "devDependencies": {
-    "wrangler": "^3.22.3"
+    "wrangler": "^3.22.4"
   }
 }

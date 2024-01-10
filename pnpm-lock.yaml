@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   '@ahmedrangel/rand-user-agent':
-    specifier: ^1.0.1
-    version: 1.0.1
+    specifier: ^2.0.1
+    version: 2.0.1
   buffer:
     specifier: ^6.0.3
     version: 6.0.3
@@ -32,8 +32,8 @@ dependencies:
 
 devDependencies:
   wrangler:
-    specifier: ^3.22.3
-    version: 3.22.3
+    specifier: ^3.22.4
+    version: 3.22.4
 
 packages:
 
@@ -42,8 +42,8 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: false
 
-  /@ahmedrangel/rand-user-agent@1.0.1:
-    resolution: {integrity: sha512-QUchBaQUjbcmnP+aYtkIIdh+TbBVncnNXFnFbGe08lZ0CsCIi+W7rguVGDWKiziUr6455Y3Yx4yAdOxg2mUGzQ==}
+  /@ahmedrangel/rand-user-agent@2.0.1:
+    resolution: {integrity: sha512-O3kW9FOtnWtO9IVb3+PROmB4HaPdIB/i7q6ZP90YJFNhNp0nCZCt135xms5dLBNap3Xm6UsHP84JGuVMI/eexQ==}
     engines: {node: '>=14.16'}
     dev: false
 
@@ -1704,8 +1704,8 @@ packages:
       '@cloudflare/workerd-windows-64': 1.20231218.0
     dev: true
 
-  /wrangler@3.22.3:
-    resolution: {integrity: sha512-EhGEQLoMcQm71v6XrtnKfMG2B8BTM7RxhoS9iWIkc1hc3l9cOWyoN0cJnoBqcGTgtQk5V7+cRECTfwh08IEjBQ==}
+  /wrangler@3.22.4:
+    resolution: {integrity: sha512-AhqraOHTcIV9rrm0z5tlxFDhx+l+O6g4QnKL08J1wnLg3mdvTWwMm5QmhxN0JQ0YgS2jgRCwg0PR+Fa5cumP8A==}
     engines: {node: '>=16.17.0'}
     hasBin: true
     dependencies:
