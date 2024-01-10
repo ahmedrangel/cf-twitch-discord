@@ -1,5 +1,5 @@
 import { Router } from "itty-router";
-import { generateUniqueId, getDateAgoFromTimeStamp, getRandom, obtenerIDDesdeURL, obtenerDiscordUserIdFromAvatarsCdn, getTimeUnitsFromISODate, KVSorterByValue, jsonCustomSorterByProperty, SettedTwitchTagsResponse, isoToSeconds } from "./utils/helpers";
+import { generateUniqueId, getDateAgoFromTimeStamp, getRandom, obtenerIDDesdeURL, obtenerDiscordUserIdFromAvatarsCdn, getTimeUnitsFromISODate, KVSorterByValue, jsonCustomSorterByProperty, SettedTwitchTagsResponse, timeToSeconds } from "./utils/helpers";
 import twitchApi from "./apis/twitchApi";
 import JsResponse from "./response";
 import JsonResponse from "./jsonResponse";
@@ -13,6 +13,8 @@ import { lolChampTagAdder } from "./crons/lolChampTagAdder";
 import { nbCum, nbFuck, nbFuckAngar, nbHug, nbHugAngar, nbKiss, nbKissAngar, nbKissChino } from "./utils/nightbotEmotes";
 import youtubeApi from "./apis/youtubeApi";
 import { randUA } from "@ahmedrangel/rand-user-agent";
+import saveigsApi from "./apis/saveigsApi";
+import mp3youtubeApi from "./apis/mp3youtubeApi";
 // import twitterApi from "./twitterApi";
 
 const router = Router();
@@ -1640,7 +1642,7 @@ router.get("/d1/select?", async (req, env) => {
 
 router.get("/dc/instagram-video-scrapper?", async (req, env) => {
   let count = 0;
-  let maxTries = 4;
+  let maxTries = 3;
   const scrap = async () => {
     const { query } = req;
     // const _cookie = env.ig_cookie;
@@ -1649,11 +1651,7 @@ router.get("/dc/instagram-video-scrapper?", async (req, env) => {
     const getInstagramId = (url) => {
       const regex = /instagram.com\/(?:p|reels|reel)\/([A-Za-z0-9-_]+)/;
       const match = url.match(regex);
-      if (match && match[1]) {
-        return match[1];
-      } else {
-        return null;
-      }
+      return match && match[1] ? match[1] : null;
     };
 
     const idUrl = getInstagramId(url);
@@ -1662,34 +1660,19 @@ router.get("/dc/instagram-video-scrapper?", async (req, env) => {
       console.log("Invalid url");
       return JSON.stringify({status: 400});
     } else {
-      const response = await fetch(`https://instagram-bulk-profile-scrapper.p.rapidapi.com/clients/api/ig/media_by_id?shortcode=${idUrl}&response_type=feeds`, {
-        headers: {
-          "X-RapidAPI-Key": env.rapid_api_token,
-          "X-RapidAPI-Host": "instagram-bulk-profile-scrapper.p.rapidapi.com"
-        }
-      });
-      const json = await response.json();
-      const items = json[0].items[0];
+      const saveigs = new saveigsApi;
+      const items = await saveigs.getMedia(`https://instagram.com/p/${idUrl}`, "video");
       let video_url;
-      let caption;
-      if (items.caption) {
-        caption = items.caption.text;
-      } else {
-        caption = "";
-      }
-      if (items.video_versions) {
-        /*
-        if (items.video_versions[0].height <= 720) {
-          video_url = items.video_versions[0].url;
+      const caption = items.title !== "Instagram Post" ? items.title : "";
+      for (const media of items.medias) {
+        if (media.videoAvailable) {
+          video_url = media.url;
+          break;
         } else {
-          video_url = items.video_versions[1].url;
+          video_url = "No es video";
+          break;
         }
-        */
-        video_url = items.video_versions[0].url;
-      } else {
-        video_url = "No es video";
-      }
-      console.log(video_url);
+      };
       const json_response = {
         video_url: video_url,
         short_url: url.replace(/\?.*$/, "").replace("www.",""),
@@ -1698,6 +1681,57 @@ router.get("/dc/instagram-video-scrapper?", async (req, env) => {
       };
       return JSON.stringify(json_response);
     }
+  };
+
+  const retryScrap = async () => {
+    try {
+      return await scrap();
+    } catch (error) {
+      console.log(error);
+      if (count < maxTries) {
+        count++;
+        return await retryScrap();
+      } else {
+        const json_error = {status: 429};
+        return JSON.stringify(json_error);
+      }
+    }
+  };
+
+  return new JsResponse(await retryScrap());
+});
+
+router.get("/dc/youtube-video-scrapper?", async (req, env) => {
+  let count = 0;
+  let maxTries = 3;
+  const scrap = async () => {
+    const { query } = req;
+    const url = decodeURIComponent(query.url);
+    const filter = query.filter;
+    const regex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=|shorts\/)?|youtu\.be\/)([a-zA-Z0-9_-]+)/;
+    const id = url.match(regex)[1];
+    if (id) {
+      const saveigs = new saveigsApi;
+      const items = await saveigs.getMedia("https://youtu.be/" + id, filter);
+      const caption = items.title;
+      let maxSize = 0;
+      let video_url = "";
+      for (const media of items.medias) {
+        if (media.size > maxSize && media.size < 50000000) {
+          maxSize = media.size;
+          video_url = media.url;
+        }
+      }
+      const json_response = {
+        video_url: video_url,
+        short_url: items.url.replace(/\?.*$/, "").replace("www.",""),
+        caption: caption,
+        duration: timeToSeconds(items.duration),
+        status: 200
+      };
+      return JSON.stringify(json_response);
+    }
+    return JSON.stringify({status: 400});
   };
 
   const retryScrap = async () => {
@@ -2074,31 +2108,6 @@ router.get("/dc/stable-diffusion?", async (req, env, ctx) => {
   return new JsResponse(response.output[0]);
 });
 
-router.get("/dc/kick-live?", async (req, env) => {
-  const { query } = req;
-  const channel = query.channel;
-  const check = query.check;
-  const status = Number(await env.KICK_LIVE_CHECK.get(channel));
-  console.log(channel + "-" + check + "-" + status);
-  let response;
-  if (check == 1 && status == 0) {
-    await env.KICK_LIVE_CHECK.put(channel, 1, {metadata: {value: 1},});
-    console.log("Está en vivo, se hace put 1 en KV");
-    response = {notificar: true};
-  } else if (check == 1 && status == 1) {
-    console.log("Está en vivo, ya hay 1 en KV, no se hace put");
-    response = {notificar: false};
-  } else if (check == 0 && status == 0) {
-    console.log("No está en vivo, ya hay 0 en KV, no se hace put");
-    response = {notificar: false};
-  } else if (check == 0 && status == 1) {
-    await env.KICK_LIVE_CHECK.put(channel, 0, {metadata: {value: 0},});
-    console.log("No está en vivo, hay 1 en KV, se hace put 0 en KV");
-    response = {notificar: false};
-  }
-  return new JsonResponse(response);
-});
-
 // Nightbot command: Followage
 router.get("/followage/:channel/:touser?", async (req, env) => {
   const { channel, touser } = req.params;
@@ -2202,9 +2211,10 @@ router.get("/dc/twitch-video-scrapper?", async (req, env) => {
   return new JsonResponse(obj);
 });
 
-router.get("/dc/yt-info?", async (req, env) => {
+router.get("/dc/ytdl?", async (req, env) => {
   const { url } = req.query;
   const youtube = new youtubeApi(env.youtube_token);
+  const mp3youtube = new mp3youtubeApi();
   const regex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=|shorts\/)?|youtu\.be\/)([a-zA-Z0-9_-]+)/;
   const videoUrl = decodeURIComponent(url);
   const id = videoUrl.match(regex)[1];
@@ -2212,9 +2222,11 @@ router.get("/dc/yt-info?", async (req, env) => {
   try {
     const { items } = await youtube.getVideoInfo(id);
     const { snippet, contentDetails } = items[0];
-    const duration = isoToSeconds(contentDetails.duration);
+    const duration = timeToSeconds(contentDetails.duration);
     const short_url = "https://youtu.be/" + id;
+    const video_url = await mp3youtube.getMp3(id);
     return new JsonResponse({
+      video_url: video_url,
       caption: snippet.title,
       short_url: short_url,
       duration: duration,

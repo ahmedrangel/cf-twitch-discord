@@ -168,11 +168,25 @@ export const SettedTwitchTagsResponse = async(env, channelId, auth_list, filtere
   return response[0];
 };
 
-export const isoToSeconds = (iso) => {
-  return iso.match(/\d+[HMS]/g).reduce((total, time) => {
-    const unit = time.charAt(time.length - 1);
-    const value = parseInt(time);
-    const formatter = { "H": 3600, "M": 60, "S": 1 };
-    return total + (value * formatter[unit]);
-  }, 0);
+export const timeToSeconds = (time) => {
+  const isoToSeconds = (iso) => {
+    return iso.match(/\d+[HMS]/g).reduce((total, time) => {
+      const unit = time.charAt(time.length - 1);
+      const value = parseInt(time);
+      const formatter = { "H": 3600, "M": 60, "S": 1 };
+      return total + (value * formatter[unit]);
+    }, 0);
+  };
+
+  const hhmmssToSeconds = (time) => {
+    const timeArray = time.split(":").map(Number);
+    const length = timeArray.length;
+    if (length === 3) return timeArray[0] * 3600 + timeArray[1] * 60 + timeArray[2];
+    else if (length === 2) return timeArray[0] * 60 + timeArray[1];
+    return 0; // Formato no reconocido
+  };
+
+  if (time.includes("PT")) return isoToSeconds(time);
+  else if (time.includes(":")) return hhmmssToSeconds(time);
+  return 0; // Formato no reconocido
 };
