@@ -1643,8 +1643,8 @@ router.get("/dc/instagram-video-scrapper?", async (req, env) => {
   let maxTries = 4;
   const scrap = async () => {
     const { query } = req;
-    const _cookie = env.ig_cookie;
-    const _xIgAppId = "936619743392459";
+    // const _cookie = env.ig_cookie;
+    // const _xIgAppId = "936619743392459";
     const url = decodeURIComponent(query.url);
     const getInstagramId = (url) => {
       const regex = /instagram.com\/(?:p|reels|reel)\/([A-Za-z0-9-_]+)/;
@@ -1662,18 +1662,14 @@ router.get("/dc/instagram-video-scrapper?", async (req, env) => {
       console.log("Invalid url");
       return JSON.stringify({status: 400});
     } else {
-      const _userAgent = randUA("desktop");
-      console.log(_userAgent);
-      const response = await fetch(`https://www.instagram.com/p/${idUrl}?__a=1&__d=dis`, {
+      const response = await fetch(`https://instagram-bulk-profile-scrapper.p.rapidapi.com/clients/api/ig/media_by_id?shortcode=${idUrl}&response_type=feeds`, {
         headers: {
-          "cookie": _cookie,
-          "user-agent": _userAgent,
-          "x-ig-app-id": _xIgAppId,
-          ["sec-fetch-site"]: "same-origin"
+          "X-RapidAPI-Key": env.rapid_api_token,
+          "X-RapidAPI-Host": "instagram-bulk-profile-scrapper.p.rapidapi.com"
         }
       });
       const json = await response.json();
-      const items = json.items[0];
+      const items = json[0].items[0];
       let video_url;
       let caption;
       if (items.caption) {
@@ -1682,11 +1678,14 @@ router.get("/dc/instagram-video-scrapper?", async (req, env) => {
         caption = "";
       }
       if (items.video_versions) {
+        /*
         if (items.video_versions[0].height <= 720) {
           video_url = items.video_versions[0].url;
         } else {
           video_url = items.video_versions[1].url;
         }
+        */
+        video_url = items.video_versions[0].url;
       } else {
         video_url = "No es video";
       }
