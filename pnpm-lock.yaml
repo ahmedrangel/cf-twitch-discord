@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   '@ahmedrangel/rand-user-agent':
-    specifier: ^2.0.1
-    version: 2.0.1
+    specifier: ^2.0.3
+    version: 2.0.3
   buffer:
     specifier: ^6.0.3
     version: 6.0.3
@@ -21,14 +21,14 @@ dependencies:
     specifier: ^8.56.0
     version: 8.56.0
   itty-router:
-    specifier: ^4.0.26
-    version: 4.0.26
+    specifier: ^4.0.27
+    version: 4.0.27
   jsonpath:
     specifier: ^1.1.1
     version: 1.1.1
   openai:
-    specifier: ^4.24.2
-    version: 4.24.2
+    specifier: ^4.24.4
+    version: 4.24.4
 
 devDependencies:
   wrangler:
@@ -42,9 +42,9 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: false
 
-  /@ahmedrangel/rand-user-agent@2.0.1:
-    resolution: {integrity: sha512-O3kW9FOtnWtO9IVb3+PROmB4HaPdIB/i7q6ZP90YJFNhNp0nCZCt135xms5dLBNap3Xm6UsHP84JGuVMI/eexQ==}
-    engines: {node: '>=14.16'}
+  /@ahmedrangel/rand-user-agent@2.0.3:
+    resolution: {integrity: sha512-8gxrhmpPV8OG/Y+qMp1gx2xpN2EZaBRMC9oDSn9WyEKsPgniZ6Q3QTtWdRLbXSKsvRiSZEXw7uaXIIUFljVYUQ==}
+    engines: {node: '>=17.1.0'}
     dev: false
 
   /@cloudflare/kv-asset-handler@0.2.0:
@@ -1168,8 +1168,8 @@ packages:
     resolution: {integrity: sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==}
     dev: false
 
-  /itty-router@4.0.26:
-    resolution: {integrity: sha512-GBcmhxQRvIQ7fuzXPlvfeQcN6O7VGhctzdG9WHIcEcaRYH4FvDpMxuSWRIAxQrIM+nxtfxK0/bR78ATvb4LC5Q==}
+  /itty-router@4.0.27:
+    resolution: {integrity: sha512-Q3/GOE2EJvyu3hhxGN3WDWh3QNg4v7h1KFx/jSLcIOOkpSI1jUFTgGefEESXon4j5YwqCIf0DEemjiVAFSBiUw==}
     dev: false
 
   /js-yaml@4.1.0:
@@ -1350,8 +1350,8 @@ packages:
       wrappy: 1.0.2
     dev: false
 
-  /openai@4.24.2:
-    resolution: {integrity: sha512-Np5zFPAYsBRmsfgPS8cMM25r1wVO5NCTdmeoYDNEUhJn/rw6jNXU0CFSFwhbWsjIkYhdv31pPIzQ0xChHCvltQ==}
+  /openai@4.24.4:
+    resolution: {integrity: sha512-y58aEgq4HFCkfwiVCAvdxTkjGqHUWYFx4vJP6FWmH5udJn5SooZNXn+0N6uAe0ShmUT6846aZy3boJ0iN/KWvw==}
     hasBin: true
     dependencies:
       '@types/node': 18.19.4

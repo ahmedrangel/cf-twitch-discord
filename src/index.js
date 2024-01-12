@@ -1702,54 +1702,29 @@ router.get("/dc/instagram-video-scrapper?", async (req, env) => {
 });
 
 router.get("/dc/youtube-video-scrapper?", async (req, env) => {
-  let count = 0;
-  let maxTries = 3;
-  const scrap = async () => {
-    const { query } = req;
-    const url = decodeURIComponent(query.url);
-    const filter = query.filter;
-    const regex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=|shorts\/)?|youtu\.be\/)([a-zA-Z0-9_-]+)/;
-    const id = url.match(regex)[1];
-    if (id) {
-      const saveigs = new saveigsApi;
-      const items = await saveigs.getMedia("https://youtu.be/" + id, filter);
-      const caption = items.title;
-      let maxSize = 0;
-      let video_url = "";
-      for (const media of items.medias) {
-        if (media.size > maxSize && media.size < 50000000) {
-          maxSize = media.size;
-          video_url = media.url;
-        }
-      }
-      const json_response = {
-        video_url: video_url,
-        short_url: items.url.replace(/\?.*$/, "").replace("www.",""),
-        caption: caption,
-        duration: timeToSeconds(items.duration),
-        status: 200
-      };
-      return JSON.stringify(json_response);
-    }
-    return JSON.stringify({status: 400});
-  };
-
-  const retryScrap = async () => {
-    try {
-      return await scrap();
-    } catch (error) {
-      console.log(error);
-      if (count < maxTries) {
-        count++;
-        return await retryScrap();
-      } else {
-        const json_error = {status: 429};
-        return JSON.stringify(json_error);
-      }
-    }
-  };
-
-  return new JsResponse(await retryScrap());
+  const { url, filter } = req.query;
+  const youtube = new youtubeApi(env.youtube_token);
+  const mp3youtube = new mp3youtubeApi();
+  const regex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=|shorts\/)?|youtu\.be\/)([a-zA-Z0-9_-]+)/;
+  const videoUrl = decodeURIComponent(url);
+  const id = videoUrl.match(regex)[1];
+  try {
+    const { items } = await youtube.getVideoInfo(id);
+    const { snippet, contentDetails } = items[0];
+    const duration = timeToSeconds(contentDetails.duration);
+    const short_url = "https://youtu.be/" + id;
+    const video_url = await mp3youtube.getMedia(id, filter);
+    return new JsonResponse({
+      video_url: video_url,
+      caption: snippet.title,
+      short_url: short_url,
+      duration: duration,
+      status: 200
+    });
+  } catch(e) {
+    console.log(e);
+    return new JsonResponse({ status: 404 });
+  }
 });
 
 router.get("/dc/facebook-video-scrapper?", async (req, env) => {
@@ -2209,33 +2184,6 @@ router.get("/dc/twitch-video-scrapper?", async (req, env) => {
     obj.status = 404;
   }
   return new JsonResponse(obj);
-});
-
-router.get("/dc/ytdl?", async (req, env) => {
-  const { url } = req.query;
-  const youtube = new youtubeApi(env.youtube_token);
-  const mp3youtube = new mp3youtubeApi();
-  const regex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=|shorts\/)?|youtu\.be\/)([a-zA-Z0-9_-]+)/;
-  const videoUrl = decodeURIComponent(url);
-  const id = videoUrl.match(regex)[1];
-  console.log(id);
-  try {
-    const { items } = await youtube.getVideoInfo(id);
-    const { snippet, contentDetails } = items[0];
-    const duration = timeToSeconds(contentDetails.duration);
-    const short_url = "https://youtu.be/" + id;
-    const video_url = await mp3youtube.getMp3(id);
-    return new JsonResponse({
-      video_url: video_url,
-      caption: snippet.title,
-      short_url: short_url,
-      duration: duration,
-      status: 200
-    });
-  } catch(e) {
-    console.log(e);
-    return new JsonResponse({ status: 404 });
-  }
 });
 
 router.all("*", () => new JsResponse("Not Found.", { status: 404 }));

@@ -5,11 +5,11 @@ class mp3youtubeApi {
     this.base = "https://v3.mp3youtube.cc";
   }
 
-  async getMp3 (id) {
+  async getMedia (id, filter) {
     const _userAgent = randUA("desktop");
     const formData = new FormData();
     formData.append("link", `https://youtu.be/${id}`);
-    formData.append("format", "mp3");
+    formData.append("format", filter === "audio" ? "mp3" : "mp4");
     const response = await fetch(`${this.base}/api/converter`, {
       method: "POST",
       headers: {

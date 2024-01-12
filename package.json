@@ -9,14 +9,14 @@
     "lint": "eslint --ext .ts,.js,.vue --fix --ignore-path .gitignore ."
   },
   "dependencies": {
-    "@ahmedrangel/rand-user-agent": "^2.0.1",
+    "@ahmedrangel/rand-user-agent": "^2.0.3",
     "buffer": "^6.0.3",
     "cheerio": "1.0.0-rc.12",
     "detectlanguage": "^2.1.0",
     "eslint": "^8.56.0",
-    "itty-router": "^4.0.26",
+    "itty-router": "^4.0.27",
     "jsonpath": "^1.1.1",
-    "openai": "^4.24.2"
+    "openai": "^4.24.4"
   },
   "devDependencies": {
     "wrangler": "^3.22.4"
