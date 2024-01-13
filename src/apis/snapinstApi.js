@@ -1,8 +1,9 @@
 import { randUA } from "@ahmedrangel/rand-user-agent";
+import { obtenerIDDesdeURL } from "../utils/helpers";
 
-class saveigsApi {
+class snapinstApi {
   constructor () {
-    this.domain = "https://saveigs.com/wp-json/aio-dl/video-data";
+    this.domain = "https://snapinst.com/api/convert";
   }
 
   async getMedia (url, type) {
@@ -18,18 +19,18 @@ class saveigsApi {
         body: formData
       });
       const data = await response.json();
-      const filtered = (extensions) => {
-        data.medias = data.medias.filter(media => extensions.includes(media.extension));
+      if (type === "video" && data?.url[0]?.type === "mp4") {
+        const url = new URL(data?.url[0]?.url);
+        const igUrl = data.url[0].url = url.searchParams.get("uri");
+        const filename = obtenerIDDesdeURL(igUrl) + ".mp4";
+        data.meta.title = filename === data?.meta?.title ? null : data?.meta?.title;
         return data;
-      };
-      if (type === "audio") return filtered(["m4a", "mp3", "webm"]);
-      else if (type === "video") return filtered(["mp4"]);
-      else if (type === "image") return filtered(["jpg"]);
-      return data;
+      }
+      return null;
     } catch (e) {
       return null;
     }
   }
 }
 
-export default saveigsApi;
+export default snapinstApi;

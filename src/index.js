@@ -13,7 +13,7 @@ import { lolChampTagAdder } from "./crons/lolChampTagAdder";
 import { nbCum, nbFuck, nbFuckAngar, nbHug, nbHugAngar, nbKiss, nbKissAngar, nbKissChino } from "./utils/nightbotEmotes";
 import youtubeApi from "./apis/youtubeApi";
 import { randUA } from "@ahmedrangel/rand-user-agent";
-import saveigsApi from "./apis/saveigsApi";
+import snapinstApi from "./apis/snapinstApi";
 import mp3youtubeApi from "./apis/mp3youtubeApi";
 // import twitterApi from "./twitterApi";
 
@@ -1660,19 +1660,10 @@ router.get("/dc/instagram-video-scrapper?", async (req, env) => {
       console.log("Invalid url");
       return JSON.stringify({status: 400});
     } else {
-      const saveigs = new saveigsApi;
-      const items = await saveigs.getMedia(`https://instagram.com/p/${idUrl}`, "video");
-      let video_url;
-      const caption = items.title !== "Instagram Post" ? items.title : "";
-      for (const media of items.medias) {
-        if (media.videoAvailable) {
-          video_url = media.url;
-          break;
-        } else {
-          video_url = "No es video";
-          break;
-        }
-      };
+      const snapinst = new snapinstApi;
+      const items = await snapinst.getMedia(`https://instagram.com/p/${idUrl}`, "video");
+      const video_url = items?.url[0]?.url;
+      const caption = items?.meta?.title;
       const json_response = {
         video_url: video_url,
         short_url: url.replace(/\?.*$/, "").replace("www.",""),
