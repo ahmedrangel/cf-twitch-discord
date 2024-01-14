@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   '@ahmedrangel/rand-user-agent':
-    specifier: ^2.0.3
-    version: 2.0.3
+    specifier: ^2.0.4
+    version: 2.0.4
   buffer:
     specifier: ^6.0.3
     version: 6.0.3
@@ -27,8 +27,8 @@ dependencies:
     specifier: ^1.1.1
     version: 1.1.1
   openai:
-    specifier: ^4.24.4
-    version: 4.24.4
+    specifier: ^4.24.7
+    version: 4.24.7
 
 devDependencies:
   wrangler:
@@ -42,8 +42,8 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: false
 
-  /@ahmedrangel/rand-user-agent@2.0.3:
-    resolution: {integrity: sha512-8gxrhmpPV8OG/Y+qMp1gx2xpN2EZaBRMC9oDSn9WyEKsPgniZ6Q3QTtWdRLbXSKsvRiSZEXw7uaXIIUFljVYUQ==}
+  /@ahmedrangel/rand-user-agent@2.0.4:
+    resolution: {integrity: sha512-pq9yLyxWXuI79DwzWWmOvZ95ZX+xLCf80gGjZ6gEJ2LM0rggxV7EEHA5Pb5/1vWOqsOUjc4noeI6kCVzUsfWYQ==}
     engines: {node: '>=17.1.0'}
     dev: false
 
@@ -1350,8 +1350,8 @@ packages:
       wrappy: 1.0.2
     dev: false
 
-  /openai@4.24.4:
-    resolution: {integrity: sha512-y58aEgq4HFCkfwiVCAvdxTkjGqHUWYFx4vJP6FWmH5udJn5SooZNXn+0N6uAe0ShmUT6846aZy3boJ0iN/KWvw==}
+  /openai@4.24.7:
+    resolution: {integrity: sha512-JUesECWPtsDHO0TlZGb6q73hnAmXUdzj9NrwgZeL4lqlRt/kR1sWrXoy8LocxN/6uOtitywvcJqe0O1PLkG45g==}
     hasBin: true
     dependencies:
       '@types/node': 18.19.4
