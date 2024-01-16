@@ -1,5 +1,4 @@
 import { randUA } from "@ahmedrangel/rand-user-agent";
-import { obtenerIDDesdeURL } from "../utils/helpers";
 
 class snapinstApi {
   constructor () {
