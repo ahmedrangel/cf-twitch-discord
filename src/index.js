@@ -16,6 +16,7 @@ import { randUA } from "@ahmedrangel/rand-user-agent";
 import snapinstApi from "./apis/snapinstApi";
 import mp3youtubeApi from "./apis/mp3youtubeApi";
 import y2mateApi from "./apis/y2mateApi";
+import crossclipApi from "./apis/crossclipApi";
 // import twitterApi from "./twitterApi";
 
 const router = Router();
@@ -2228,6 +2229,13 @@ router.get("/dc/twitch-video-scrapper?", async (req, env) => {
     obj.status = 404;
   }
   return new JsonResponse(obj);
+});
+
+router.get("/kick/clip/:id", async (req, env) => {
+  const { id } = req.params;
+  const crossclip = new crossclipApi(env.crossclip_token);
+  const url = await crossclip.getKickClip(id);
+  return new JsonResponse({ url });
 });
 
 router.all("*", () => new JsResponse("Not Found.", { status: 404 }));
