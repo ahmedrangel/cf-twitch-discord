@@ -19,15 +19,18 @@ class snapinstApi {
         body: formData
       });
       const data = await response.json();
-      if (type === "video" && data?.url[0]?.type === "mp4") {
-        const url = new URL(data?.url[0]?.url);
-        const igUrl = data.url[0].url = url.searchParams.get("uri");
-        const filename = obtenerIDDesdeURL(igUrl) + ".mp4";
-        data.meta.title = filename === data?.meta?.title ? null : data?.meta?.title;
-        return data;
+      for (const key of data.url) {
+        if (type === "video" && key?.type === "mp4") {
+          const snapUrl = new URL(key?.url);
+          const igUrl = key.url = snapUrl.searchParams.get("uri");
+          const filename = key.url = snapUrl.searchParams.get("filename");
+          data.dl = igUrl;
+          data.meta.title = filename.includes(data?.meta?.title) ? null : data?.meta?.title;
+          return data;
+        }
       }
-      return null;
     } catch (e) {
+      console.log(e);
       return null;
     }
   }

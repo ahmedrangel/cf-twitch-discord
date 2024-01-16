@@ -1651,7 +1651,7 @@ router.get("/dc/instagram-video-scrapper?", async (req, env) => {
     // const _xIgAppId = "936619743392459";
     const url = decodeURIComponent(query.url);
     const getInstagramId = (url) => {
-      const regex = /instagram.com\/(?:p|reels|reel)\/([A-Za-z0-9-_]+)/;
+      const regex = /instagram.com\/(?:p|reels|reel|stories)\/([A-Za-z0-9-_]+)/;
       const match = url.match(regex);
       return match && match[1] ? match[1] : null;
     };
@@ -1663,8 +1663,8 @@ router.get("/dc/instagram-video-scrapper?", async (req, env) => {
       return JSON.stringify({status: 400});
     } else {
       const snapinst = new snapinstApi;
-      const items = await snapinst.getMedia(`https://instagram.com/p/${idUrl}`, "video");
-      const video_url = items?.url[0]?.url;
+      const items = await snapinst.getMedia(url.includes("/stories") ? url : `https://instagram.com/p/${idUrl}`, "video");
+      const video_url = items?.dl;
       const caption = items?.meta?.title;
       const json_response = {
         video_url: video_url,
@@ -2236,6 +2236,7 @@ router.get("/kick/clip/:id", async (req, env) => {
   const crossclip = new crossclipApi(env.crossclip_token);
   let url = await crossclip.getKickClip(id);
   let maxAttempts = 4;
+  console.log(id);
   while (!url && maxAttempts > 0) {
     console.log("Retrying video download (attempt " + (5 - maxAttempts) + ")");
     await new Promise(r => setTimeout(r, 5000));
