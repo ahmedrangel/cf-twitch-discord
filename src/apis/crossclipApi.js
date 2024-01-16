@@ -16,7 +16,6 @@ class crossclipApi {
         },
       });
       const data = await response.json();
-      console.log(data);
       return data.url;
     } catch (e) {
       console.log(e);

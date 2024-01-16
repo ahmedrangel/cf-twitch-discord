@@ -2234,7 +2234,14 @@ router.get("/dc/twitch-video-scrapper?", async (req, env) => {
 router.get("/kick/clip/:id", async (req, env) => {
   const { id } = req.params;
   const crossclip = new crossclipApi(env.crossclip_token);
-  const url = await crossclip.getKickClip(id);
+  let url = await crossclip.getKickClip(id);
+  let maxAttempts = 4;
+  while (!url && maxAttempts > 0) {
+    console.log("Retrying video download (attempt " + (5 - maxAttempts) + ")");
+    await new Promise(r => setTimeout(r, 5000));
+    url = await crossclip.getKickClip(id);
+    maxAttempts--;
+  }
   return new JsonResponse({ url });
 });
 
