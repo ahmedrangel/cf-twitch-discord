@@ -12,8 +12,7 @@ kv_namespaces = [
   { binding = "GPT", id = "064407f00455407c9c4fbd1bee16afcb" },
   { binding = "HUG", id = "301c9dfa6739434b8653c2ea0c924f72" },
   { binding = "KISS", id = "438fcee4874747369ecd54651c825334" },
-  { binding = "SPANK", id = "394ddc0e32e14ad1a9ac0e1ad911ea61" },
-  { binding = "KICK_LIVE_CHECK", id = "609b6ef25a4644b1af255ac21146c219" }
+  { binding = "SPANK", id = "394ddc0e32e14ad1a9ac0e1ad911ea61" }
 ]
 
 r2_buckets = [
@@ -22,7 +21,7 @@ r2_buckets = [
 ]
 
 [triggers]
-crons = ["*/5 * * * *"]
+crons = [] # "*/5 * * * *"
 
 [[d1_databases]]
 binding = "ImgurDiscord"
