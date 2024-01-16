@@ -15,6 +15,7 @@ import youtubeApi from "./apis/youtubeApi";
 import { randUA } from "@ahmedrangel/rand-user-agent";
 import snapinstApi from "./apis/snapinstApi";
 import mp3youtubeApi from "./apis/mp3youtubeApi";
+import y2mateApi from "./apis/y2mateApi";
 // import twitterApi from "./twitterApi";
 
 const router = Router();
@@ -1692,7 +1693,7 @@ router.get("/dc/instagram-video-scrapper?", async (req, env) => {
   return new JsResponse(await retryScrap());
 });
 
-router.get("/dc/youtube-video-scrapper?", async (req, env) => {
+router.get("/dc/youtube/mp3?", async (req, env) => {
   const { url, filter } = req.query;
   const youtube = new youtubeApi(env.youtube_token);
   const mp3youtube = new mp3youtubeApi();
@@ -1704,12 +1705,51 @@ router.get("/dc/youtube-video-scrapper?", async (req, env) => {
     const { snippet, contentDetails } = items[0];
     const duration = timeToSeconds(contentDetails.duration);
     const short_url = "https://youtu.be/" + id;
-    let video_url = await mp3youtube.getMedia(id, filter);
+    let video_url = await mp3youtube.getMedia(id, "audio");
     let maxAttempts = 4;
     while (!video_url && maxAttempts > 0) {
       console.log("Retrying video download (attempt " + (4 - maxAttempts) + ")");
       await new Promise(resolve => setTimeout(resolve, 2000));
-      video_url = await mp3youtube.getMedia(id, filter);
+      video_url = await mp3youtube.getMedia(id, "audio");
+      maxAttempts--;
+    }
+    if (!video_url) {
+      return new JsonResponse({
+        error: "No se pudo obtener el video después de varios intentos",
+        status: 500
+      });
+    }
+    return new JsonResponse({
+      video_url: video_url,
+      caption: snippet.title,
+      short_url: short_url,
+      duration: duration,
+      status: 200
+    });
+  } catch(e) {
+    console.log(e);
+    return new JsonResponse({ status: 404 });
+  }
+});
+
+router.get("/dc/youtube-video-scrapper?", async (req, env) => {
+  const { url, filter } = req.query;
+  const youtube = new youtubeApi(env.youtube_token);
+  const y2mate = new y2mateApi();
+  const regex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=|shorts\/)?|youtu\.be\/)([a-zA-Z0-9_-]+)/;
+  const videoUrl = decodeURIComponent(url);
+  const id = videoUrl.match(regex)[1];
+  try {
+    const { items } = await youtube.getVideoInfo(id);
+    const { snippet, contentDetails } = items[0];
+    const duration = timeToSeconds(contentDetails.duration);
+    const short_url = "https://youtu.be/" + id;
+    let video_url = await y2mate.getMedia(id, filter);
+    let maxAttempts = 4;
+    while (!video_url && maxAttempts > 0) {
+      console.log("Retrying video download (attempt " + (4 - maxAttempts) + ")");
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      video_url = await y2mate.getMedia(id, filter);
       maxAttempts--;
     }
     if (!video_url) {
