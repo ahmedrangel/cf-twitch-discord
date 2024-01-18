@@ -2243,6 +2243,7 @@ router.get("/kick/clip/:id", async (req, env) => {
     url = await crossclip.getKickClip(id);
     maxAttempts--;
   }
+  if (url) console.log("Downloaded");
   return new JsonResponse({ url });
 });
 
