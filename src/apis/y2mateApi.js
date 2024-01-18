@@ -23,7 +23,11 @@ class y2mateApi {
         body: formData
       });
       const data = await response.json();
-      const hd_token = data?.links?.mp4["22"]?.k; // 720p
+      const q720 = data?.links?.mp4["22"]?.k; // 720p
+      const q480 = data?.links?.mp4["135"]?.k; // 480p
+      const q360p = data?.links?.mp4["18"]?.k; // 360p
+      const q240p = data?.links?.mp4["133"]?.k; // 240p
+      const hd_token = q720 ? q720 : q480 ? q480 : q360p ? q360p : q240p;
       return { hd_token };
     } catch (e) {
       console.log(e);
