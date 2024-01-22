@@ -3,6 +3,7 @@ class twitchApi {
   constructor(client_id, client_secret, database) {
     this.client_id = client_id;
     this.client_secret = client_secret;
+    console.log(this.client_secret);
     this.grant_type = "client_credentials";
     this.database = database;
     this.API_BASE = "https://api.twitch.tv/helix";

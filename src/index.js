@@ -532,7 +532,7 @@ router.get("/ia/:prompt/:user", async (req, env) => {
     model: "gpt-3.5-turbo-instruct",
     prompt: `${user}: ${decodeURIComponent(prompt)}\nGemi:`,
     temperature: 0.7,
-    max_tokens: 135,
+    max_tokens: 120,
     top_p: 1,
     frequency_penalty: 0,
     presence_penalty: 0,
