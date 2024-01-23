@@ -23,6 +23,7 @@ class y2mateApi {
         body: formData
       });
       const data = await response.json();
+      console.log(data);
       const q720 = data?.links?.mp4["22"]?.k; // 720p
       const q480 = data?.links?.mp4["135"]?.k; // 480p
       const q360p = data?.links?.mp4["18"]?.k; // 360p
