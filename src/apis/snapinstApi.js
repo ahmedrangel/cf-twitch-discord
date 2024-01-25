@@ -24,7 +24,8 @@ class snapinstApi {
           const igUrl = key.url = snapUrl.searchParams.get("uri");
           const filename = key.url = snapUrl.searchParams.get("filename");
           data.dl = igUrl;
-          data.meta.title = filename.includes(data?.meta?.title) ? null : data?.meta?.title;
+          console.log(data.meta.title, filename);
+          data.meta.title = url.includes("stories") ? null : data?.meta?.title;
           return data;
         }
       }
