@@ -1665,10 +1665,11 @@ router.get("/dc/instagram-video-scrapper?", async (req, env) => {
       const snapinst = new snapinstApi;
       const items = await snapinst.getMedia(url.includes("/stories") ? url : `https://instagram.com/p/${idUrl}`, "video");
       const video_url = items?.dl;
+      const short_url = items?.meta.source;
       const caption = items?.meta?.title;
       const json_response = {
         video_url: video_url,
-        short_url: url.replace(/\?.*$/, "").replace("www.",""),
+        short_url: short_url.replace(/\?.*$/, "").replace("www.",""),
         caption: caption,
         status: 200
       };
@@ -1779,7 +1780,7 @@ router.get("/dc/facebook-video-scrapper?", async (req, env) => {
     const { query } = req;
     const _cookie = env.fb_cookie;
     const _userAgent = randUA("desktop");
-    const url = decodeURIComponent(query.url);
+    const url = decodeURIComponent(query.url.includes("https://") ? query.url : `https://${query.url}`);
     const dataFetch = async (URL, is_reel) => {
       const response = await fetch(URL, {
         headers: {
@@ -1899,7 +1900,7 @@ router.get("/dc/tiktok-video-scrapper?", async (req, env) => {
   if (url.includes("tiktok.com/")) {
     console.log("es link de tiktok");
     const scrap = async () => {
-      const fetchTikTokMobile = await fetch(url);
+      const fetchTikTokMobile = await fetch(url.includes("https://") ? url : `https://${url}`);
       const html = await fetchTikTokMobile.text();
       const body = cheerio.load(html);
       const scripts = [];
