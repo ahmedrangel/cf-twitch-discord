@@ -17,6 +17,7 @@ import snapinstApi from "./apis/snapinstApi";
 import mp3youtubeApi from "./apis/mp3youtubeApi";
 import y2mateApi from "./apis/y2mateApi";
 import crossclipApi from "./apis/crossclipApi";
+import fdownloaderApi from "./apis/fdownloaderApi";
 // import twitterApi from "./twitterApi";
 
 const router = Router();
@@ -1774,122 +1775,22 @@ router.get("/dc/youtube-video-scrapper?", async (req, env) => {
 });
 
 router.get("/dc/facebook-video-scrapper?", async (req, env) => {
-  let count = 0;
-  let maxTries = 3;
-  const scrap = async () => {
-    const { query } = req;
-    const _cookie = env.fb_cookie;
-    const _userAgent = randUA("desktop");
-    const url = decodeURIComponent(query.url.includes("https://") ? query.url : `https://${query.url}`);
-    const dataFetch = async (URL, is_reel) => {
-      const response = await fetch(URL, {
-        headers: {
-          "cookie": _cookie,
-          "user-agent": _userAgent,
-          "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
-          "sec-fetch-dest": "document",
-          "sec-fetch-site": "none",
-          "sec-fetch-user": "?1",
-          "sec-fetch-mode": "navigate",
-          "upgrade-insecure-requests": "1",
-        }
-      });
-      console.log(response.url);
-      const html = await response.text();
-      const body = cheerio.load(html);
-      const scripts = [];
-      if (is_reel == false) {
-        body("script").each((i, el) => {
-          const script = body(el).html();
-          if (script.includes("VideoPlayerShakaPerformanceLoggerConfig") || script.includes("CometFeedStoryDefaultMessageRenderingStrategy")) {
-            scripts.push(script);
-          }
-        });
-        const json_media = JSON.parse(scripts[0]).require[0];
-        const json_text = scripts[1] ? JSON.parse(scripts[1]).require[0] : null;
-        let data;
-        let caption;
-        if (json_text) {
-          json_text[json_text.length - 1][0]?.__bbox?.require.forEach(el => {
-            if (el[0] == "RelayPrefetchedStreamCache") {
-              const step1 = el[el.length - 1];
-              caption = step1[step1.length - 1]?.__bbox?.result?.data?.attachments[0]?.media?.creation_story?.comet_sections?.message?.story?.message?.text?.replaceAll(/\n\n/g, "\n") ?? null;
-            }
-          });
-        } else {
-          caption = null;
-        }
-        json_media[json_media.length - 1][0]?.__bbox?.require.forEach(el => {
-          if (el[0] == "RelayPrefetchedStreamCache") {
-            const step1 = el[el.length - 1];
-            const step2 = step1[step1.length - 1]?.__bbox?.result?.data?.video?.story?.attachments[0]?.media;
-            data = step2;
-          }
-        });
-        const json_object = {
-          short_url: "https://facebook.com/watch/?v=" + data?.id,
-          video_url: data?.browser_native_hd_url ? data?.browser_native_hd_url : data?.browser_native_sd_url,
-          caption: caption,
-          status: 200
-        };
-        return JSON.stringify(json_object);
-      } else {
-        body("script").each((i, el) => {
-          const script = body(el).html();
-          if (script.includes("VideoPlayerShakaPerformanceLoggerConfig")) {
-            scripts.push(script);
-          }
-        });
-        const json_media = JSON.parse(scripts[0]).require[0];
-        let data;
-        let caption;
-        json_media[json_media.length - 1][0]?.__bbox?.require.forEach(el => {
-          if (el[0] == "RelayPrefetchedStreamCache") {
-            const step1 = el[el.length - 1];
-            const step2 = step1[step1.length - 1]?.__bbox?.result?.data?.video?.creation_story;
-            data = step2?.short_form_video_context;
-            caption = step2?.message?.text ?? null;
-          }
-        });
-        const json_object = {
-          short_url: data?.shareable_url.replace("www.",""),
-          video_url: data?.playback_video?.browser_native_hd_url ? data?.playback_video?.browser_native_hd_url : data?.playback_video?.browser_native_sd_url,
-          caption: caption,
-          status: 200
-        };
-        return JSON.stringify(json_object);
-      }
-    };
-
-    if (url.includes("facebook.com/watch") || url.includes("fb.watch/") || url.includes("fb.gg/") || url.includes("facebook.com/share/v")) {
-      return await dataFetch(url, false);
-    } else if (url.includes ("/videos/")) {
-      const id = obtenerIDDesdeURL(url);
-      return await dataFetch("https://www.facebook.com/watch/?v=" + id, false);
-    } else if (url.includes("facebook.com/reel") || url.includes("facebook.com/share/r") ) {
-      return await dataFetch(url, true);
-    } else {
-      console.log("Invalid url");
-      return JSON.stringify({status: 400});
-    }
-  };
-
-  const retryScrap = async () => {
-    try {
-      return await scrap();
-    } catch (error) {
-      console.log(error);
-      if (count < maxTries) {
-        count++;
-        return await retryScrap();
-      } else {
-        const json_error = {status: 429};
-        return JSON.stringify(json_error);
-      }
-    }
-  };
-
-  return new JsResponse(await retryScrap());
+  const { query } = req;
+  const url = decodeURIComponent(query.url);
+  const fdownloader = new fdownloaderApi();
+  let video_url;
+  const short_url = url.replace(/\?mibextid.*$/, "").replace("www.","");
+  let status;
+  let maxAttempts = 4;
+  while (!video_url && maxAttempts > 0) {
+    console.log("Retrying video download (attempt " + (4 - maxAttempts) + ")");
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    const data = await fdownloader.getMedia(url);
+    video_url = data?.url;
+    status = data?.status;
+    maxAttempts--;
+  }
+  return new JsonResponse({ video_url, short_url, status });
 });
 
 router.get("/dc/tiktok-video-scrapper?", async (req, env) => {
