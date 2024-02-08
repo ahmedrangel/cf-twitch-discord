@@ -1665,13 +1665,11 @@ router.get("/dc/instagram-video-scrapper?", async (req, env) => {
     } else {
       const snapinst = new snapinstApi;
       const items = await snapinst.getMedia(url.includes("/stories") ? url : `https://instagram.com/p/${idUrl}`, "video");
-      const video_url = items?.dl;
-      const short_url = items?.meta.source;
-      const caption = items?.meta?.title;
+      const video_url = items.url;
       const json_response = {
         video_url: video_url,
-        short_url: short_url.replace(/\?.*$/, "").replace("www.",""),
-        caption: caption,
+        short_url: url.replace(/\?.*$/, "").replace("www.",""),
+        caption: null,
         status: 200
       };
       return JSON.stringify(json_response);

@@ -1,37 +1,32 @@
 import { randUA } from "@ahmedrangel/rand-user-agent";
+import cheerio from "cheerio";
 
 class snapinstApi {
   constructor () {
-    this.domain = "https://snapinst.com/api/convert";
+    this.domain = "https://fastdl.app/c/";
   }
 
-  async getMedia (url, type) {
+  async getMedia (link) {
+    const _userAgent = randUA("desktop", "chrome", "linux");
     try {
-      const _userAgent = randUA("desktop");
       const formData = new FormData();
-      formData.append("url", url);
+      formData.append("url", link);
+      formData.append("lang_code", "en");
       const response = await fetch(this.domain, {
         method: "POST",
         headers: {
+          "Accept": "text/html",
           "User-Agent": _userAgent
         },
         body: formData
       });
-      const data = await response.json();
-      for (const key of data.url) {
-        if (type === "video" && key?.type === "mp4") {
-          const snapUrl = new URL(key?.url);
-          const igUrl = key.url = snapUrl.searchParams.get("uri");
-          const filename = key.url = snapUrl.searchParams.get("filename");
-          data.dl = igUrl;
-          console.log(data.meta.title, filename);
-          data.meta.title = url.includes("stories") || data.meta.title === filename ? null : data?.meta?.title;
-          return data;
-        }
-      }
+      const data = await response.text();
+      const html = cheerio.load(String(data));
+      const url = html("a").attr("href");
+      console.log(url);
+      return { status: 200, url: url };
     } catch (e) {
-      console.log(e);
-      return null;
+      return { error: e, status: 404 };
     }
   }
 }
