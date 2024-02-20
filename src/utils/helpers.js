@@ -155,9 +155,9 @@ export const SettedTwitchTagsResponse = async(env, channelId, auth_list, filtere
     if (channelId == users_keys.name) {
       const access_token = await twitch.RefreshToken(users_keys.metadata.value);
       const tagsPatch = await twitch.SetTags(access_token, users_keys.name, filteredTags);
-      if (tagsPatch.status === 400 && originalLength < 10) {
+      if (tagsPatch.status === 400 && originalLength <= 10) {
         return "Error. Una etiqueta contiene caracteres inválidos. Las etiquetas deben estar separadas por comas y evitar caracteres especiales o símbolos.";
-      } else if (tagsPatch.status === 400 && originalLength >= 10) {
+      } else if (tagsPatch.status === 400 && originalLength > 10) {
         return "Error. La cantidad máxima de etiquetas que puedes establecer es de 10.";
       } else {
         const newTags = String(filteredTags).replaceAll(/,/g,", ");

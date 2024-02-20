@@ -174,18 +174,23 @@ class twitchApi {
 
   // Set Stream Tags, require user access token, tags must be an array
   async SetTags (user_access_token, channelID, tags) {
-    const api = `${this.API_BASE}/channels?broadcaster_id=${channelID}`;
-    const set_tags = await fetch(api, {
-      method: "PATCH",
-      headers: {
-        "Accept": "application/json",
-        "Client-ID": this.client_id,
-        "Authorization": "Bearer " + user_access_token,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ tags: tags })
-    });
-    return set_tags;
+    try {
+      const api = `${this.API_BASE}/channels?broadcaster_id=${channelID}`;
+      const set_tags = await fetch(api, {
+        method: "PATCH",
+        headers: {
+          "Accept": "application/json",
+          "Client-ID": this.client_id,
+          "Authorization": "Bearer " + user_access_token,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ tags: tags })
+      });
+      console.log(await set_tags.json());
+      return set_tags;
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   // Set Stream Moderator, require user access token

@@ -2153,7 +2153,7 @@ export default {
   },
   async scheduled(event, env, ctx) {
     switch (event.cron) {
-    case "*/5 * * * *":
+    case "*/3 * * * *":
       await lolChampTagAdder(env);
       break;
     }
