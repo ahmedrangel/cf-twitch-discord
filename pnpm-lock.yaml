@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   '@ahmedrangel/rand-user-agent':
-    specifier: ^2.0.9
-    version: 2.0.9
+    specifier: ^2.0.10
+    version: 2.0.10
   buffer:
     specifier: ^6.0.3
     version: 6.0.3
@@ -42,8 +42,8 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: false
 
-  /@ahmedrangel/rand-user-agent@2.0.9:
-    resolution: {integrity: sha512-aevTDkp4K++2J1VagVtdJBGWTOE+OCtgQt2KMw/2m4F3sd5ZL+FuhjBWPAgt73aUX1JnfrFYpMRT+jiUa7kGLw==, tarball: https://registry.npmjs.org/@ahmedrangel/rand-user-agent/-/rand-user-agent-2.0.9.tgz}
+  /@ahmedrangel/rand-user-agent@2.0.10:
+    resolution: {integrity: sha512-x5/qDfS+hoDX2TkTjYF0ds3zEzKnkOfabIjRCWUXxCoqY1MIzvc8zAcDS4NY9LMuL0iIOAmsStGNmFmhILTXqQ==, tarball: https://npm.pkg.github.com/download/@ahmedrangel/rand-user-agent/2.0.10/184a79c8d3c91bc0e99a7c77f00d7f652ef00c6e}
     engines: {node: '>=17.1.0'}
     dev: false
 
