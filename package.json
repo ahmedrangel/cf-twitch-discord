@@ -14,12 +14,12 @@
     "buffer": "^6.0.3",
     "cheerio": "1.0.0-rc.12",
     "detectlanguage": "^2.1.0",
-    "eslint": "^8.56.0",
+    "eslint": "^8.57.0",
     "itty-router": "^4.0.27",
     "jsonpath": "^1.1.1",
     "openai": "^4.28.0"
   },
   "devDependencies": {
-    "wrangler": "^3.28.3"
+    "wrangler": "^3.29.0"
   }
 }

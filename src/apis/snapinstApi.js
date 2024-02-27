@@ -7,7 +7,7 @@ class snapinstApi {
   }
 
   async getMedia (link) {
-    const _userAgent = randUA("desktop", "chrome", "linux");
+    const _userAgent = randUA("desktop");
     try {
       const formData = new FormData();
       formData.append("url", link);

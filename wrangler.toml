@@ -21,7 +21,7 @@ r2_buckets = [
 ]
 
 [triggers]
-crons = ["*/3 * * * *"] # "*/5 * * * *"
+crons = [] # "*/3 * * * *"
 
 [[d1_databases]]
 binding = "ImgurDiscord"

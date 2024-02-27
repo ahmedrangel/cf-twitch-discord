@@ -11,7 +11,7 @@ class fdownloaderApi {
       return [...Array(longitud)].map(() => "abcdefghijklmnopqrstuvwxyz0123456789".charAt(Math.floor(Math.random() * 36))).join("");
     }
     const token = generarCadenaAleatoria(64);
-    const _userAgent = randUA("desktop", "chrome", "linux");
+    const _userAgent = randUA("desktop");
     try {
       const formData = new FormData();
       formData.append("q", link);
