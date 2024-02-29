@@ -1799,7 +1799,12 @@ router.get("/dc/tiktok-video-scrapper?", async (req, env) => {
   if (url.includes("tiktok.com/")) {
     console.log("es link de tiktok");
     const scrap = async () => {
-      const fetchTikTokMobile = await fetch(url.includes("https://") ? url : `https://${url}`);
+      const fetchTikTokMobile = await fetch(url.includes("https://") ? url : `https://${url}`, {
+        headers: {
+          "Accept": "application/json",
+          "User-Agent": randUA("desktop")
+        }
+      });
       const html = await fetchTikTokMobile.text();
       const body = cheerio.load(html);
       const scripts = [];
