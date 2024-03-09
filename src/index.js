@@ -2136,7 +2136,9 @@ router.get("/dc/twitch-video-scrapper?", async (req, env) => {
 
 router.get("/kick/clip/:id", async (req, env) => {
   const { id } = req.params;
-  const crossclip = new crossclipApi(env.crossclip_token);
+  const tokens = [env.crossclip_token, env.crossclip_token2];
+  const random_token = tokens[Math.floor(Math.random() * tokens.length)];
+  const crossclip = new crossclipApi(random_token);
   let url = await crossclip.getKickClip(id);
   let maxAttempts = 4;
   console.log(id);
