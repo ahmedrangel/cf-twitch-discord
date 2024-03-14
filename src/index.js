@@ -2144,7 +2144,7 @@ router.get("/kick/clip/:id", async (req, env) => {
   console.log(id);
   while (!url && maxAttempts > 0) {
     console.log("Retrying video download (attempt " + (5 - maxAttempts) + ")");
-    await new Promise(r => setTimeout(r, 5000));
+    await new Promise(r => setTimeout(r, 7000));
     url = await crossclip.getKickClip(id);
     maxAttempts--;
   }
