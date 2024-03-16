@@ -1218,23 +1218,25 @@ router.get("/lol/live-game?", async (req, env,) => {
   return new JsResponse(data);
 });
 
-router.get("/lol/live-game-for-discord?", async (req, env,) => {
-  const { query } = req;
-  const region = (query.region).toLowerCase();
-  const summoner = query.summoner;
+router.get("/lol/spectator/:region/:name/:tag", async (req, env,) => {
+  const { params } = req;
+  const region = (params.region).toLowerCase();
+  const riotName = params.name;
+  const riotTag = params.tag;
   const roles = ["TOP", "JUNGLE", "MIDDLE", "BOTTOM", "UTILITY"];
   const team1 = [], team2 = [];
   const match = {};
   match.status_code = 404;
   const riot = new riotApi(env.riot_token);
   const region_route = riot.RegionNameRouting(region);
+  const cluster = riot.RegionalRouting(region);
   const ddversions = await fetch(`https://ddragon.leagueoflegends.com/realms/${region.toLowerCase()}.json`);
   const ddversions_data = await ddversions.json();
   const champion_list = await fetch(`https://ddragon.leagueoflegends.com/cdn/${ddversions_data.n.champion}/data/es_MX/champion.json`);
   const champion_data = await champion_list.json();
-  const summoner_data = await riot.SummonerDataByName(summoner, region_route);
-  const summoner_id = summoner_data.id;
-  const live_game_data = await riot.LiveGameData(summoner_id, region_route);
+  const account_data = await riot.getAccountByRiotID(riotName, riotTag, cluster);
+  const puuid = account_data.puuid;
+  const live_game_data = await riot.LiveGameData(puuid, region_route);
   const game_type = riot.queueCase(live_game_data?.gameQueueConfigId);
   const participantsHandler = async(p, merakiRates, game_type, team, color) => {
     const ranked_data = await riot.RankedData(p.summonerId, region_route);
@@ -1251,7 +1253,7 @@ router.get("/lol/live-game-for-discord?", async (req, env,) => {
           const rank = r.tier !== "MASTER" && r.tier !== "GRANDMASTER" && r.tier !== "CHALLENGER" ? r.rank : "";
           team.push({
             teamColor: color,
-            summonerName: p.summonerName,
+            riotId: p.riotId,
             championId: p.championId,
             championName: championName,
             spell1Id: p.spell1Id,

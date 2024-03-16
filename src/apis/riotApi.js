@@ -90,8 +90,8 @@ class riotApi {
     return data;
   }
 
-  async LiveGameData(summoner_id, region) {
-    const response = await fetch(`https://${region}.${this.domain}/lol/spectator/v4/active-games/by-summoner/${summoner_id}?api_key=${this.riot_token}`);
+  async LiveGameData(puuid, region) {
+    const response = await fetch(`https://${region}.${this.domain}/lol/spectator/v5/active-games/by-summoner/${puuid}?api_key=${this.riot_token}`);
     const data = await response.json();
     return data;
   }
