@@ -1802,32 +1802,12 @@ router.get("/dc/tiktok-video-scrapper?", async (req, env) => {
   if (url.includes("tiktok.com/")) {
     console.log("es link de tiktok");
     const scrap = async () => {
-      const fetchTikTokMobile = await fetch(url.includes("https://") ? url : `https://${url}`, {
-        headers: {
-          "Accept": "application/json",
-          "User-Agent": randUA("desktop")
-        }
-      });
-      const html = await fetchTikTokMobile.text();
-      const body = cheerio.load(html);
-      const scripts = [];
-      body("script").each((i, el) => {
-        const script = body(el).html();
-        if (script.includes("\"itemStruct\"")) {
-          scripts.push(script);
-        }
-      });
-      const json = JSON.parse(scripts);
-      const tt_id = jp.query(json, "$..[?(@.itemStruct)].itemStruct.id")[0];
-      const video = await fetch(`https://tikwm.com/video/media/play/${tt_id}.mp4`);
-      const video_url = video.url;
-      const response = await fetch(`https://www.tiktok.com/oembed?url=https://www.tiktok.com/@/video/${tt_id}`);
+      const response = await fetch(`https://tikwm.com/api/?url=${url}`);
       const data = await response.json();
-      const caption = (data.title).trim().replace(/\s+$/, "");
-      console.log(video_url);
+      const caption = (data.data?.title).trim().replace(/\s+$/, "");
       const json_response = {
-        video_url: video_url,
-        short_url: "https://m.tiktok.com/v/"+ tt_id,
+        video_url: data?.data?.play,
+        short_url: "https://m.tiktok.com/v/"+ data.data.id,
         caption: caption,
         status: 200
       };
