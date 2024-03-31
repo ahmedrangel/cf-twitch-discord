@@ -15,11 +15,11 @@
     "cheerio": "1.0.0-rc.12",
     "detectlanguage": "^2.1.0",
     "eslint": "^8.57.0",
-    "itty-router": "^4.2.2",
+    "itty-router": "^5.0.4",
     "jsonpath": "^1.1.1",
-    "openai": "^4.29.2"
+    "openai": "^4.31.0"
   },
   "devDependencies": {
-    "wrangler": "^3.38.0"
+    "wrangler": "^3.41.0"
   }
 }

@@ -1,4 +1,4 @@
-import { Router } from "itty-router";
+import { IttyRouter } from "itty-router";
 import { generateUniqueId, getDateAgoFromTimeStamp, getRandom, obtenerIDDesdeURL, obtenerDiscordUserIdFromAvatarsCdn, getTimeUnitsFromISODate, KVSorterByValue, jsonCustomSorterByProperty, SettedTwitchTagsResponse, timeToSeconds } from "./utils/helpers";
 import twitchApi from "./apis/twitchApi";
 import JsResponse from "./response";
@@ -8,7 +8,6 @@ import spotifyApi from "./apis/spotifyApi";
 import riotApi, { eloValues } from "./apis/riotApi";
 import imgurApi from "./apis/imgurApi";
 import jp from "jsonpath";
-import * as cheerio from "cheerio";
 import { lolChampTagAdder } from "./crons/lolChampTagAdder";
 import { nbCum, nbFuck, nbFuckAngar, nbHug, nbHugAngar, nbKiss, nbKissAngar, nbKissChino } from "./utils/nightbotEmotes";
 import youtubeApi from "./apis/youtubeApi";
@@ -20,7 +19,7 @@ import crossclipApi from "./apis/crossclipApi";
 import fdownloaderApi from "./apis/fdownloaderApi";
 // import twitterApi from "./twitterApi";
 
-const router = Router();
+const router = IttyRouter();
 // educar
 router.get("/educar/:user/:channel/:touser", async (req, env) => {
   const percent = getRandom(100);
@@ -2136,11 +2135,74 @@ router.get("/kick/clip/:id", async (req, env) => {
   return new JsonResponse({ url });
 });
 
+router.get("/lol/elo?", async (req, env) => {
+  const { query } = req;
+  const riot = new riotApi(env.riot_token);
+  const default_riot = decodeURIComponent(query.default).split("-");
+  let soloq;
+  let flex;
+  if (!query.query) {
+    const riotName = default_riot[0].replace(/ /g, "");
+    const riotTag = default_riot[1];
+    const region = default_riot[2].toLowerCase();
+    const cluster = riot.RegionalRouting(region);
+    const route = riot.RegionNameRouting(region);
+    const { puuid, gameName, tagLine } = await riot.getAccountByRiotID(riotName, riotTag, cluster);
+    if (!puuid) return new JsResponse("Usuario no encontrado. Asegúrate de escribir correctamente el comando con el siguiente formato:  !elo <Nombre#Tag> <Región>");
+    const { id } = await riot.getSummonerDataByPUUID(puuid, route);
+    if (!id) return new JsResponse("Usuario no encontrado.");
+    const leagueData = await riot.RankedData(id, route);
+    for (const d of leagueData) {
+      if (d.queueType === "RANKED_SOLO_5x5") {
+        const tier = riot.tierCase(d.tier).full;
+        const rank = d.tier === "GRANDMASTER" || d.tier === "CHALLENGER" || d.tier === "MASTER" ? "" : d.rank;
+        const winrate = Math.round((d.wins/(d.wins + d.losses))*100);
+        soloq = `SoloQ: ${tier} ${rank} · ${d.leaguePoints} LP · ${d.wins}V ${d.losses}D (${winrate}% WR)`;
+      } else if (d.queueType === "RANKED_FLEX_SR") {
+        const tier = riot.tierCase(d.tier).full;
+        const rank = d.tier === "GRANDMASTER" || d.tier === "CHALLENGER" || d.tier === "MASTER" ? "" : d.rank;
+        const winrate = Math.round((d.wins/(d.wins + d.losses))*100);
+        flex = `Flex: ${tier} ${rank} · ${d.leaguePoints} LP · ${d.wins}V ${d.losses}D (${winrate}% WR)`;
+      }
+    }
+    return new JsResponse(`${gameName} #${tagLine} ${soloq ? `| ${soloq}` : ""} ${flex ? `| ${flex}` : ""}`);
+  }
+  const query_full = decodeURIComponent(query.query);
+  const regex = /^(.*?)#(.*?)\s(.*?)$/;
+  const matches = regex.exec(query_full);
+  if (!matches) return new JsResponse("Asegúrate de escribir correctamente el comando con el siguiente formato:  !elo <Nombre#Tag> <Región>");
+  const riotName = matches[1];
+  const riotTag = matches[2];
+  const region = matches[3].toLowerCase();
+  console.log(riotName, riotTag, region);
+  const cluster = riot.RegionalRouting(region);
+  const route = riot.RegionNameRouting(region);
+  const { puuid, gameName, tagLine } = await riot.getAccountByRiotID(riotName, riotTag, cluster);
+  if (!puuid) return new JsResponse("Usuario no encontrado. Asegúrate de escribir correctamente el comando con el siguiente formato:  !elo <Nombre#Tag> <Región>");
+  const { id } = await riot.getSummonerDataByPUUID(puuid, route);
+  if (!id) return new JsResponse("Usuario no encontrado.");
+  const leagueData = await riot.RankedData(id, route);
+  for (const d of leagueData) {
+    if (d.queueType === "RANKED_SOLO_5x5") {
+      const tier = riot.tierCase(d.tier).full;
+      const rank = d.tier === "GRANDMASTER" || d.tier === "CHALLENGER" || d.tier === "MASTER" ? "" : d.rank;
+      const winrate = Math.round((d.wins/(d.wins + d.losses))*100);
+      soloq = `SoloQ: ${tier} ${rank} · ${d.leaguePoints} LP · ${d.wins}V ${d.losses}D (${winrate}% WR)`;
+    } else if (d.queueType === "RANKED_FLEX_SR") {
+      const tier = riot.tierCase(d.tier).full;
+      const rank = d.tier === "GRANDMASTER" || d.tier === "CHALLENGER" || d.tier === "MASTER" ? "" : d.rank;
+      const winrate = Math.round((d.wins/(d.wins + d.losses))*100);
+      flex = `Flex: ${tier} ${rank} · ${d.leaguePoints} LP · ${d.wins}V ${d.losses}D (${winrate}% WR)`;
+    }
+  }
+  return new JsResponse(`${gameName} #${tagLine} ${soloq ? `| ${soloq}` : ""} ${flex ? `| ${flex}` : ""}`);
+});
+
 router.all("*", () => new JsResponse("Not Found.", { status: 404 }));
 
 export default {
   async fetch(req, env, ctx) {
-    return router.handle(req, env, ctx);
+    return router.fetch(req, env, ctx);
   },
   async scheduled(event, env, ctx) {
     switch (event.cron) {
