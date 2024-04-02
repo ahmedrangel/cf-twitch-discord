@@ -17,12 +17,13 @@ import mp3youtubeApi from "./apis/mp3youtubeApi";
 import y2mateApi from "./apis/y2mateApi";
 import crossclipApi from "./apis/crossclipApi";
 import fdownloaderApi from "./apis/fdownloaderApi";
+import * as cheerio from "cheerio";
 // import twitterApi from "./twitterApi";
 
 const router = IttyRouter();
 // educar
 router.get("/educar/:user/:channel/:touser", async (req, env) => {
-  const percent = getRandom(100);
+  const percent = getRandom({ max: 100 });
   const { user, touser, channel } = req.params;
   let mensaje = null;
   const response_user = await fetch(`https://decapi.me/twitch/id/${user}`);
@@ -86,7 +87,7 @@ router.get("/kiss/:user/:channelID/:touser", async (req, env) => {
 router.get("/fuck/:user/:channelID/:touser", async (req, env) => {
   const { user, touser } = req.params;
   const channelId = req.params.channelID;
-  const percent = getRandom(100);
+  const percent = getRandom({ max: 100 });
   const twitch = new twitchApi(env.client_id, env.client_secret, env.NB);
   const touserData = await twitch.getUserByName(touser);
   if (!touserData) {
@@ -117,7 +118,7 @@ router.get("/fuck/:user/:channelID/:touser", async (req, env) => {
 // fuck v2
 router.get("/fuck/v2/:user/:userId/:channelId/:touser", async (req, env) => {
   const { user, userId, channelId, touser } = req.params;
-  const percent = getRandom(100);
+  const percent = getRandom({ max: 100 });
   const twitch = new twitchApi(env.client_id, env.client_secret, env.NB);
   const touserData = await twitch.getUserByName(touser);
   if (!touserData) {
@@ -211,7 +212,7 @@ router.get("/cum/v2/:user/:userId/:channelId/:touser", async (req, env) => {
     "en la BOCA"
   ];
   const lugar = arr[Math.floor(Math.random()*arr.length)];
-  const percent = getRandom(100);
+  const percent = getRandom({ max: 100 });
   const twitch = new twitchApi(env.client_id, env.client_secret, env.NB);
   const touserData = await twitch.getUserByName(touser);
   if (!touserData) {
@@ -249,7 +250,7 @@ router.get("/cum/v2/:user/:userId/:channelId/:touser", async (req, env) => {
 // cum
 router.get("/cum/:user/:channelID/:touser", async (req, env) => {
   const { user, touser, channelID } = req.params;
-  const percent = getRandom(100);
+  const percent = getRandom({ max: 100 });
   let mensaje = null;
   const error_msg = `${user}, El usuario que has mencionado no existe. FallHalp`;
   const twitch = new twitchApi(env.client_id, env.client_secret, env.NB);
@@ -1796,17 +1797,55 @@ router.get("/dc/facebook-video-scrapper?", async (req, env) => {
 router.get("/dc/tiktok-video-scrapper?", async (req, env) => {
   const { query } = req;
   const url = decodeURIComponent(query.url);
+  const api_host = "https://api22-normal-c-useast2a.tiktokv.com";
   let count = 0;
   let maxTries = 3;
   if (url.includes("tiktok.com/")) {
     console.log("es link de tiktok");
     const scrap = async () => {
-      const response = await fetch(`https://tikwm.com/api/?url=${url}`);
+      let tt_id;
+      if (!url.includes("/video/") || !url.includes("/v/")) {
+        const fetchTikTokMobile = await fetch(url.includes("https://") ? url : `https://${url}`, {
+          headers: {
+            "Accept": "application/json",
+            "User-Agent": randUA("desktop")
+          }
+        });
+        const html = await fetchTikTokMobile.text();
+        const body = cheerio.load(html);
+        const scripts = [];
+        body("script").each((i, el) => {
+          const script = body(el).html();
+          if (script.includes("\"itemStruct\"")) {
+            scripts.push(script);
+          }
+        });
+        const json = JSON.parse(scripts);
+        tt_id = jp.query(json, "$..[?(@.itemStruct)].itemStruct.id")[0];
+      } else {
+        tt_id = obtenerIDDesdeURL(url);
+      }
+      const version_code = ("34.1.2").split(".").map(v => v.padStart(2, "0")).join(".");
+      const device_id = getRandom({ min: "7250000000000000000", max: "7351147085025500000" });
+      const known_iid = [
+        "7351144126450059040",
+        "7351149742343391009",
+        "7351153174894626592",
+      ];
+      const iid = known_iid[Math.floor(Math.random() * known_iid.length)];
+      const response = await fetch(`${api_host}/aweme/v1/feed/?aweme_id=${tt_id}&iid=${iid}&device_id=${device_id}&version_code=${version_code}`, {
+        headers: {
+          "Accept": "application/json",
+          "User-Agent": randUA("mobile")
+        }
+      });
       const data = await response.json();
-      const caption = (data.data?.title).trim().replace(/\s+$/, "");
+      const video_url = data.aweme_list[0].video.play_addr.url_list[0];
+      const caption = (data.aweme_list[0].desc).trim().replace(/\s+$/, "");
+      console.log(video_url);
       const json_response = {
-        video_url: data?.data?.play,
-        short_url: "https://m.tiktok.com/v/"+ data.data.id,
+        video_url: video_url,
+        short_url: "https://m.tiktok.com/v/"+ tt_id,
         caption: caption,
         status: 200
       };

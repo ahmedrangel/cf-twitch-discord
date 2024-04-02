@@ -1,7 +1,9 @@
 import twitchApi from "../apis/twitchApi";
 
-export const getRandom = (max) => {
-  return Math.round((Math.random() * (max - 1)) + 1);
+export const getRandom = (options) => {
+  const min = Number(options.min) || 1;
+  const max = Number(options.max) || 100;
+  return Math.round((Math.random() * (max - min)) + min);
 };
 
 export const getDateAgoFromTimeStamp = (timestamp) => {
