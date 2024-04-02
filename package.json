@@ -10,16 +10,16 @@
     "tail": "wrangler tail" 
   },
   "dependencies": {
-    "@ahmedrangel/rand-user-agent": "^2.0.13",
+    "@ahmedrangel/rand-user-agent": "^2.0.14",
     "buffer": "^6.0.3",
     "cheerio": "1.0.0-rc.12",
     "detectlanguage": "^2.1.0",
     "eslint": "^8.57.0",
-    "itty-router": "^5.0.4",
+    "itty-router": "^5.0.5",
     "jsonpath": "^1.1.1",
-    "openai": "^4.31.0"
+    "openai": "^4.32.0"
   },
   "devDependencies": {
-    "wrangler": "^3.41.0"
+    "wrangler": "^3.42.0"
   }
 }
