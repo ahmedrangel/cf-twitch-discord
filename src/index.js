@@ -1350,11 +1350,12 @@ router.get("/lol/profile/:region/:name/:tag", async (req, env,) => {
   ranked_data.forEach((rankedData) => {
     if (rankedData.queueType !== "CHERRY") {
       const tier = riot.tierCase(rankedData.tier).full;
+      const rank = rankedData.tier !== "MASTER" && rankedData.tier !== "GRANDMASTER" && rankedData.tier !== "CHALLENGER" ? rankedData.rank : "";
       rank_profile.push({
         leagueId: rankedData.leagueId,
         queueType: rankedData.queueType,
         tier: tier,
-        rank: rankedData.rank,
+        rank: rank,
         leaguePoints: rankedData.leaguePoints,
         wins: rankedData.wins,
         losses: rankedData.losses
