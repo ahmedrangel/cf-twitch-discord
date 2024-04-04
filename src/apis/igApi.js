@@ -32,7 +32,7 @@ class igApi {
     const maxMediaSize = Math.max(...medias.map(obj => obj.size));
     const url = medias.find(obj => obj.size === maxMediaSize).url;
     console.log(url);
-    return { status: 200, url: url, caption: data?.title };
+    return { status: 200, url: url, caption: data?.title.replace("Instagram Post", "") };
   }
 }
 
