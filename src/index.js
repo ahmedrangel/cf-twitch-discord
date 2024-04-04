@@ -12,7 +12,7 @@ import { lolChampTagAdder } from "./crons/lolChampTagAdder";
 import { nbCum, nbFuck, nbFuckAngar, nbHug, nbHugAngar, nbKiss, nbKissAngar, nbKissChino } from "./utils/nightbotEmotes";
 import youtubeApi from "./apis/youtubeApi";
 import { randUA } from "@ahmedrangel/rand-user-agent";
-import snapinstApi from "./apis/snapinstApi";
+import igApi from "./apis/igApi";
 import mp3youtubeApi from "./apis/mp3youtubeApi";
 import y2mateApi from "./apis/y2mateApi";
 import crossclipApi from "./apis/crossclipApi";
@@ -1087,11 +1087,11 @@ router.get("/put-r2-chokis?", async (req, env, ctx) => {
   return new JsResponse("Error. No se ha encontrado un video.");
 });
 
-router.get("/lol/live-game?", async (req, env,) => {
+router.get("/lol/live?", async (req, env,) => {
   const { query } = req;
+  const riot = new riotApi(env.riot_token);
+  const default_riot = decodeURIComponent(query.default).split("-");
   const roles = ["TOP", "JUNGLE", "MIDDLE", "BOTTOM", "UTILITY"];
-  let q_summoner;
-  let q_region;
   let data = [];
   let team1String = [], team1 = [];
   let team2String = [], team2 = [];
@@ -1100,36 +1100,36 @@ router.get("/lol/live-game?", async (req, env,) => {
   let division = "";
   let lp = "";
   let dots = "_";
+  const break_line = "─────────────────────────";
   // Decode al query, reemplaza espacios por (-), elimina caracteres especiales
   let query_string = decodeURIComponent(query.query).replaceAll(/ /g, "-").replaceAll(/[^a-zA-Z0-9\-]/g, "", "");
   query_string = query_string.replace(/-+$/, ""); // elimina el overflow de guiones al final de la cadena
   // Si el query no está vacío se separa el usuario y la región, de lo contrario se usa el usuario y region definido.
-  if (query_string !== "") {
-    let lastSpaceIndex = query_string.lastIndexOf("-");
-    if (lastSpaceIndex !== -1) {
-      q_summoner = query_string.substr(0, lastSpaceIndex).replaceAll(/-/g, "");
-      q_region = query_string.substr(lastSpaceIndex + 1);
-    } else {
-      q_summoner = query_string;
-    }
-    console.log(q_summoner + " " + q_region);
-  } else {
-    q_summoner = "Zihne";
-    q_region = "las";
+  if (!query.query) {
+    const riotName = default_riot[0].replace(/ /g, "");
+    const riotTag = default_riot[1];
+    const region = default_riot[2].toLowerCase();
+    return new JsResponse(await responseBuild(riotName, riotTag, region));
   }
-  const riot = new riotApi(env.riot_token);
-  const break_line = "─────────────────────────";
-  console.log(q_region);
-  const region = riot.RegionNameRouting(q_region);
-  console.log(region);
-  if (q_summoner && region !== false && q_region !== undefined) {
-    const ddversions = await fetch(`https://ddragon.leagueoflegends.com/realms/${q_region.toLowerCase()}.json`);
+  const query_full = decodeURIComponent(query.query);
+  const regex = /^(.*?)#(.*?)\s(.*?)$/;
+  const matches = regex.exec(query_full);
+  if (!matches) return new JsResponse("Asegúrate de escribir correctamente el comando con el siguiente formato:  !elo <Nombre#Tag> <Región>");
+  const riotName = matches[1];
+  const riotTag = matches[2];
+  const region = matches[3].toLowerCase();
+  return new JsResponse(await responseBuild(riotName, riotTag, region));
+
+  async function responseBuild (riotName, riotTag, region) {
+    const cluster = riot.RegionalRouting(region);
+    const route = riot.RegionNameRouting(region);
+    const { puuid, gameName, tagLine } = await riot.getAccountByRiotID(riotName, riotTag, cluster);
+    if (!puuid) return new JsResponse("Usuario no encontrado. Asegúrate de escribir correctamente el comando con el siguiente formato:  !elo <Nombre#Tag> <Región>");
+    const ddversions = await fetch(`https://ddragon.leagueoflegends.com/realms/${region}.json`);
     const ddversions_data = await ddversions.json();
     const champion_list = await fetch(`https://ddragon.leagueoflegends.com/cdn/${ddversions_data.n.champion}/data/es_MX/champion.json`);
     const champion_data = await champion_list.json();
-    const summoner_data = await riot.SummonerDataByName(q_summoner, region);
-    const summoner_id = summoner_data.id;
-    const live_game_data = await riot.LiveGameData(summoner_id, region);
+    const live_game_data = await riot.LiveGameData(puuid, route);
     const game_type = riot.queueCase(live_game_data.gameQueueConfigId);
     if (live_game_data.participants) {
       const participants = live_game_data.participants;
@@ -1137,10 +1137,10 @@ router.get("/lol/live-game?", async (req, env,) => {
       for (let i = 0; i < team_size; i++) {
         if (participants[i].teamId == 100) {
           const blue_team = "🔵";
-          await AdjustParticipants(participants[i], team1, region, game_type.profile_rank_type, blue_team, champion_data);
+          await AdjustParticipants(participants[i], team1, game_type.profile_rank_type, blue_team, champion_data, route);
         } else if (participants[i].teamId == 200) {
           const red_team = "🔴";
-          await AdjustParticipants(participants[i], team2, region, game_type.profile_rank_type, red_team, champion_data);
+          await AdjustParticipants(participants[i], team2, game_type.profile_rank_type, red_team, champion_data, route);
         }
       }
       const ratesFetch = await fetch("https://cdn.merakianalytics.com/riot/lol/resources/latest/en-US/championrates.json");
@@ -1153,30 +1153,23 @@ router.get("/lol/live-game?", async (req, env,) => {
       });
       team1 = riot.fixJsonJungleSort(jsonCustomSorterByProperty(team1, roles, "role"));
       team2 = riot.fixJsonJungleSort(jsonCustomSorterByProperty(team2, roles, "role"));
-      console.log(team1);
-      console.log(team2);
+
       team1.forEach(t => {
-        team2String.push(`${t.teamColor}${t.summonerName}(${t.championName})${t.dots}${t.division}${t.lp}`);
+        team2String.push(`${t.teamColor}${t.riotId}(${t.championName})${t.dots}${t.division}${t.lp}`);
       });
       team2.forEach(t => {
-        team2String.push(`${t.teamColor}${t.summonerName}(${t.championName})${t.dots}${t.division}${t.lp}`);
+        team2String.push(`${t.teamColor}${t.riotId}(${t.championName})${t.dots}${t.division}${t.lp}`);
       });
 
-      data = String((`${game_type.queue_name} ${break_line} ${String(team1String)} ${String(team2String)}`).replaceAll(","," "));
-    } else {
-      data = `${q_summoner} no se encuentra en partida ahora mismo. FallHalp `;
+      return String((`${game_type.queue_name} ${break_line} ${String(team1String)} ${String(team2String)}`).replaceAll(","," "));
     }
-  } else if (region == false) {
-    data = "No se ha especificado la región o la región es incorrecta. Manera correcta: !lolgame <invocador> <region>";
+    return `${gameName} #${tagLine} no se encuentra en partida ahora mismo. FallHalp `;
   }
 
-  async function AdjustParticipants (participants, team, region, game_type, team_color, champion_data) {
+  async function AdjustParticipants (participants, team, game_type, team_color, champion_data, route) {
     participants.championName = (String(jp.query(champion_data.data, `$..[?(@.key==${participants.championId})].name`)));
-    let summonerName = participants.summonerName.charAt(0);
-    let sn2 = participants.summonerName.slice(1);
-    sn2 = sn2.toLowerCase();
-    summonerName = summonerName + sn2;
-    const ranked_data = await riot.RankedData(participants.summonerId, region);
+    let riotId = participants.riotId;
+    const ranked_data = await riot.RankedData(participants.summonerId, route);
     const current_rank_type = (String(jp.query(ranked_data, `$..[?(@.queueType=="${game_type}")].queueType`)));
     if (ranked_data.length != 0 && game_type == current_rank_type) {
       for (let i = 0; i < ranked_data.length; i++) {
@@ -1192,10 +1185,10 @@ router.get("/lol/live-game?", async (req, env,) => {
       rank = false;
     }
     division = riot.divisionCase(riot.tierCase(tier).short, riot.rankCase(rank));
-    let names_size = (42 - (String(participants.championName).length + String(participants.summonerName).length + 17));
+    let names_size = (46 - (String(participants.championName).length + String(participants.riotId).length + 14));
     let teamObj = {
       teamColor: team_color,
-      summonerName: summonerName.replaceAll(" ",""),
+      riotId: riotId.replaceAll(" ","").replace(/#.+$/, ""),
       championName: participants.championName.replaceAll(" ",""),
       championId: participants.championId,
       spell1Id: participants.spell1Id,
@@ -1214,7 +1207,7 @@ router.get("/lol/live-game?", async (req, env,) => {
       team.push(teamObj);
     }
   };
-  console.log(data);
+
   return new JsResponse(data);
 });
 
@@ -1665,13 +1658,13 @@ router.get("/dc/instagram-video-scrapper?", async (req, env) => {
       console.log("Invalid url");
       return JSON.stringify({status: 400});
     } else {
-      const snapinst = new snapinstApi;
-      const items = await snapinst.getMedia(url.includes("/stories") ? url : `https://instagram.com/p/${idUrl}`, "video");
+      const instagram = new igApi;
+      const items = await instagram.getMedia(url.includes("/stories") ? url : `https://instagram.com/p/${idUrl}`, "video");
       const video_url = items.url;
       const json_response = {
         video_url: video_url,
         short_url: url.replace(/\?.*$/, "").replace("www.",""),
-        caption: null,
+        caption: items?.caption,
         status: 200
       };
       return JSON.stringify(json_response);
