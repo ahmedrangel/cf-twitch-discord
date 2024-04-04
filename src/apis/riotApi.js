@@ -266,6 +266,12 @@ class riotApi {
       queue.full_name = "Normal";
       queue.short_name = "Normal";
       break;
+    case 490:
+      queue.profile_rank_type = "RANKED_SOLO_5x5";
+      queue.queue_name = "NORMAL (QUICK)";
+      queue.full_name = "Normal (Quickplay)";
+      queue.short_name = "Normal (Q)";
+      break;
     case 700:
       queue.profile_rank_type = "RANKED_SOLO_5x5";
       queue.queue_name = "CLASH";
@@ -283,6 +289,12 @@ class riotApi {
       queue.queue = "ARURF";
       queue.full_name = "All Random URF";
       queue.short_name = "ARURF";
+      break;
+    case 1020:
+      queue.profile_rank_type = "RANKED_SOLO_5x5";
+      queue.queue = "ONE FOR ALL";
+      queue.full_name = "Uno Para Todos";
+      queue.short_name = "One4All";
       break;
     case 1300:
       queue.profile_rank_type = "RANKED_SOLO_5x5";
