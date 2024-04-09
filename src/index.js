@@ -2165,7 +2165,7 @@ router.get("/lol/elo?", async (req, env) => {
         flex = `Flex: ${tier} ${rank} · ${d.leaguePoints} LP · ${d.wins}V ${d.losses}D (${winrate}% WR)`;
       }
     }
-    return new JsResponse(`${gameName} #${tagLine} ${soloq ? `| ${soloq}` : ""} ${flex ? `| ${flex}` : ""}`);
+    return new JsResponse(`${gameName} #${tagLine} ${soloq ? `| ${soloq}` : ""} ${flex ? `| ${flex}` : ""} ${!soloq && !flex ? "| Unranked" : ""}`);
   }
   const query_full = decodeURIComponent(query.query);
   const regex = /^(.*?)#(.*?)\s(.*?)$/;
@@ -2195,7 +2195,22 @@ router.get("/lol/elo?", async (req, env) => {
       flex = `Flex: ${tier} ${rank} · ${d.leaguePoints} LP · ${d.wins}V ${d.losses}D (${winrate}% WR)`;
     }
   }
-  return new JsResponse(`${gameName} #${tagLine} ${soloq ? `| ${soloq}` : ""} ${flex ? `| ${flex}` : ""}`);
+  return new JsResponse(`${gameName} #${tagLine} ${soloq ? `| ${soloq}` : ""} ${flex ? `| ${flex}` : ""} ${!soloq && !flex ? "| Unranked" : ""}`);
+});
+
+router.get("/twitch/subscribers/:user/total", async (req, env) => {
+  const { user } = req.params;
+  const response = await fetch(`https://twitchtracker.com/${user}/subscribers`, {
+    headers: {
+      "User-Agent": randUA("desktop")
+    }
+  });
+  const html = await response.text();
+  const $ = cheerio.load(html);
+  const divSubs = $('.g-x-s-label.color-gold');
+  const firstSpan = divSubs.parent().find('span').first();
+  const total = firstSpan.text();
+  return new JsonResponse({ total });
 });
 
 router.all("*", () => new JsResponse("Not Found.", { status: 404 }));
