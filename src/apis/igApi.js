@@ -1,8 +1,9 @@
 import { randUA } from "@ahmedrangel/rand-user-agent";
+import * as cheerio from "cheerio";
 
 class igApi {
   constructor () {
-    this.domain = "https://snapinsta.vip/wp-json/aio-dl/video-data/";
+    this.domain = "https://fastdl.app/c/";
     this.domain_stories = "https://igram.world/api/ig/story";
   }
 
@@ -20,19 +21,22 @@ class igApi {
       return { status: 200, url: url };
     }
 
-    const response = await fetch(this.domain + `?url=${link}`, {
+    const formData = new FormData();
+    formData.append("url", link);
+    formData.append("lang_code", "en");
+    const response = await fetch(this.domain, {
       method: "POST",
       headers: {
-        "Accept": "application/json",
+        "Accept": "text/html",
         "User-Agent": _userAgent
-      }
+      },
+      body: formData
     });
-    const data = await response.json();
-    const medias = data.medias;
-    const maxMediaSize = Math.max(...medias.map(obj => obj.size));
-    const url = medias.find(obj => obj.size === maxMediaSize).url;
+    const data = await response.text();
+    const html = cheerio.load(String(data));
+    const url = html("a").attr("href");
     console.log(url);
-    return { status: 200, url: url, caption: data?.title.replace("Instagram Post", "") };
+    return { status: 200, url: url, caption: "" };
   }
 }
 
