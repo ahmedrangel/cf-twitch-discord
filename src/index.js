@@ -1790,6 +1790,7 @@ router.get("/dc/tiktok-video-scrapper?", async (req, env) => {
       const device_id = getRandom({ min: "7250000000000000000", max: "7351147085025500000" });
       const known_iid = [
         "7318518857994389254",
+        "7128673685729396482"
       ];
       const iid = known_iid[Math.floor(Math.random() * known_iid.length)];
       const response = await fetch(`${api_host}/aweme/v1/feed/?aweme_id=${tt_id}&iid=${iid}&device_id=${device_id}&version_code=${version_code}`, {
