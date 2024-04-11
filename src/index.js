@@ -2207,8 +2207,8 @@ router.get("/twitch/subscribers/:user/total", async (req, env) => {
   });
   const html = await response.text();
   const $ = cheerio.load(html);
-  const divSubs = $('.g-x-s-label.color-gold');
-  const firstSpan = divSubs.parent().find('span').first();
+  const divSubs = $(".g-x-s-label.color-gold");
+  const firstSpan = divSubs.parent().find("span").first();
   const total = firstSpan.text();
   return new JsonResponse({ total });
 });
@@ -2221,9 +2221,9 @@ export default {
   },
   async scheduled(event, env, ctx) {
     switch (event.cron) {
-    case "*/3 * * * *":
-      await lolChampTagAdder(env);
-      break;
+      case "*/3 * * * *":
+        await lolChampTagAdder(env);
+        break;
     }
   }
 };

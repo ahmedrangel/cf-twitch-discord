@@ -7,54 +7,54 @@ class riotApi {
   RegionNameRouting (region) {
     region = region.toLowerCase();
     switch (region) {
-    case "lan":
-      region = "la1";
-      break;
-    case "las":
-      region = "la2";
-      break;
-    case "na":
-      region = "na1";
-      break;
-    case "euw":
-      region = "euw1";
-      break;
-    case "eune":
-      region = "eun1";
-      break;
-    case "br":
-      region = "br1";
-      break;
-    case "kr":
-      region = "kr";
-      break;
-    case "jp":
-      region = "jp1";
-      break;
-    case "oce":
-      region = "oc1";
-      break;
-    case "tr":
-      region = "tr1";
-      break;
-    case "ru":
-      region = "ru";
-      break;
-    case "ph":
-      region = "ph2";
-      break;
-    case "th":
-      region = "th2";
-      break;
-    case "tw":
-      region = "tw2";
-      break;
-    case "vn":
-      region = "vn2";
-      break;
-    default:
-      region = false;
-      break;
+      case "lan":
+        region = "la1";
+        break;
+      case "las":
+        region = "la2";
+        break;
+      case "na":
+        region = "na1";
+        break;
+      case "euw":
+        region = "euw1";
+        break;
+      case "eune":
+        region = "eun1";
+        break;
+      case "br":
+        region = "br1";
+        break;
+      case "kr":
+        region = "kr";
+        break;
+      case "jp":
+        region = "jp1";
+        break;
+      case "oce":
+        region = "oc1";
+        break;
+      case "tr":
+        region = "tr1";
+        break;
+      case "ru":
+        region = "ru";
+        break;
+      case "ph":
+        region = "ph2";
+        break;
+      case "th":
+        region = "th2";
+        break;
+      case "tw":
+        region = "tw2";
+        break;
+      case "vn":
+        region = "vn2";
+        break;
+      default:
+        region = false;
+        break;
     }
     return region;
   }
@@ -147,50 +147,50 @@ class riotApi {
   tierCase (option) {
     let tier = {};
     switch (option) {
-    case "IRON":
-      tier.short = "I";
-      tier.full = "Hierro";
-      break;
-    case "BRONZE":
-      tier.short = "B";
-      tier.full = "Bronce";
-      break;
-    case "SILVER":
-      tier.short = "S";
-      tier.full = "Plata";
-      break;
-    case "GOLD":
-      tier.short = "G";
-      tier.full = "Oro";
-      break;
-    case "PLATINUM":
-      tier.short = "P";
-      tier.full = "Platino";
-      break;
-    case "EMERALD":
-      tier.short = "E";
-      tier.full = "Esmeralda";
-      break;
-    case "DIAMOND":
-      tier.short = "D";
-      tier.full = "Diamante";
-      break;
-    case "MASTER":
-      tier.short = "M";
-      tier.full = "Maestro";
-      break;
-    case "GRANDMASTER":
-      tier.short = "GM";
-      tier.full = "Gran Maestro";
-      break;
-    case "CHALLENGER":
-      tier.short = "CH";
-      tier.full = "Retador";
-      break;
-    default:
-      tier.short = "Unranked";
-      tier.full = "Unranked";
-      break;
+      case "IRON":
+        tier.short = "I";
+        tier.full = "Hierro";
+        break;
+      case "BRONZE":
+        tier.short = "B";
+        tier.full = "Bronce";
+        break;
+      case "SILVER":
+        tier.short = "S";
+        tier.full = "Plata";
+        break;
+      case "GOLD":
+        tier.short = "G";
+        tier.full = "Oro";
+        break;
+      case "PLATINUM":
+        tier.short = "P";
+        tier.full = "Platino";
+        break;
+      case "EMERALD":
+        tier.short = "E";
+        tier.full = "Esmeralda";
+        break;
+      case "DIAMOND":
+        tier.short = "D";
+        tier.full = "Diamante";
+        break;
+      case "MASTER":
+        tier.short = "M";
+        tier.full = "Maestro";
+        break;
+      case "GRANDMASTER":
+        tier.short = "GM";
+        tier.full = "Gran Maestro";
+        break;
+      case "CHALLENGER":
+        tier.short = "CH";
+        tier.full = "Retador";
+        break;
+      default:
+        tier.short = "Unranked";
+        tier.full = "Unranked";
+        break;
     }
     return tier;
   }
@@ -198,21 +198,21 @@ class riotApi {
   rankCase (option) {
     let rank;
     switch (option) {
-    case "I":
-      rank = "1";
-      break;
-    case "II":
-      rank = "2";
-      break;
-    case "III":
-      rank = "3";
-      break;
-    case "IV":
-      rank = "4";
-      break;
-    default:
-      rank = "";
-      break;
+      case "I":
+        rank = "1";
+        break;
+      case "II":
+        rank = "2";
+        break;
+      case "III":
+        rank = "3";
+        break;
+      case "IV":
+        rank = "4";
+        break;
+      default:
+        rank = "";
+        break;
     }
     return rank;
   }
@@ -230,90 +230,90 @@ class riotApi {
   queueCase (option) {
     let queue = {};
     switch (option) {
-    case 0:
-      queue.profile_rank_type = "RANKED_SOLO_5x5";
-      queue.queue_name = "CUSTOM";
-      queue.full_name = "Custom";
-      queue.short_name = "Custom";
-      break;
-    case 420:
-      queue.profile_rank_type = "RANKED_SOLO_5x5";
-      queue.queue_name = "SOLO/DUO-R";
-      queue.full_name = "Solo/Duo";
-      queue.short_name = "SoloQ";
-      break;
-    case 440:
-      queue.profile_rank_type = "RANKED_FLEX_SR";
-      queue.queue_name = "FLEX-R";
-      queue.full_name = "Flexible";
-      queue.short_name = "Flex";
-      break;
-    case 450:
-      queue.profile_rank_type = "RANKED_SOLO_5x5";
-      queue.queue_name = "ARAM";
-      queue.full_name = "ARAM";
-      queue.short_name = "ARAM";
-      break;
-    case 400:
-      queue.profile_rank_type = "RANKED_SOLO_5x5";
-      queue.queue_name = "NORMAL";
-      queue.full_name = "Normal";
-      queue.short_name = "Normal";
-      break;
-    case 430:
-      queue.profile_rank_type = "RANKED_SOLO_5x5";
-      queue.queue_name = "NORMAL";
-      queue.full_name = "Normal";
-      queue.short_name = "Normal";
-      break;
-    case 490:
-      queue.profile_rank_type = "RANKED_SOLO_5x5";
-      queue.queue_name = "NORMAL (QUICK)";
-      queue.full_name = "Normal (Quickplay)";
-      queue.short_name = "Normal (Q)";
-      break;
-    case 700:
-      queue.profile_rank_type = "RANKED_SOLO_5x5";
-      queue.queue_name = "CLASH";
-      queue.full_name = "Clash";
-      queue.short_name = "Clash";
-      break;
-    case 720:
-      queue.profile_rank_type = "RANKED_SOLO_5x5";
-      queue.queue_name = "ARAM CLASH";
-      queue.full_name = "ARAM Clash";
-      queue.short_name = "ARAM Clash";
-      break;
-    case 900:
-      queue.profile_rank_type = "RANKED_SOLO_5x5";
-      queue.queue = "ARURF";
-      queue.full_name = "All Random URF";
-      queue.short_name = "ARURF";
-      break;
-    case 1020:
-      queue.profile_rank_type = "RANKED_SOLO_5x5";
-      queue.queue = "ONE FOR ALL";
-      queue.full_name = "Uno Para Todos";
-      queue.short_name = "One4All";
-      break;
-    case 1300:
-      queue.profile_rank_type = "RANKED_SOLO_5x5";
-      queue.queue = "FRENESÍ";
-      queue.full_name = "Frenesí en el Nexo";
-      queue.short_name = "Frenesí";
-      break;
-    case 1700:
-      queue.profile_rank_type = "RANKED_SOLO_5x5";
-      queue.queue = "ARENA";
-      queue.full_name = "Arena";
-      queue.short_name = "Arena";
-      break;
-    default:
-      queue.profile_rank_type = "RANKED_SOLO_5x5";
-      queue.queue = "";
-      queue.full_name = "";
-      queue.short_name = "";
-      break;
+      case 0:
+        queue.profile_rank_type = "RANKED_SOLO_5x5";
+        queue.queue_name = "CUSTOM";
+        queue.full_name = "Custom";
+        queue.short_name = "Custom";
+        break;
+      case 420:
+        queue.profile_rank_type = "RANKED_SOLO_5x5";
+        queue.queue_name = "SOLO/DUO-R";
+        queue.full_name = "Solo/Duo";
+        queue.short_name = "SoloQ";
+        break;
+      case 440:
+        queue.profile_rank_type = "RANKED_FLEX_SR";
+        queue.queue_name = "FLEX-R";
+        queue.full_name = "Flexible";
+        queue.short_name = "Flex";
+        break;
+      case 450:
+        queue.profile_rank_type = "RANKED_SOLO_5x5";
+        queue.queue_name = "ARAM";
+        queue.full_name = "ARAM";
+        queue.short_name = "ARAM";
+        break;
+      case 400:
+        queue.profile_rank_type = "RANKED_SOLO_5x5";
+        queue.queue_name = "NORMAL";
+        queue.full_name = "Normal";
+        queue.short_name = "Normal";
+        break;
+      case 430:
+        queue.profile_rank_type = "RANKED_SOLO_5x5";
+        queue.queue_name = "NORMAL";
+        queue.full_name = "Normal";
+        queue.short_name = "Normal";
+        break;
+      case 490:
+        queue.profile_rank_type = "RANKED_SOLO_5x5";
+        queue.queue_name = "NORMAL (QUICK)";
+        queue.full_name = "Normal (Quickplay)";
+        queue.short_name = "Normal (Q)";
+        break;
+      case 700:
+        queue.profile_rank_type = "RANKED_SOLO_5x5";
+        queue.queue_name = "CLASH";
+        queue.full_name = "Clash";
+        queue.short_name = "Clash";
+        break;
+      case 720:
+        queue.profile_rank_type = "RANKED_SOLO_5x5";
+        queue.queue_name = "ARAM CLASH";
+        queue.full_name = "ARAM Clash";
+        queue.short_name = "ARAM Clash";
+        break;
+      case 900:
+        queue.profile_rank_type = "RANKED_SOLO_5x5";
+        queue.queue = "ARURF";
+        queue.full_name = "All Random URF";
+        queue.short_name = "ARURF";
+        break;
+      case 1020:
+        queue.profile_rank_type = "RANKED_SOLO_5x5";
+        queue.queue = "ONE FOR ALL";
+        queue.full_name = "Uno Para Todos";
+        queue.short_name = "One4All";
+        break;
+      case 1300:
+        queue.profile_rank_type = "RANKED_SOLO_5x5";
+        queue.queue = "FRENESÍ";
+        queue.full_name = "Frenesí en el Nexo";
+        queue.short_name = "Frenesí";
+        break;
+      case 1700:
+        queue.profile_rank_type = "RANKED_SOLO_5x5";
+        queue.queue = "ARENA";
+        queue.full_name = "Arena";
+        queue.short_name = "Arena";
+        break;
+      default:
+        queue.profile_rank_type = "RANKED_SOLO_5x5";
+        queue.queue = "";
+        queue.full_name = "";
+        queue.short_name = "";
+        break;
 
     }
     return queue;

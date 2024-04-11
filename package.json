@@ -6,7 +6,7 @@
   "scripts": {
     "start": "wrangler dev",
     "worker:deploy": "wrangler deploy",
-    "lint": "eslint --ext .ts,.js,.vue --fix --ignore-path .gitignore .",
+    "lint": "eslint --fix .",
     "tail": "wrangler tail" 
   },
   "dependencies": {
@@ -14,12 +14,12 @@
     "buffer": "^6.0.3",
     "cheerio": "1.0.0-rc.12",
     "detectlanguage": "^2.1.0",
-    "eslint": "^8.57.0",
-    "itty-router": "^5.0.5",
+    "eslint": "^9.0.0",
+    "itty-router": "^5.0.12",
     "jsonpath": "^1.1.1",
-    "openai": "^4.32.0"
+    "openai": "^4.33.0"
   },
   "devDependencies": {
-    "wrangler": "^3.42.0"
+    "wrangler": "^3.49.0"
   }
 }
