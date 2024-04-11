@@ -1786,14 +1786,24 @@ router.get("/dc/tiktok-video-scrapper?", async (req, env) => {
       } else {
         tt_id = obtenerIDDesdeURL(url);
       }
-      const version_code = "300904";
       const device_id = getRandom({ min: "7250000000000000000", max: "7351147085025500000" });
       const known_iid = [
         "7318518857994389254",
         "7128673685729396482"
       ];
       const iid = known_iid[Math.floor(Math.random() * known_iid.length)];
-      const response = await fetch(`${api_host}/aweme/v1/feed/?aweme_id=${tt_id}&iid=${iid}&device_id=${device_id}&version_code=${version_code}`, {
+      const params = new URLSearchParams({
+        aweme_id: tt_id,
+        iid: iid,
+        device_id: device_id,
+        version_code: "300904",
+        channel: "googleplay",
+        app_name: "musical_ly",
+        device_platform: "android",
+        device_type: "ASUS_Z01QD",
+        os_version: "9"
+      });
+      const response = await fetch(`${api_host}/aweme/v1/feed/?${params}`, {
         headers: {
           "Accept": "application/json",
           "User-Agent": randUA("mobile")
