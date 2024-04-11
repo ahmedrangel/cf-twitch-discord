@@ -1758,7 +1758,7 @@ router.get("/dc/facebook-video-scrapper?", async (req, env) => {
 router.get("/dc/tiktok-video-scrapper?", async (req, env) => {
   const { query } = req;
   const url = decodeURIComponent(query.url);
-  const api_host = "https://api22-normal-c-useast2a.tiktokv.com";
+  const api_host = "https://api22-normal-c-alisg.tiktokv.com";
   let count = 0;
   let maxTries = 3;
   if (url.includes("tiktok.com/")) {
@@ -1786,12 +1786,10 @@ router.get("/dc/tiktok-video-scrapper?", async (req, env) => {
       } else {
         tt_id = obtenerIDDesdeURL(url);
       }
-      const version_code = ("34.1.2").split(".").map(v => v.padStart(2, "0")).join(".");
+      const version_code = "300904";
       const device_id = getRandom({ min: "7250000000000000000", max: "7351147085025500000" });
       const known_iid = [
-        "7351144126450059040",
-        "7351149742343391009",
-        "7351153174894626592",
+        "7318518857994389254",
       ];
       const iid = known_iid[Math.floor(Math.random() * known_iid.length)];
       const response = await fetch(`${api_host}/aweme/v1/feed/?aweme_id=${tt_id}&iid=${iid}&device_id=${device_id}&version_code=${version_code}`, {
