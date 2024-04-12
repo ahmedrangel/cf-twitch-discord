@@ -1626,7 +1626,7 @@ router.get("/dc/instagram-video-scrapper?", async (req, env) => {
       console.log("Invalid url");
       return JSON.stringify({status: 400});
     } else {
-      const instagram = new igApi;
+      const instagram = new igApi(env.ig_proxy_host);
       const items = await instagram.getMedia(url.includes("/stories") ? url : `https://instagram.com/p/${idUrl}`, "video");
       const video_url = items.url;
       const json_response = {
