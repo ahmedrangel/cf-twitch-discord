@@ -1875,12 +1875,10 @@ router.get("/dc/twitter-video-scrapper?", async (req, env) => {
       return entries[0];
     };
     const data = entries();
-    console.log(data);
     if (data?.extended_entities?.media[0]?.video_info) {
       const videos = data.extended_entities.media[0].video_info.variants;
       const short_url = data.extended_entities.media[0].url;
       const caption = data.full_text.replace(/https:\/\/t\.co\/\w+/g, "").trim();
-      console.log(videos);
       let maxBitrate = 0;
       let video_url = "";
       for (const video of videos) {
