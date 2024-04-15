@@ -27,8 +27,8 @@ class igApi {
       const data = await response.json();
       return {
         status: 200,
-        url: data?.video_versions[0]?.url,
-        caption: data?.caption?.text
+        url: data?.video_url,
+        caption: data?.edge_media_to_caption?.edges[0]?.node?.text
       };
     } catch(e) {
       const formData = new FormData();
