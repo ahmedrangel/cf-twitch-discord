@@ -319,6 +319,32 @@ class riotApi {
     return queue;
   }
 
+  queueToId (queue) {
+    const q = queue?.toLowerCase();
+    let id;
+    switch (q) {
+      case "soloq":
+        id = 420;
+        break;
+      case "flex":
+        id = 440;
+        break;
+      case "aram":
+        id = 450;
+        break;
+      case "normal":
+        id = 400;
+        break;
+      case "quickplay":
+        id = 490;
+        break;
+      default:
+        id = null;
+        break;
+    }
+    return id;
+  }
+
   championRole (id, merakiRates) {
     const rates = merakiRates.data[id];
     const propertyName = Object.keys(rates).reduce((maxProperty, currentProperty) => {

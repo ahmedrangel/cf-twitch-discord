@@ -1310,6 +1310,7 @@ router.get("/lol/spectator/:region/:name/:tag", async (req, env,) => {
 // LoL Profile (with Riot ID)
 router.get("/lol/profile/:region/:name/:tag", async (req, env,) => {
   const { name, tag } = req.params;
+  const { filter } = req.query;
   const region = (req.params.region).toLowerCase();
   let profile_data;
   const rank_profile = [], match_history = [];
@@ -1369,7 +1370,7 @@ router.get("/lol/profile/:region/:name/:tag", async (req, env,) => {
     return soloIndex - flexIndex;
   });
   profile_data.rankProfile = rank_profile;
-  const matchesId = await riot.getMatches(puuid, cluster, 10);
+  const matchesId = await riot.getMatches(puuid, cluster, 10, riot.queueToId(filter));
   console.log(matchesId);
   const champion_list = await fetch(`https://ddragon.leagueoflegends.com/cdn/${ddversions.n.champion}/data/es_MX/champion.json`);
   const champion_data = await champion_list.json();
