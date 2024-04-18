@@ -24,21 +24,21 @@ importers:
         specifier: ^9.0.0
         version: 9.0.0
       itty-router:
-        specifier: ^5.0.12
-        version: 5.0.12
+        specifier: ^5.0.15
+        version: 5.0.15
       jsonpath:
         specifier: ^1.1.1
         version: 1.1.1
       openai:
-        specifier: ^4.33.0
-        version: 4.33.0
+        specifier: ^4.37.1
+        version: 4.37.1
       snapsave-media-downloader:
-        specifier: ^1.0.3
-        version: 1.0.3(typescript@5.4.5)
+        specifier: ^1.0.4
+        version: 1.0.4(typescript@5.4.5)
     devDependencies:
       wrangler:
-        specifier: ^3.49.0
-        version: 3.49.0
+        specifier: ^3.51.0
+        version: 3.51.0
 
 packages:
 
@@ -371,11 +371,6 @@ packages:
     resolution: {integrity: sha512-k+iyHEuPgSw6SbuDpGQM+06HQUa04DZ3o+F6CSzXMvvI5KMvnaEqXe+YVe555R9nn6GPt404fos4wcgpw12SDA==}
     engines: {node: '>=0.4.0'}
 
-  acorn@8.10.0:
-    resolution: {integrity: sha512-F0SAmZ8iUtS//m8DmCTA0jlh6TDKkHQyK6xc6V4KDTyZKA9dnvX9/3sRTVQrWm79glUAZbnmmNcdYwUIHWVybw==}
-    engines: {node: '>=0.4.0'}
-    hasBin: true
-
   acorn@8.11.3:
     resolution: {integrity: sha512-Y9rRfJG5jcKOE0CLisYbojUjIrIEE7AGMzA/Sm4BslANhbS+cDMpgBdcPT91oJ7OuJ9hYJBx59RjbhxVnrF8Xg==}
     engines: {node: '>=0.4.0'}
@@ -481,10 +476,6 @@ packages:
   cheerio@1.0.0-rc.12:
     resolution: {integrity: sha512-VqR8m68vM46BNnuZ5NtnGBKIE/DfN0cRIzg9n40EIq9NOv90ayxLBXA8fXC5gquFRGJSTRqBq25Jt2ECLR431Q==}
     engines: {node: '>= 6'}
-
-  chokidar@3.5.3:
-    resolution: {integrity: sha512-Dr3sfKRP6oTcjf2JmUmFJfeVMvXBdegxB0iVQ5eb2V10uFJUCAS8OByZdVAyVb8xXNz3GjjTgj9kLWsZTqE6kw==}
-    engines: {node: '>= 8.10.0'}
 
   chokidar@3.6.0:
     resolution: {integrity: sha512-7VT13fmjotKpGipCW9JEQAusEPE+Ei8nl6/g4FBAmIm0GOOLMua9NDDo/DWp0ZAxCr3cPq5ZpBqmPAQgDda2Pw==}
@@ -911,8 +902,8 @@ packages:
   isexe@2.0.0:
     resolution: {integrity: sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==}
 
-  itty-router@5.0.12:
-    resolution: {integrity: sha512-mL+QBfOhEeclImvZuZZpJUozsEf3wjlyIxvYNgAtOfcLKiQ23kE7S9ZTooDEbl7tUabU3dbbjtiSfOiCloWT9w==}
+  itty-router@5.0.15:
+    resolution: {integrity: sha512-TGpdnAYdzfUWROKBGDXi2d44taRv1j2B1QG0Yt3NeUhwp8QkfdskF2VfZnFHgUMvYx0YpN99ymACq2mVJbLOIg==}
 
   jiti@1.21.0:
     resolution: {integrity: sha512-gFqAIbuKyyso/3G2qhiO2OM6shY6EPP/R0+mkDbyspxKazh8BXDC5FiFsUjlczgdNz/vfra0da2y+aHrusLG/Q==}
@@ -999,8 +990,8 @@ packages:
     resolution: {integrity: sha512-vqiC06CuhBTUdZH+RYl8sFrL096vA45Ok5ISO6sE/Mr1jRbGH4Csnhi8f3wKVl7x8mO4Au7Ir9D3Oyv1VYMFJw==}
     engines: {node: '>=12'}
 
-  miniflare@3.20240405.0:
-    resolution: {integrity: sha512-OlC/96bIJA9FHvcjQMe4ZLU8FMXp4d2cGuIKOK7TxCmYRZqdVDLvVuOPUatWO8z9EtjWgiP9eGmY7O0KEdblvw==}
+  miniflare@3.20240405.2:
+    resolution: {integrity: sha512-n/V5m9GVMN37U5gWdrNXKx2d1icLXtcIKcxWtLslH4RTaebZJdSRmp12UHyuQsKlaSpTkNqyzLVtCEgt2bhRSA==}
     engines: {node: '>=16.13'}
     hasBin: true
 
@@ -1115,8 +1106,8 @@ packages:
     resolution: {integrity: sha512-OS+QTnw1/4vrf+9hh1jc1jnYjzSG4ttTBB8UxOwAnInG3Uo4ssetzC1ihqaIHjLJnA5GGlRl6QlZXOTQhRBUvg==}
     engines: {node: '>=14.16'}
 
-  openai@4.33.0:
-    resolution: {integrity: sha512-Sh4KvplkvkAREuhb8yZpohqsOo08cBBu6LNWLD8YyMxe8yCxbE+ouJYUs1X2oDPrzQGANj0rFNQYiwW9gWLBOg==}
+  openai@4.37.1:
+    resolution: {integrity: sha512-YVuhylpDeTNCWgsfhZe38+c4dDWZuW9VgzNY/sdYiNt6K9pvijroyYENp8YGEUHnuIAKtsLneZX9Qb/iB5XHkw==}
     hasBin: true
 
   optionator@0.8.3:
@@ -1273,8 +1264,8 @@ packages:
     resolution: {integrity: sha512-g9Q1haeby36OSStwb4ntCGGGaKsaVSjQ68fBxoQcutl5fS1vuY18H3wSt3jFyFtrkx+Kz0V1G85A4MyAdDMi2Q==}
     engines: {node: '>=8'}
 
-  snapsave-media-downloader@1.0.3:
-    resolution: {integrity: sha512-rBAODQA/IszFbrPwjPhY/dGASIZZzfG5GKRb0UCR83foNq/X/ZJHIuL7d8xE/c//zTTmTB2AhPzD5oqA+zpGqw==}
+  snapsave-media-downloader@1.0.4:
+    resolution: {integrity: sha512-H8OegnkQqXbqa0DMGDq3uCdbVZS3rFKvldCvfv8jYkQCXyqann7esreiH+SL6kTgdHOEUL5f9FwNZ8W/uhrYFw==}
 
   source-map@0.6.1:
     resolution: {integrity: sha512-UjgapumWlbMhkBgzT7Ykc5YXUT46F0iKu8SGXq0bcwP5dz/h0Plj6enJqjz1Zbq2l5WaqYnrVbwWOWMyF3F47g==}
@@ -1424,8 +1415,8 @@ packages:
     engines: {node: '>=16'}
     hasBin: true
 
-  wrangler@3.49.0:
-    resolution: {integrity: sha512-j+TfMxZ2CCMJtoipoLaWOjNlLoOyR5/W9Cdl4w7XBLh765SerAh71IiqvQMlgUNfIhz+/esvTjRWZ/3q8Qco3g==}
+  wrangler@3.51.0:
+    resolution: {integrity: sha512-1WVVbLTWeNP/djFjfctUkrMKbOdWyp/MrRAK6tefW3IgvQV8dEA9WU36GUIhnFhWLTQ2zHfg7jbaoP8n6ticrQ==}
     engines: {node: '>=16.17.0'}
     hasBin: true
     peerDependencies:
@@ -1744,8 +1735,6 @@ snapshots:
 
   acorn-walk@8.2.0: {}
 
-  acorn@8.10.0: {}
-
   acorn@8.11.3: {}
 
   agentkeepalive@4.5.0:
@@ -1889,18 +1878,6 @@ snapshots:
       htmlparser2: 8.0.2
       parse5: 7.1.2
       parse5-htmlparser2-tree-adapter: 7.0.0
-
-  chokidar@3.5.3:
-    dependencies:
-      anymatch: 3.1.3
-      braces: 3.0.2
-      glob-parent: 5.1.2
-      is-binary-path: 2.1.0
-      is-glob: 4.0.3
-      normalize-path: 3.0.0
-      readdirp: 3.6.0
-    optionalDependencies:
-      fsevents: 2.3.3
 
   chokidar@3.6.0:
     dependencies:
@@ -2279,7 +2256,7 @@ snapshots:
       array-union: 2.1.0
       dir-glob: 3.0.1
       fast-glob: 3.3.2
-      ignore: 5.2.4
+      ignore: 5.3.1
       merge2: 1.4.1
       slash: 3.0.0
 
@@ -2364,7 +2341,7 @@ snapshots:
 
   isexe@2.0.0: {}
 
-  itty-router@5.0.12: {}
+  itty-router@5.0.15: {}
 
   jiti@1.21.0: {}
 
@@ -2437,10 +2414,10 @@ snapshots:
 
   mimic-fn@4.0.0: {}
 
-  miniflare@3.20240405.0:
+  miniflare@3.20240405.2:
     dependencies:
       '@cspotcode/source-map-support': 0.8.1
-      acorn: 8.10.0
+      acorn: 8.11.3
       acorn-walk: 8.2.0
       capnp-ts: 0.7.0
       exit-hook: 2.2.1
@@ -2557,7 +2534,7 @@ snapshots:
       is-inside-container: 1.0.0
       is-wsl: 2.2.0
 
-  openai@4.33.0:
+  openai@4.37.1:
     dependencies:
       '@types/node': 18.19.4
       '@types/node-fetch': 2.6.10
@@ -2710,7 +2687,7 @@ snapshots:
 
   slash@3.0.0: {}
 
-  snapsave-media-downloader@1.0.3(typescript@5.4.5):
+  snapsave-media-downloader@1.0.4(typescript@5.4.5):
     dependencies:
       changelogen: 0.5.5
       cheerio: 1.0.0-rc.12
@@ -2851,15 +2828,15 @@ snapshots:
       '@cloudflare/workerd-linux-arm64': 1.20240405.0
       '@cloudflare/workerd-windows-64': 1.20240405.0
 
-  wrangler@3.49.0:
+  wrangler@3.51.0:
     dependencies:
       '@cloudflare/kv-asset-handler': 0.3.1
       '@esbuild-plugins/node-globals-polyfill': 0.2.3(esbuild@0.17.19)
       '@esbuild-plugins/node-modules-polyfill': 0.2.2(esbuild@0.17.19)
       blake3-wasm: 2.1.5
-      chokidar: 3.5.3
+      chokidar: 3.6.0
       esbuild: 0.17.19
-      miniflare: 3.20240405.0
+      miniflare: 3.20240405.2
       nanoid: 3.3.6
       path-to-regexp: 6.2.1
       resolve: 1.22.8
