@@ -22,9 +22,10 @@ class igApi {
     }
 
     const response = await fetch(`${this.domain}/ig/post?url=${link}`);
-    const data = await response.json();
 
-    if (!data.video_url) {
+    const data = response.ok ? await response.json() : null;
+
+    if (!data?.video_url || !response.ok) {
       const { data } = await snapsave(link);
       console.log(data);
       return { status: 200, url: data[0]?.url, caption: "" };
