@@ -7,7 +7,7 @@
     "start": "wrangler dev",
     "worker:deploy": "wrangler deploy",
     "lint": "eslint --fix .",
-    "tail": "wrangler tail" 
+    "tail": "wrangler tail"
   },
   "dependencies": {
     "@ahmedrangel/rand-user-agent": "^2.0.14",
@@ -17,7 +17,8 @@
     "eslint": "^9.0.0",
     "itty-router": "^5.0.12",
     "jsonpath": "^1.1.1",
-    "openai": "^4.33.0"
+    "openai": "^4.33.0",
+    "snapsave-media-downloader": "^1.0.3"
   },
   "devDependencies": {
     "wrangler": "^3.49.0"
