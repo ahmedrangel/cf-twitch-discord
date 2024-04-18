@@ -25,9 +25,9 @@ class igApi {
 
     const data = response.ok ? await response.json() : null;
 
-    if (!data?.video_url || !response.ok) {
+    if (!data?.video_url || !response.ok || !data) {
       const { data } = await snapsave(link);
-      console.log(data);
+      if (!data) return { status: 404 };
       return { status: 200, url: data[0]?.url, caption: "" };
     }
 

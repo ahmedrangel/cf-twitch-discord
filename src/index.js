@@ -1634,7 +1634,7 @@ router.get("/dc/instagram-video-scrapper?", async (req, env) => {
         video_url: video_url,
         short_url: url.replace(/\?.*$/, "").replace("www.",""),
         caption: items?.caption,
-        status: 200
+        status: items.status
       };
       return JSON.stringify(json_response);
     }
