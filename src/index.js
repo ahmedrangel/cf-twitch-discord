@@ -757,7 +757,7 @@ router.get("/dc/image-variation/:url", async (req, env) => {
 // Twitch Auth that redirect to oauth callback to save authenticated users
 router.get("/twitch/auth", async (req, env) => {
   const { scopes } = req.query;
-  const allScopes = "user:read:email bits:read channel:manage:broadcast channel:read:subscriptions channel:manage:moderators moderator:read:chatters moderator:manage:shoutouts moderator:read:followers user:read:follows moderation:read moderator:manage:banned_users";
+  const allScopes = "user:read:email bits:read channel:manage:broadcast channel:read:subscriptions channel:manage:moderators moderator:read:chatters moderator:manage:shoutouts moderator:read:followers user:read:follows moderation:read moderator:manage:banned_users channel:manage:vips";
   const redirect_uri = env.WORKER_URL + "/twitch/user-oauth";
   const dest = new URL("https://id.twitch.tv/oauth2/authorize?"); // destination
   dest.searchParams.append("client_id", env.client_id);
@@ -868,13 +868,15 @@ router.get("/addmod/:user_id/:channel_id/:touser", async (req, env) => {
         const add_mod = await twitch.AddMod(access_token, users_keys.name, to_user);
         if (add_mod.status === 400 && to_user !== false) {
           console.log(add_mod);
-          return "Error. El usuario ya es moderador del canal.";
+          return "Error al intentar agregar como moderador.";
         } else if (add_mod.status === 422) {
           return "Error. Este usuario es VIP. Para convertirlo en moderador primero debe remover el VIP.";
         } else if (to_user === false) {
           return "Error. Usuario no encontrado.";
-        } else {
+        } else if (add_mod.status === 204) {
           return `El usuario: @${touser}, ha obtenido privilegios de moderador.`;
+        } else {
+          return "Error al intentar agregar como moderador.";
         }
       }
     })))).filter(users_keys => users_keys);
@@ -903,8 +905,77 @@ router.get("/unmod/:user_id/:channel_id/:touser", async (req, env) => {
           return "Error. Este usuario no es moderador";
         } else if (to_user === false) {
           return "Error. Usuario no encontrado.";
-        } else {
+        } else if (unmod.status === 204) {
           return `El usuario: @${touser}, ha dejado de ser moderador`;
+        } else {
+          return "Error al intentar remover como moderador.";
+        }
+      }
+    })))).filter(users_keys => users_keys);
+    console.log (response);
+  } else {
+    response = "No tienes permiso para realizar esta acción.";
+  }
+  return new JsResponse(response);
+});
+
+// Nightbot command: Add Vip
+router.get("/addvip/:user_id/:channel_id/:touser", async (req, env) => {
+  const { user_id, channel_id, touser } = req.params;
+  const ahmed = "71492353";
+  let response = "";
+  const twitch = new twitchApi(env.client_id, env.client_secret, env.NB);
+  if (user_id == ahmed || user_id == channel_id) {
+    const auth_list = (await env.AUTH_USERS.list()).keys;
+    response = (await Promise.all((auth_list.map(async(users_keys) => {
+      if (channel_id == users_keys.name) {
+        const access_token = await twitch.RefreshToken(users_keys.metadata.value);
+        console.log(touser);
+        const to_user = await twitch.getId(touser);
+        const add_vip = await twitch.AddVip(access_token, users_keys.name, to_user);
+        if (add_vip.status === 400 && to_user !== false) {
+          console.log(add_vip);
+          return "Error al intentar agregar como VIP";
+        } else if (add_vip.status === 422) {
+          return "Error al intentar agregar como VIP . Este usuario ya es VIP o es Moderador.";
+        } else if (add_vip.status === 409) {
+          return "Error. Este canal no tiene slots de VIP disponibles.";
+        } else if (to_user === false) {
+          return "Error. Usuario no encontrado.";
+        } else {
+          return `El usuario: @${touser}, ha obtenido VIP`;
+        }
+      }
+    })))).filter(users_keys => users_keys);
+    console.log (response);
+  } else {
+    response = "No tienes permiso para realizar esta acción.";
+  }
+  return new JsResponse(response);
+});
+
+// Nightbot command: Remove Vip
+router.get("/unvip/:user_id/:channel_id/:touser", async (req, env) => {
+  const { user_id, channel_id, touser } = req.params;
+  const ahmed = "71492353";
+  let response = "";
+  const twitch = new twitchApi(env.client_id, env.client_secret, env.NB);
+  if (user_id == ahmed || user_id == channel_id) {
+    const auth_list = (await env.AUTH_USERS.list()).keys;
+    response = (await Promise.all((auth_list.map(async(users_keys) => {
+      if (channel_id == users_keys.name) {
+        const access_token = await twitch.RefreshToken(users_keys.metadata.value);
+        console.log(touser);
+        const to_user = await twitch.getId(touser);
+        const unvip = await twitch.UnVip(access_token, users_keys.name, to_user);
+        if (unvip.status === 422 && to_user !== false) {
+          return "Error. Este usuario no es VIP";
+        } else if (to_user === false) {
+          return "Error. Usuario no encontrado.";
+        } else if (unvip.status === 204) {
+          return `El usuario: @${touser}, ha dejado de ser VIP`;
+        } else {
+          return "Error al intentar remover VIP";
         }
       }
     })))).filter(users_keys => users_keys);

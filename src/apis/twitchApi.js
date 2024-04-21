@@ -223,6 +223,36 @@ class twitchApi {
     return unmod;
   }
 
+  // Set Stream Vip, require user access token
+  async AddVip (user_access_token, channel_id, user_id) {
+    const api = `${this.API_BASE}/channels/vips?broadcaster_id=${channel_id}&user_id=${user_id}`;
+    const add_vip = await fetch(api, {
+      method: "POST",
+      headers: {
+        "Accept": "application/json",
+        "Client-ID": this.client_id,
+        "Authorization": "Bearer " + user_access_token,
+        "Content-Type": "application/json"
+      }
+    });
+    return add_vip;
+  }
+
+  // Remove Stream Vip, require user access token
+  async UnVip (user_access_token, channel_id, user_id) {
+    const api = `${this.API_BASE}/channels/vips?broadcaster_id=${channel_id}&user_id=${user_id}`;
+    const unvip = await fetch(api, {
+      method: "DELETE",
+      headers: {
+        "Accept": "application/json",
+        "Client-ID": this.client_id,
+        "Authorization": "Bearer " + user_access_token,
+        "Content-Type": "application/json"
+      }
+    });
+    return unvip;
+  }
+
   // Get chatters as mod or broadcaster, require user access token
   async getChatters (user_access_token, channel_id, mod_id) {
     const api = `${this.API_BASE}/chat/chatters?broadcaster_id=${channel_id}&moderator_id=${mod_id}`;
