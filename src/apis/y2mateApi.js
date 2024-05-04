@@ -24,7 +24,7 @@ class y2mateApi {
       });
       const data = await response.json();
       console.log(data);
-      const q720 = data?.links?.mp4["22"]?.k; // 720p
+      const q720 = data?.links?.mp4["22"]?.k; // 720p (shorts)
       const q480 = data?.links?.mp4["135"]?.k; // 480p
       const q360p = data?.links?.mp4["18"]?.k; // 360p
       const q240p = data?.links?.mp4["133"]?.k; // 240p
