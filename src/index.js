@@ -83,6 +83,35 @@ router.get("/kiss/:user/:channelID/:touser", async (req, env) => {
   }
 });
 
+// fuck v2 kick
+router.get("/kick/fuck/:user/:channel", async (req, env) => {
+  const { user, channel } = req.params;
+  const { touser } = req.query;
+  const user_lc = user.toLowerCase();
+  const channel_lc = channel.toLowerCase();
+  const touser_lc = touser.toLowerCase();
+
+  if (!touser) return new JsResponse("Error. Debes etiquetar con arroba (@) a alguien.");
+  const percent = getRandom({ max: 100 });
+  const select = await env.KB.prepare(`SELECT count FROM fuck WHERE user = '${touser_lc}' AND channel = '${channel_lc}'`).first();
+  if (user_lc === touser_lc) {
+    return new JsonResponse(`@${user} -> Cómo? estás intentando follarte a ti mismo?`);
+  } else if (percent < 40) {
+    const count = select?.count;
+    const counter = count ? count + 1 : 1;
+    if (!select) {
+      await env.KB.prepare(`INSERT INTO fuck (user, channel) VALUES ('${touser_lc}', '${channel_lc}')`).first();
+    } else {
+      await env.KB.prepare(`UPDATE fuck SET count = '${counter}', user = '${touser_lc}' WHERE user = '${touser_lc}' AND channel = '${channel_lc}'`).first();
+    }
+    const veces = counter === 1 ? "vez" : "veces";
+    const emote = nbFuck[Math.floor(Math.random()*nbFuck.length)];
+    return new JsonResponse(`@${user} -> Le has dado una follada a @${touser} . Ha sido follado ${counter} ${veces} en total.`);
+  } else {
+    return new JsonResponse(`@${user} -> @${touser} Se ha logrado escapar. Quizás la proxima vez.`);
+  }
+});
+
 // fuck
 router.get("/fuck/:user/:channelID/:touser", async (req, env) => {
   const { user, touser } = req.params;

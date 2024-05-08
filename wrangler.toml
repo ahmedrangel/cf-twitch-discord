@@ -33,5 +33,10 @@ binding = "NB"
 database_name = "nightbot"
 database_id = "584dd3e0-b9f8-40ed-b8a9-d4598da372de"
 
+[[d1_databases]]
+binding = "KB"
+database_name = "kickbot"
+database_id = "7b308ca8-f878-4608-bfe7-9ab76ba437ce"
+
 
 
