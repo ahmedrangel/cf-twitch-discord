@@ -2293,16 +2293,29 @@ router.get("/lol/elo?", async (req, env) => {
 
 router.get("/twitch/subscribers/:user/total", async (req, env) => {
   const { user } = req.params;
-  const response = await fetch(`https://twitchtracker.com/${user}/subscribers`, {
-    headers: {
-      "User-Agent": randUA("desktop")
+  let total;
+  let attempts = 0;
+
+  while (!total && attempts < 4) {
+    if (attempts > 0) await new Promise(r => setTimeout(r, 1000));
+    try {
+      const response = await fetch(`https://twitchtracker.com/${user}/subscribers`, {
+        headers: {
+          "User-Agent": randUA("desktop")
+        }
+      });
+      const html = await response.text();
+      const $ = cheerio.load(html);
+      const divSubs = $(".g-x-s-label.color-gold");
+      const firstSpan = divSubs.parent().find("span").first();
+      total = firstSpan.text();
+      console.log(total);
+    } catch (error) {
+      console.error("Error fetching data:", error);
     }
-  });
-  const html = await response.text();
-  const $ = cheerio.load(html);
-  const divSubs = $(".g-x-s-label.color-gold");
-  const firstSpan = divSubs.parent().find("span").first();
-  const total = firstSpan.text();
+    attempts++;
+  }
+
   return new JsonResponse({ total });
 });
 
