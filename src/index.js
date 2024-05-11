@@ -1968,7 +1968,7 @@ router.get("/dc/twitter-video-scrapper?", async (req, env) => {
       let maxBitrate = 0;
       let video_url = "";
       for (const video of videos) {
-        if (video.content_type === "video/mp4" && video.bitrate && video.bitrate > maxBitrate && video.url.includes("avc1")) {
+        if (video.content_type === "video/mp4" && video.bitrate && video.bitrate > maxBitrate && (video.url.includes("avc1") || video.url.includes("/pu/vid/") || video.url.includes(".mp4?tag=12"))) {
           maxBitrate = video.bitrate;
           video_url = video.url;
         }
