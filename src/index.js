@@ -1866,9 +1866,9 @@ router.get("/dc/tiktok-video-scrapper?", async (req, env) => {
     const scrap = async () => {
       const response = await fetch(`https://tikwm.com/api/?url=${url}`);
       const data = await response.json();
+      console.log(data);
       const video_url = data?.data?.play;
-      const caption = (data.data?.title).trim().replace(/\s+$/, "");
-      console.log(video_url);
+      const caption = (data.data?.title)?.trim().replace(/\s+$/, "");
       const json_response = {
         video_url: video_url,
         short_url: "https://m.tiktok.com/v/"+ data.data.id,
@@ -1884,6 +1884,7 @@ router.get("/dc/tiktok-video-scrapper?", async (req, env) => {
         console.log(error);
         if (count < maxTries) {
           count++;
+          await new Promise(resolve => setTimeout(resolve, 500));
           return await retryScrap();
         } else {
           const json_error = {status: 429};
