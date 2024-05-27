@@ -1801,7 +1801,7 @@ router.get("/dc/youtube-video-scrapper?", async (req, env) => {
   const { url, filter } = req.query;
   const youtube = new youtubeApi(env.youtube_token);
   const y2mate = new y2mateApi();
-  const regex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=|shorts\/)?|youtu\.be\/)([a-zA-Z0-9_-]+)/;
+  const regex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?|live)\/|\S*?[?&]v=|shorts\/)?|youtu\.be\/)([a-zA-Z0-9_-]+)/;
   const videoUrl = decodeURIComponent(url);
   const id = videoUrl.match(regex)[1];
   try {
