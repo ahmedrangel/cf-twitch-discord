@@ -678,7 +678,8 @@ router.get("/dc/image-generation/:prompt", async (req, env) => {
       size: "1024x1024",
       response_format: "b64_json"
     });
-    let openai_b64 = response.data.data[0].b64_json;
+
+    let openai_b64 = response.data[0].b64_json;
     const imgur = new imgurApi(env.imgur_client_id, env.imgur_client_secret);
     const auth_list = (await env.AUTH_USERS.list()).keys;
     const imgur_user = "imgur_ahmedrangel";
