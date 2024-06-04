@@ -10,17 +10,17 @@
     "tail": "wrangler tail"
   },
   "dependencies": {
-    "@ahmedrangel/rand-user-agent": "^2.0.15",
+    "@ahmedrangel/rand-user-agent": "^2.0.16",
     "buffer": "^6.0.3",
     "cheerio": "1.0.0-rc.12",
     "detectlanguage": "^2.1.0",
-    "eslint": "^9.2.0",
+    "eslint": "^9.4.0",
     "itty-router": "^5.0.17",
     "jsonpath": "^1.1.1",
-    "openai": "^4.44.0",
+    "openai": "^4.47.3",
     "snapsave-media-downloader": "^1.0.4"
   },
   "devDependencies": {
-    "wrangler": "^3.55.0"
+    "wrangler": "^3.58.0"
   }
 }
