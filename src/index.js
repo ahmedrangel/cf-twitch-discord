@@ -620,48 +620,48 @@ router.get("/ai/translate/:prompt", async (req, env) => {
 
 // Openai GPT-3.5 chatbot AI for Discord
 router.get("/dc/ai/:user/:prompt", async (req, env) => {
-  const prompt = decodeURIComponent(req.params.prompt);
-  const user = decodeURIComponent(req.params.user);
-  const botName = "Gemi-Chan";
-  const direct_prompt = `${user}: ${prompt}`;
-  const separator = "$SEP$";
-  console.log("User: "+user);
-  console.log("Prompt: "+prompt);
-  const openai = new OpenAI({
-    apiKey: env.openai_token,
-  });
-  let historyRaw = await env.R2gpt.get("history.txt");
-  let history;
-  historyRaw = await historyRaw?.text();
-  if (!historyRaw) {
-    history = "";
-    historyRaw = `${direct_prompt}${separator}${botName}:`;
-  } else {
-    const prompt_history = historyRaw.split(separator);
-    if (prompt_history.length > 7) {
-      prompt_history.shift();
+  try {
+    const prompt = decodeURIComponent(req.params.prompt);
+    const user = decodeURIComponent(req.params.user);
+    const botName = "Gemi-Chan";
+    console.log("User: "+user);
+    console.log("Prompt: "+prompt);
+    const openai = new OpenAI({
+      apiKey: env.openai_token,
+    });
+    let context = "";
+    const history = await env.R2gpt.get("history.json");
+    const historyJson = await history?.json() || [];
+    if (historyJson && historyJson.length) {
+      historyJson.length > 4 ? historyJson.shift() : null;
+      for (const h of historyJson) {
+        context = context + `${h.name}:${h.message}\n`;
+      }
     }
-    historyRaw = `${prompt_history.join(separator)}${direct_prompt}${separator}${botName}:`;
-    history = prompt_history.join("\n");
+    const contextPlusPrompt = `${context}${user}:${prompt}\n${botName}:`;
+    console.log(contextPlusPrompt);
+    const response = await openai.completions.create({
+      model: "gpt-3.5-turbo-instruct",
+      prompt: contextPlusPrompt,
+      temperature: 0.7,
+      max_tokens: 1200,
+      top_p: 1,
+      frequency_penalty: 0,
+      presence_penalty: 0,
+    });
+    const completion = (String.raw`${(response.choices[0].text)}`).replaceAll(/\\/g,"\\\\");
+    historyJson.push(
+      { name: user, message: prompt },
+      { name: botName, message: completion }
+    );
+    // Put R2
+    const httpHeaders = {"Content-Type": "application/json; charset=utf-8"};
+    const headers = new Headers(httpHeaders);
+    await env.R2gpt.put("history.json", JSON.stringify(historyJson), {httpMetadata: headers});
+    return new JsonResponse({ status: 200, message: response.choices[0].text });
+  } catch (e) {
+    return new JsonResponse({ status: 400 });
   }
-  const context = `${history}${direct_prompt}\n${botName}:`;
-  const response = await openai.completions.create({
-    model: "gpt-3.5-turbo-instruct",
-    prompt: context,
-    temperature: 0.7,
-    max_tokens: 1200,
-    top_p: 1,
-    frequency_penalty: 0,
-    presence_penalty: 0,
-  });
-  const completion = (String.raw`${(response.choices[0].text)}${separator}`).replaceAll(/\\/g,"\\\\");;
-  const value = historyRaw + completion;
-
-  // Put R2
-  const httpHeaders = {"Content-Type": "text/plain; charset=utf-8"};
-  const headers = new Headers(httpHeaders);
-  await env.R2gpt.put("history.txt", value, {httpMetadata: headers});
-  return new JsResponse(`${response.choices[0].text}`);
 });
 
 router.get("/dc/image-generation/:prompt", async (req, env) => {
