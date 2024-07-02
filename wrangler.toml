@@ -25,8 +25,8 @@ crons = [] # "*/3 * * * *"
 
 [[d1_databases]]
 binding = "ImgurDiscord"
-database_name = "imgur-discord"
-database_id = "a164b874-5aeb-4735-854c-6634b1e5f1c0"
+database_name = "imgur"
+database_id = "d987199f-3513-4bc2-b0ea-6576e1e0bc32"
 
 [[d1_databases]]
 binding = "NB"
