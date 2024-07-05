@@ -1912,7 +1912,7 @@ router.get("/dc/twitter-video-scrapper?", async (req, env) => {
       const entries = [];
       result.data?.threaded_conversation_with_injections_v2?.instructions[0]?.entries?.forEach((en) => {
         if (en?.entryId === `tweet-${id}`) {
-          entries.push(en?.content?.itemContent?.tweet_results?.result?.legacy);
+          entries.push(en?.content?.itemContent?.tweet_results?.result?.legacy || en?.content?.itemContent?.tweet_results?.result?.tweet?.legacy);
         }
       });
       return entries[0];
