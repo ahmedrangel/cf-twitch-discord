@@ -6,7 +6,7 @@
   "scripts": {
     "start": "wrangler dev",
     "worker:deploy": "wrangler deploy",
-    "lint": "eslint --fix .",
+    "lint": "eslint --fix --config .config/eslint.mjs",
     "tail": "wrangler tail"
   },
   "dependencies": {
