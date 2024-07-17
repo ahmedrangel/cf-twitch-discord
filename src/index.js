@@ -19,6 +19,7 @@ import crossclipApi from "./apis/crossclipApi";
 import fdownloaderApi from "./apis/fdownloaderApi";
 import * as cheerio from "cheerio";
 import twitterApi from "./apis/twitterApi";
+import tiktokApi from "./apis/tiktokApi";
 
 const router = IttyRouter();
 // educar
@@ -1858,44 +1859,23 @@ router.get("/dc/facebook-video-scrapper?", async (req, env) => {
 });
 
 router.get("/dc/tiktok-video-scrapper?", async (req, env) => {
+  const tiktok = new tiktokApi;
   const { query } = req;
   const url = decodeURIComponent(query.url);
-  let count = 0;
-  let maxTries = 3;
   if (url.includes("tiktok.com/")) {
     console.log("es link de tiktok");
-    const scrap = async () => {
-      const response = await fetch(`https://tikwm.com/api/?url=${url}`);
-      const data = await response.json();
-      console.log(data);
-      const video_url = data?.data?.play;
-      const caption = (data.data?.title)?.trim().replace(/\s+$/, "");
-      const json_response = {
-        video_url: video_url,
-        short_url: "https://m.tiktok.com/v/"+ data.data.id,
-        caption: caption,
-        status: 200
-      };
-      return JSON.stringify(json_response);
+    const data = await tiktok.getMedia(url);
+    if (!data) return new JsonResponse({ status: 404 });
+    const video_url = data?.data?.play;
+    const caption = (data.data?.title)?.trim().replace(/\s+$/, "");
+    const json_response = {
+      video_url: video_url,
+      short_url: "https://m.tiktok.com/v/"+ data.data.id,
+      caption: caption,
+      status: 200
     };
-    const retryScrap = async () => {
-      try {
-        return await scrap();
-      } catch (error) {
-        console.log(error);
-        if (count < maxTries) {
-          count++;
-          await new Promise(resolve => setTimeout(resolve, 500));
-          return await retryScrap();
-        } else {
-          const json_error = {status: 429};
-          return JSON.stringify(json_error);
-        }
-      }
-    };
-    return new JsResponse(await retryScrap());
+    return new JsonResponse(json_response);
   } else {
-    console.log("no es link de tiktok");
     return new JsResponse("Url no válida");
   }
 });

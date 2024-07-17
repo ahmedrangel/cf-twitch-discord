@@ -17,8 +17,10 @@
     "eslint": "^9.7.0",
     "itty-router": "^5.0.17",
     "jsonpath": "^1.1.1",
+    "ofetch": "^1.3.4",
     "openai": "^4.52.7",
-    "snapsave-media-downloader": "^1.0.4"
+    "snapsave-media-downloader": "^1.0.4",
+    "ufo": "^1.5.4"
   },
   "devDependencies": {
     "wrangler": "^3.64.0"

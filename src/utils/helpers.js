@@ -192,3 +192,7 @@ export const timeToSeconds = (time) => {
   else if (time.includes(":")) return hhmmssToSeconds(time);
   return 0; // Formato no reconocido
 };
+
+export const defaultRetry = {
+  retry: 3, retryDelay: 1000
+};
