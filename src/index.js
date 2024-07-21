@@ -1866,15 +1866,7 @@ router.get("/dc/tiktok-video-scrapper?", async (req, env) => {
     console.log("es link de tiktok");
     const data = await tiktok.getMedia(url);
     if (!data) return new JsonResponse({ status: 404 });
-    const video_url = data?.data?.play;
-    const caption = (data.data?.title)?.trim().replace(/\s+$/, "");
-    const json_response = {
-      video_url: video_url,
-      short_url: "https://m.tiktok.com/v/"+ data.data.id,
-      caption: caption,
-      status: 200
-    };
-    return new JsonResponse(json_response);
+    return new JsonResponse(data);
   } else {
     return new JsResponse("Url no válida");
   }
