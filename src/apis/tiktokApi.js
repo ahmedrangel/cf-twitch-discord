@@ -1,6 +1,6 @@
 import { withQuery } from "ufo";
 import { $fetch } from "ofetch";
-import { defaultRetry, obtenerIDDesdeURL } from "../utils/helpers";
+import { defaultRetry } from "../utils/helpers";
 import { randUA } from "@ahmedrangel/rand-user-agent";
 import { load } from "cheerio";
 
