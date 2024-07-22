@@ -3,7 +3,6 @@ import { $fetch } from "ofetch";
 import { defaultRetry, obtenerIDDesdeURL } from "../utils/helpers";
 import { randUA } from "@ahmedrangel/rand-user-agent";
 import { load } from "cheerio";
-import jp from "jsonpath";
 
 class tiktokApi {
   constructor () {
@@ -14,37 +13,33 @@ class tiktokApi {
   async getMedia (url) {
     const method_1 = async () => {
       try {
-        let tt_id;
-        if (!url.includes("/video/") || !url.includes("/v/")) {
-          const html = await $fetch(url, { headers: { "User-Agent": randUA("desktop") } });
-          const body = load(html);
-          const scripts = [];
+        const html = await $fetch(url, { headers: { "User-Agent": randUA("desktop") } });
+        const body = load(html);
+        const scripts = [];
 
-          body("script").each((i, el) => {
-            const script = body(el).html();
-            if (script.includes("\"itemStruct\"")) {
-              scripts.push(script);
-            }
-          });
+        body("script").each((i, el) => {
+          const script = body(el).html();
+          if (script.includes("__DEFAULT_SCOPE__")) {
+            scripts.push(script);
+          }
+        });
 
-          const json = JSON.parse(scripts);
-          tt_id = jp.query(json, "$..[?(@.itemStruct)].itemStruct.id")[0];
-        } else {
-          tt_id = obtenerIDDesdeURL(url);
-        }
-        const known_iid = ["7351144126450059040", "7351149742343391009", "7351153174894626592"];
+        const json = JSON.parse(scripts);
+        const tt_id = json["__DEFAULT_SCOPE__"]["webapp.video-detail"].itemInfo.itemStruct.id;
+        const device_id = json["__DEFAULT_SCOPE__"]["webapp.app-context"].wid;
+        // const known_iid = ["7351144126450059040", "7351149742343391009", "7351153174894626592"];
         const query = {
-          "aweme_ids": `[${tt_id}]`,
-          "iid": known_iid[Math.floor(Math.random() * known_iid.length)],
-          "device_id": "7366733862057297414",
-          "channel": "googleplay",
-          "aid": "1233",
-          "app_name": "musical_ly",
-          "version_code": "350103",
-          "version_name": "35.1.3",
-          "device_platform": "android",
-          "device_type": "Pixel 8 Pro",
-          "os_version": "14",
+          aweme_ids: `[${tt_id}]`,
+          iid: 0,
+          device_id,
+          channel: "googleplay",
+          aid: 1233,
+          app_name: "musical_ly",
+          version_code: 350103,
+          version_name: "35.1.3",
+          device_platform: "android",
+          device_type: "Pixel 8 Pro",
+          os_version: 14,
         };
 
         const headers = {
