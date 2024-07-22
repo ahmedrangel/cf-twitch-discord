@@ -1880,44 +1880,14 @@ router.get("/dc/twitter-video-scrapper?", async (req, env) => {
     const twitter = new twitterApi(env.twitter_bearer_token, env.x_cookie);
     const id = obtenerIDDesdeURL(url);
     const result = await twitter.getTweet(id);
-    const entries = () => {
-      const entries = [];
-      result.data?.threaded_conversation_with_injections_v2?.instructions[0]?.entries?.forEach((en) => {
-        if (en?.entryId === `tweet-${id}`) {
-          entries.push(en?.content?.itemContent?.tweet_results?.result?.legacy || en?.content?.itemContent?.tweet_results?.result?.tweet?.legacy);
-        }
-      });
-      return entries[0];
-    };
-    const data = entries();
-    if (data?.extended_entities?.media[0]?.video_info) {
-      const videos = data.extended_entities.media[0].video_info.variants;
-      const short_url = data.extended_entities.media[0].url;
-      const caption = data.full_text.replace(/https:\/\/t\.co\/\w+/g, "").trim();
-      let maxBitrate = 0;
-      let video_url = "";
-      for (const video of videos) {
-        if (video.content_type === "video/mp4" && video.bitrate && video.bitrate > maxBitrate && (video.url.includes("avc1") || video.url.includes("/pu/vid/") || video.url.includes(".mp4?tag=12"))) {
-          maxBitrate = video.bitrate;
-          video_url = video.url;
-        }
-      }
-      console.log(video_url);
-      const json_response = {
-        video_url: video_url,
-        short_url: short_url,
-        caption: caption,
-        status: 200
-      };
-      return new JsonResponse(json_response);
-    } else {
-      console.log("no es video");
-      return new JsonResponse({ status: 404 });
-    }
-  } else {
-    console.log("no es link de twitter");
-    return new JsResponse("Url no válida");
+
+    if(!result) return new JsonResponse({ status: 404 });
+
+    return new JsonResponse(result);
   }
+
+  console.log("no es link de twitter");
+  return new JsResponse("Url no válida");
 });
 
 router.get("/dc/stable-diffusion?", async (req, env, ctx) => {
