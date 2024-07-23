@@ -40,7 +40,7 @@ router.get("/educar/:user/:channel/:touser", async (req, env) => {
       mensaje = "No puedes educarte a ti mismo, menciona a alguien más. angarW";
     } else {
       counter = counter ? counter + 1 : 1;
-      await env.EDUCAR.put(key, counter, {metadata: {value: counter},});
+      await env.EDUCAR.put(key, counter, { metadata: { value: counter } });
       const veces = counter === 1 ? "vez" : "veces";
       mensaje = `ha educado a ${touser}. ${touser} ha sido educado ${counter} ${veces} en total. angarEz`;
     }
@@ -291,27 +291,27 @@ router.get("/cum/:user/:channelID/:touser", async (req, env) => {
     const id_channel = channelID;
     const key = id_touser + "-" + id_channel;
     let counter = Number(await env.CUM.get(key));
-    let responses_arr = ["en la cara","en la espalda","en el pecho","en las manos","en los pies","en las tetas","en la boca"];
+    let responses_arr = ["en la cara", "en la espalda", "en el pecho", "en las manos", "en los pies", "en las tetas", "en la boca"];
     let lugar = responses_arr[Math.floor(Math.random()*responses_arr.length)];
     if (id_channel == id_angar) {
-      let emotes_arr = ["angarMonkas","angarRico","angarGasm"];
+      let emotes_arr = ["angarMonkas", "angarRico", "angarGasm"];
       let emote = emotes_arr[Math.floor(Math.random()*emotes_arr.length)];
       if (percent < 40) {
         if (id_user == id_touser) {
           counter = counter ? counter + 1 : 1;
-          await env.CUM.put(key, counter, {metadata: {value: counter},});
+          await env.CUM.put(key, counter, { metadata: { value: counter } });
           const veces = counter === 1 ? "vez" : "veces";
           mensaje = `${user}, Has cumeado en ti mismo. angarL Te han cumeado ${counter} ${veces} en total. `;
         } else {
           counter = counter ? counter + 1 : 1;
-          await env.CUM.put(key, counter, {metadata: {value: counter},});
+          await env.CUM.put(key, counter, { metadata: { value: counter } });
           const veces = counter === 1 ? "vez" : "veces";
           mensaje = `${user} cumeó ${lugar} de ${touser}. Han cumeado a ${touser} ${counter} ${veces} en total. ${emote}`;
         }
       } else {
         if (id_user == id_touser) {
           counter = counter ? counter + 1 : 1;
-          await env.CUM.put(key, counter, {metadata: {value: counter},});
+          await env.CUM.put(key, counter, { metadata: { value: counter } });
           const veces = counter === 1 ? "vez" : "veces";
           mensaje = `${user}, Has cumeado en ti mismo. Te han cumeado ${counter} ${veces} en total. angarL Si quieres cumear a alguien más debes mencionarlo`;
         } else {
@@ -319,24 +319,24 @@ router.get("/cum/:user/:channelID/:touser", async (req, env) => {
         }
       }
     } else {
-      let emotes_arr = ["Kreygasm","angarRico","PogChamp"];
+      let emotes_arr = ["Kreygasm", "angarRico", "PogChamp"];
       let emote = emotes_arr[Math.floor(Math.random()*emotes_arr.length)];
       if (percent < 40) {
         if (id_user == id_touser) {
           counter = counter ? counter + 1 : 1;
-          await env.CUM.put(key, counter, {metadata: {value: counter},});
+          await env.CUM.put(key, counter, { metadata: { value: counter } });
           const veces = counter === 1 ? "vez" : "veces";
           mensaje = `${user}, Has cumeado en ti mismo. Te han cumeado ${counter} ${veces} en total. LUL`;
         } else {
           counter = counter ? counter + 1 : 1;
-          await env.CUM.put(key, counter, {metadata: {value: counter},});
+          await env.CUM.put(key, counter, { metadata: { value: counter } });
           const veces = counter === 1 ? "vez" : "veces";
           mensaje = `${user} cumeó ${lugar} de ${touser}. Han cumeado a ${touser} ${counter} ${veces} en total. ${emote}`;
         }
       } else {
         if (id_user == id_touser) {
           counter = counter ? counter + 1 : 1;
-          await env.CUM.put(key, counter, {metadata: {value: counter},});
+          await env.CUM.put(key, counter, { metadata: { value: counter } });
           const veces = counter === 1 ? "vez" : "veces";
           mensaje = `${user}, Has cumeado en ti mismo. Te han cumeado ${counter} ${veces} en total. LUL Si quieres cumear a alguien más debes mencionarlo`;
         } else {
@@ -391,18 +391,18 @@ router.get("/spank/:user/:channelID/:touser", async (req, env) => {
     const id_channel = channelID;
     const key = id_touser + "-" + id_channel;
     let counter = Number(await env.SPANK.get(key));
-    let emotes_arr = ["angarRico","Kreygasm","Jebaited","TakeNRG"];
+    let emotes_arr = ["angarRico", "Kreygasm", "Jebaited", "TakeNRG"];
     let emote = emotes_arr[Math.floor(Math.random()*emotes_arr.length)];
-    let responses_arr = ["le has dado una nalgada","le has marcado sus manos en las nalgas","le has cacheteado la nalga derecha","le has cacheteado la nalga izquierda","le has dado una nalgada con sus dos manos"];
+    let responses_arr = ["le has dado una nalgada", "le has marcado sus manos en las nalgas", "le has cacheteado la nalga derecha", "le has cacheteado la nalga izquierda", "le has dado una nalgada con sus dos manos"];
     let accion = responses_arr[Math.floor(Math.random()*responses_arr.length)];
     if (id_user == id_touser) {
       counter = counter ? counter + 1 : 1;
       const veces = counter === 1 ? "nalgada" : "nalgadas";
-      await env.SPANK.put(key, counter, {metadata: {value: counter},});
+      await env.SPANK.put(key, counter, { metadata: { value: counter } });
       mensaje = `@${user} -> Te has pegado una nalgada a ti mismo ${emote}. Has recibido ${counter} ${veces} en total.`;
     } else {
       counter = counter ? counter + 1 : 1;
-      await env.SPANK.put(key, counter, {metadata: {value: counter},});
+      await env.SPANK.put(key, counter, { metadata: { value: counter } });
       const veces = counter === 1 ? "nalgada" : "nalgadas";
       mensaje = `@${user} -> ${accion} a @${touser} . @${touser} ha recibido ${counter} ${veces} en total. ${emote}`;
     }
@@ -445,9 +445,9 @@ router.get("/top_users/angar/:env_var", async (req, env, ctx) => {
     }
   }).filter(user_keys => user_keys);
 
-  let top_users_limited_array = top_users_json.slice(0,limit);
+  let top_users_limited_array = top_users_json.slice(0, limit);
 
-  let top_users = (await Promise.all((top_users_limited_array.map(async(top_users_limited_array) => {
+  let top_users = (await Promise.all((top_users_limited_array.map(async (top_users_limited_array) => {
     let json = JSON.parse(top_users_limited_array);
     let user = await twitch.getUsername(json.usuario);
     let channel = await twitch.getUsername(json.canal);
@@ -475,9 +475,9 @@ router.get("/top_users/zihnee/:env_var", async (req, env, ctx) => {
     }
   }).filter(user_keys => user_keys);
 
-  let top_users_limited_array = top_users_json.slice(0,limit);
+  let top_users_limited_array = top_users_json.slice(0, limit);
 
-  let top_users = (await Promise.all((top_users_limited_array.map(async(top_users_limited_array) => {
+  let top_users = (await Promise.all((top_users_limited_array.map(async (top_users_limited_array) => {
     let json = JSON.parse(top_users_limited_array);
     let user = await twitch.getUsername(json.usuario);
     let channel = await twitch.getUsername(json.canal);
@@ -524,7 +524,7 @@ router.get("/leaderboards/:channel?", async (req, env) => {
   kiss[0] ? lists.push({ type: "kiss", results: kiss }) : null;
   cum[0] ? lists.push({ type: "cum", results: cum }) : null;
   const response = {
-    lists: lists,
+    lists: lists
   };
   return new JsonResponse(response);
 });
@@ -537,7 +537,7 @@ router.get("/chupar/:user/:channel_id/:query", async (req, env) => {
   const twitch = new twitchApi(env.client_id, env.client_secret, env.NB);
   const auth_list = (await env.AUTH_USERS.list()).keys;
   if (query == "touser:" || query_touser == user) {
-    let response = (await Promise.all((auth_list.map(async(users_keys) => {
+    let response = (await Promise.all((auth_list.map(async (users_keys) => {
       if (mod_id == users_keys.name) {
         const access_token = await twitch.RefreshToken(users_keys.metadata.value);
         let chatters = await twitch.getChatters(access_token, channel_id, mod_id);
@@ -557,7 +557,7 @@ router.get("/chupar/:user/:channel_id/:query", async (req, env) => {
 router.get("/ia/:prompt/:user", async (req, env) => {
   const { prompt, user } = req.params;
   const openai = new OpenAI({
-    apiKey: env.openai_token,
+    apiKey: env.openai_token
   });
   const response = await openai.completions.create({
     model: "gpt-3.5-turbo-instruct",
@@ -566,28 +566,28 @@ router.get("/ia/:prompt/:user", async (req, env) => {
     max_tokens: 110,
     top_p: 1,
     frequency_penalty: 0,
-    presence_penalty: 0,
+    presence_penalty: 0
   });
-  return new JsResponse(`${response.choices[0].text.replaceAll("\n"," ")}`);
+  return new JsResponse(`${response.choices[0].text.replaceAll("\n", " ")}`);
 });
 
 // Openai GPT-3.5-turbo-instruct Translator AI  with Language detection
 router.get("/ai/translate/:prompt", async (req, env) => {
   const { prompt } = req.params;
   const openai = new OpenAI({
-    apiKey: env.openai_token,
+    apiKey: env.openai_token
   });
   const detectlanguage_url = "https://ws.detectlanguage.com/0.2/detect";
   const detect = await fetch(detectlanguage_url, {
     method: "POST",
-    body: JSON.stringify({q: decodeURIComponent(prompt)}),
+    body: JSON.stringify({ q: decodeURIComponent(prompt) }),
     headers: {
       "Authorization": "Bearer " + env.detectlanguage_token,
       "Content-Type": "application/json"
-    },
+    }
   });
-  const {data} = await detect.json();
-  const IA = async(to_language) => {
+  const { data } = await detect.json();
+  const IA = async (to_language) => {
     const response = await openai.completions.create({
       model: "gpt-3.5-turbo-instruct",
       prompt: `Translate this into 1. ${to_language}\n${decodeURIComponent(prompt)}\n1.`,
@@ -595,7 +595,7 @@ router.get("/ai/translate/:prompt", async (req, env) => {
       max_tokens: 256,
       top_p: 1,
       frequency_penalty: 0,
-      presence_penalty: 0,
+      presence_penalty: 0
     });
     return response.choices[0].text;
   };
@@ -628,7 +628,7 @@ router.get("/dc/ai/:user/:prompt", async (req, env) => {
     console.log("User: "+user);
     console.log("Prompt: "+prompt);
     const openai = new OpenAI({
-      apiKey: env.openai_token,
+      apiKey: env.openai_token
     });
     let context = "";
     const history = await env.R2gpt.get("history.json");
@@ -648,17 +648,17 @@ router.get("/dc/ai/:user/:prompt", async (req, env) => {
       max_tokens: 1200,
       top_p: 1,
       frequency_penalty: 0,
-      presence_penalty: 0,
+      presence_penalty: 0
     });
-    const completion = (String.raw`${(response.choices[0].text)}`).replaceAll(/\\/g,"\\\\");
+    const completion = (String.raw`${(response.choices[0].text)}`).replaceAll(/\\/g, "\\\\");
     historyJson.push(
       { name: user, message: prompt },
       { name: botName, message: completion }
     );
     // Put R2
-    const httpHeaders = {"Content-Type": "application/json; charset=utf-8"};
+    const httpHeaders = { "Content-Type": "application/json; charset=utf-8" };
     const headers = new Headers(httpHeaders);
-    await env.R2gpt.put("history.json", JSON.stringify(historyJson), {httpMetadata: headers});
+    await env.R2gpt.put("history.json", JSON.stringify(historyJson), { httpMetadata: headers });
     return new JsonResponse({ status: 200, message: response.choices[0].text });
   } catch (e) {
     return new JsonResponse({ status: 400 });
@@ -671,7 +671,7 @@ router.get("/dc/image-generation/:prompt", async (req, env) => {
   let image_url = "";
   try {
     const openai = new OpenAI({
-      apiKey: env.openai_token,
+      apiKey: env.openai_token
     });
     const response = await openai.images.generate({
       prompt: prompt,
@@ -684,7 +684,7 @@ router.get("/dc/image-generation/:prompt", async (req, env) => {
     const imgur = new imgurApi(env.imgur_client_id, env.imgur_client_secret);
     const auth_list = (await env.AUTH_USERS.list()).keys;
     const imgur_user = "imgur_ahmedrangel";
-    let imgur_url = (await Promise.all((auth_list.map(async(users_keys) => {
+    let imgur_url = (await Promise.all((auth_list.map(async (users_keys) => {
       if (imgur_user == users_keys.name) {
         const { access_token } = await imgur.RefreshToken(users_keys.metadata.value);
         const respuesta = await imgur.UploadImage(access_token, prompt, openai_b64, "AI DALL-E");
@@ -754,7 +754,7 @@ router.get("/dc/image-variation/:url", async (req, env) => {
     const openaifetch = await fetch(variation_fetch, {
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${env.openai_token}`,
+        Authorization: `Bearer ${env.openai_token}`
       },
       body: formData
     });
@@ -763,7 +763,7 @@ router.get("/dc/image-variation/:url", async (req, env) => {
     const imgur = new imgurApi(env.imgur_client_id, env.imgur_client_secret);
     const auth_list = (await env.AUTH_USERS.list()).keys;
     const imgur_user = "imgur_ahmedrangel";
-    let imgur_url = (await Promise.all((auth_list.map(async(users_keys) => {
+    let imgur_url = (await Promise.all((auth_list.map(async (users_keys) => {
       if (imgur_user == users_keys.name) {
         const { access_token } = await imgur.RefreshToken(users_keys.metadata.value);
         const respuesta = await imgur.UploadImage(access_token, "Variación de: " + filename, openai_b64);
@@ -782,7 +782,7 @@ router.get("/dc/image-variation/:url", async (req, env) => {
       image_url = error.message;
     }
   }
-  return new JsonResponse({original: cloudinary_url, variation: String(image_url)});
+  return new JsonResponse({ original: cloudinary_url, variation: String(image_url) });
 });
 
 // Twitch Auth that redirect to oauth callback to save authenticated users
@@ -811,7 +811,7 @@ router.get("/twitch/user-oauth?", async (req, env) => {
     const validation = await twitch.Validate(access_token);
     const { login, user_id } = await validation.json();
     const key = user_id;
-    await env.AUTH_USERS.put(key, refresh_token, {metadata: {value: refresh_token},});
+    await env.AUTH_USERS.put(key, refresh_token, { metadata: { value: refresh_token } });
     return new JsResponse(`Usuario autenticado: ${login}\nID: ${user_id}\nAccess Token: ${access_token}`);
   }
   return new JsResponse("Error. Authentication failed.");
@@ -829,23 +829,23 @@ router.get("/leaderboard/:channelID/:page", async (req, env) => {
   const insert = (str, index, value) => {
     return str.substr(0, index) + value + str.substr(index);
   };
-  for(let i = 0; i < auth_list.length; i++) {
+  for (let i = 0; i < auth_list.length; i++) {
     let user_key = auth_list[i].name;
     if (channelID == user_key) {
       const access_token = await twitch.RefreshToken(auth_list[i].metadata.value);
       const data = await twitch.getBitsLeaderBoard(access_token);
       if (page == 1) {
-        for(let i = 0; i < 5; i++) {
+        for (let i = 0; i < 5; i++) {
           msg = msg + insert(`${data[i].rank})${data[i].user_name}${data[i].score} bits `, String(data[i].rank).length + String(data[i].user_name).length + 1, dots.repeat(42 - (String(data[i].rank).length + String(data[i].user_name).length + String(data[i].score).length + 3)));
           response = `Top bits totales del 1 al 5 ${break_line} ${msg} ${break_line}`;
         }
       } else if (page == 2) {
-        for(let i = 5; i < 10; i++) {
+        for (let i = 5; i < 10; i++) {
           msg = msg + insert(`${data[i].rank})${data[i].user_name}${data[i].score} bits `, String(data[i].rank).length + String(data[i].user_name).length + 1, dots.repeat(42 - (String(data[i].rank).length + String(data[i].user_name).length + String(data[i].score).length + 3)));
           response = `Top bits totales del 6 al 10 ${break_line} ${msg} ${break_line}`;
         }
       } else if (page == 3) {
-        for(let i = 10; i < 15; i++) {
+        for (let i = 10; i < 15; i++) {
           msg = msg + insert(`${data[i].rank})${data[i].user_name}${data[i].score} bits `, String(data[i].rank).length + String(data[i].user_name).length + 1, dots.repeat(42 - (String(data[i].rank).length + String(data[i].user_name).length + String(data[i].score).length + 3)));
           response = `Top bits totales del 11 al 15 ${break_line} ${msg} ${break_line}`;
         }
@@ -870,12 +870,12 @@ router.get("/tags/:channelID", async (req, env) => {
 router.get("/set_tags/:channelID/:query", async (req, env) => {
   const { channelID, query } = req.params;
   let query_tags = decodeURIComponent(query);
-  query_tags = query_tags.replaceAll(" ","").replace("tags:","").split(",");
+  query_tags = query_tags.replaceAll(" ", "").replace("tags:", "").split(",");
   let tags_length = query_tags.length;
   const twitch = new twitchApi(env.client_id, env.client_secret, env.NB);
   if (query == "tags:") {
     let actualtags = await twitch.getBroadcasterInfo(channelID);
-    const response = `Etiquetas actuales: ${String(actualtags.tags).replaceAll(/,/g,", ")}`;
+    const response = `Etiquetas actuales: ${String(actualtags.tags).replaceAll(/,/g, ", ")}`;
     return new JsResponse(response);
   }
   const auth_list = (await env.AUTH_USERS.list()).keys;
@@ -891,7 +891,7 @@ router.get("/addmod/:user_id/:channel_id/:touser", async (req, env) => {
   const twitch = new twitchApi(env.client_id, env.client_secret, env.NB);
   if (user_id == ahmed || user_id == channel_id) {
     const auth_list = (await env.AUTH_USERS.list()).keys;
-    response = (await Promise.all((auth_list.map(async(users_keys) => {
+    response = (await Promise.all((auth_list.map(async (users_keys) => {
       if (channel_id == users_keys.name) {
         const access_token = await twitch.RefreshToken(users_keys.metadata.value);
         console.log(touser);
@@ -926,7 +926,7 @@ router.get("/unmod/:user_id/:channel_id/:touser", async (req, env) => {
   const twitch = new twitchApi(env.client_id, env.client_secret, env.NB);
   if (user_id == ahmed || user_id == channel_id) {
     const auth_list = (await env.AUTH_USERS.list()).keys;
-    response = (await Promise.all((auth_list.map(async(users_keys) => {
+    response = (await Promise.all((auth_list.map(async (users_keys) => {
       if (channel_id == users_keys.name) {
         const access_token = await twitch.RefreshToken(users_keys.metadata.value);
         console.log(touser);
@@ -958,7 +958,7 @@ router.get("/addvip/:user_id/:channel_id/:touser", async (req, env) => {
   const twitch = new twitchApi(env.client_id, env.client_secret, env.NB);
   if (user_id == ahmed || user_id == channel_id) {
     const auth_list = (await env.AUTH_USERS.list()).keys;
-    response = (await Promise.all((auth_list.map(async(users_keys) => {
+    response = (await Promise.all((auth_list.map(async (users_keys) => {
       if (channel_id == users_keys.name) {
         const access_token = await twitch.RefreshToken(users_keys.metadata.value);
         console.log(touser);
@@ -993,7 +993,7 @@ router.get("/unvip/:user_id/:channel_id/:touser", async (req, env) => {
   const twitch = new twitchApi(env.client_id, env.client_secret, env.NB);
   if (user_id == ahmed || user_id == channel_id) {
     const auth_list = (await env.AUTH_USERS.list()).keys;
-    response = (await Promise.all((auth_list.map(async(users_keys) => {
+    response = (await Promise.all((auth_list.map(async (users_keys) => {
       if (channel_id == users_keys.name) {
         const access_token = await twitch.RefreshToken(users_keys.metadata.value);
         console.log(touser);
@@ -1019,13 +1019,13 @@ router.get("/unvip/:user_id/:channel_id/:touser", async (req, env) => {
 
 // Nightbot command: Shoutout
 router.get("/shoutout/:user/:channel/:channel_id/:touser", async (req, env) => {
-  const { user, channel ,channel_id, touser } = req.params;
+  const { user, channel, channel_id, touser } = req.params;
   if (user.toLowerCase() === touser.toLowerCase()) {
     return new JsResponse(`@${user} -> No puedes hacer shoutout a ti mismo.`);
   }
   const twitch = new twitchApi(env.client_id, env.client_secret, env.NB);
   const auth_list = (await env.AUTH_USERS.list()).keys;
-  const response = (await Promise.all((auth_list.map(async(users_keys) => {
+  const response = (await Promise.all((auth_list.map(async (users_keys) => {
     if (channel_id !== users_keys.name) return;
     const access_token = await twitch.RefreshToken(users_keys.metadata.value);
     console.log(touser);
@@ -1070,7 +1070,7 @@ router.get("/spotify/user-oauth?", async (req, env) => {
     const current_user = await spotify.GetCurrentUser(access_token);
     const { id, display_name } = await current_user.json();
     const key = "spotify_"+id;
-    await env.AUTH_USERS.put(key, refresh_token, {metadata: {value: refresh_token},});
+    await env.AUTH_USERS.put(key, refresh_token, { metadata: { value: refresh_token } });
     console.log(`User: ${display_name}\nID: ${key}\nAccess Token: ${access_token}\nRefresh Token: ${refresh_token}\nExpires in: ${expires_in}`);
     return new JsResponse(`User: ${display_name}\nID: ${key}\nAccess Token: ${access_token}\nRefresh Token: ${refresh_token}\nExpires in: ${expires_in}`);
   } else {
@@ -1087,21 +1087,21 @@ router.get("/spotify/current_playing/:channelID/:channel", async (req, env) => {
   try {
     if (channelID == zihnee) {
       const auth_list = (await env.AUTH_USERS.list()).keys;
-      let response = (await Promise.all((auth_list.map(async(users_keys) => {
+      let response = (await Promise.all((auth_list.map(async (users_keys) => {
         if ("spotify_21bzdcprfxsmlthwssmrnr2si" == users_keys.name) {
           const spotify = new spotifyApi(env.spotify_client_id, env.spotify_client_secret);
           const access_token = await spotify.RefreshToken(users_keys.metadata.value);
           const data = await spotify.GetCurrentlyPlayingTrack(access_token);
-          const {item} = await data.json();
-          const {artists} = item;
-          const {name} = item;
-          const {external_urls} = item;
+          const { item } = await data.json();
+          const { artists } = item;
+          const { name } = item;
+          const { external_urls } = item;
           const track_url = external_urls.spotify;
           let artists_names = artists.map(artists => {
             let names = artists.name;
             return names;
           }).filter(artists => artists);
-          const track = artists_names.toString().replaceAll(",",", ") + " - " + name + " " + track_url;
+          const track = artists_names.toString().replaceAll(",", ", ") + " - " + name + " " + track_url;
           return track;
         }
       })))).filter(users_keys => users_keys);
@@ -1112,7 +1112,7 @@ router.get("/spotify/current_playing/:channelID/:channel", async (req, env) => {
   }
 });
 
-router.get("/put/discord-avatars?", async (req, env,) => {
+router.get("/put/discord-avatars?", async (req, env) => {
   const url = req.query.url;
   const id = obtenerIDDesdeURL(url);
   const userId = obtenerDiscordUserIdFromAvatarsCdn(url);
@@ -1130,17 +1130,17 @@ router.get("/put/video?", async (req, env, ctx) => {
     const f = await fetch(video_url);
     const b = await f.blob();
     const type = "video/mp4";
-    const httpHeaders = {"Content-Type": type, "Content-Disposition": "attachment"};
+    const httpHeaders = { "Content-Type": type, "Content-Disposition": "attachment" };
     const headers = new Headers(httpHeaders);
     const uniqueId = generateUniqueId();
 
-    const putR2 = async(id) => {
-      const object = await env.R2cdn.put(`${bot_name}/${id}.mp4`, b, {httpMetadata: headers});
+    const putR2 = async (id) => {
+      const object = await env.R2cdn.put(`${bot_name}/${id}.mp4`, b, { httpMetadata: headers });
       console.log(`escrito: ${id}`);
       return `https://cdn.ahmedrangel.com/${bot_name}/${id}.mp4`;
     };
 
-    const comprobarCDN = async(id) => {
+    const comprobarCDN = async (id) => {
       const comprobar = await fetch(`https://cdn.ahmedrangel.com/${bot_name}/${id}.mp4`);
       if (comprobar.status === 200) {
         console.log("existe, generar nuevo id, y volver a comprobar");
@@ -1156,7 +1156,7 @@ router.get("/put/video?", async (req, env, ctx) => {
   return new JsResponse("Error. No se ha encontrado un video.");
 });
 
-router.get("/lol/live?", async (req, env,) => {
+router.get("/lol/live?", async (req, env) => {
   const { query } = req;
   const riot = new riotApi(env.riot_token);
   const default_riot = decodeURIComponent(query.default).split("-");
@@ -1230,7 +1230,7 @@ router.get("/lol/live?", async (req, env,) => {
         team2String.push(`${t.teamColor}${t.riotId}(${t.championName})${t.dots}${t.division}${t.lp}`);
       });
 
-      return String((`${game_type.queue_name} ${break_line} ${String(team1String)} ${String(team2String)}`).replaceAll(","," "));
+      return String((`${game_type.queue_name} ${break_line} ${String(team1String)} ${String(team2String)}`).replaceAll(",", " "));
     }
     return `${gameName} #${tagLine} no se encuentra en partida ahora mismo. FallHalp `;
   }
@@ -1257,13 +1257,13 @@ router.get("/lol/live?", async (req, env,) => {
     let names_size = (46 - (String(participants.championName).length + String(participants.riotId).length + 14));
     let teamObj = {
       teamColor: team_color,
-      riotId: riotId.replaceAll(" ","").replace(/#.+$/, ""),
-      championName: participants.championName.replaceAll(" ",""),
+      riotId: riotId.replaceAll(" ", "").replace(/#.+$/, ""),
+      championName: participants.championName.replaceAll(" ", ""),
       championId: participants.championId,
       spell1Id: participants.spell1Id,
       spell2Id: participants.spell2Id,
       division: division,
-      lp: lp,
+      lp: lp
     };
     if (names_size <= 0) {
       names_size = 0;
@@ -1275,12 +1275,12 @@ router.get("/lol/live?", async (req, env,) => {
       teamObj.dots = dots.repeat(names_size);
       team.push(teamObj);
     }
-  };
+  }
 
   return new JsResponse(data);
 });
 
-router.get("/lol/spectator/:region/:name/:tag", async (req, env,) => {
+router.get("/lol/spectator/:region/:name/:tag", async (req, env) => {
   const { params } = req;
   const region = (params.region).toLowerCase();
   const riotName = params.name;
@@ -1300,7 +1300,7 @@ router.get("/lol/spectator/:region/:name/:tag", async (req, env,) => {
   const puuid = account_data.puuid;
   const live_game_data = await riot.LiveGameData(puuid, region_route);
   const game_type = riot.queueCase(live_game_data?.gameQueueConfigId);
-  const participantsHandler = async(p, merakiRates, game_type, team, color) => {
+  const participantsHandler = async (p, merakiRates, game_type, team, color) => {
     const ranked_data = await riot.RankedData(p.summonerId, region_route);
     const current_rank_type = (String(jp.query(ranked_data, `$..[?(@.queueType=="${game_type.profile_rank_type}")].queueType`)));
     const role = riot.championRole(p.championId, merakiRates);
@@ -1329,7 +1329,7 @@ router.get("/lol/spectator/:region/:name/:tag", async (req, env,) => {
             eloValue: eloValue,
             wins: r.wins,
             losses: r.losses,
-            role: role,
+            role: role
           });
         }
       });
@@ -1341,7 +1341,7 @@ router.get("/lol/spectator/:region/:name/:tag", async (req, env,) => {
         championName: championName,
         spell1Id: p.spell1Id,
         spell2Id: p.spell2Id,
-        role: role,
+        role: role
       });
     }
   };
@@ -1375,7 +1375,7 @@ router.get("/lol/spectator/:region/:name/:tag", async (req, env,) => {
     const eloAvg1 = eloAvg(t1Sorted);
     const eloAvg2 = eloAvg(t2Sorted);
     const eloTierRank = (avg) => {
-      let obj = {tier: "DESCONOCIDO", rank: -1};
+      let obj = { tier: "DESCONOCIDO", rank: -1 };
       for (const eloName in eloValues) {
         if (eloValues[eloName] === avg) {
           const eloNameSplit = eloName.split(" ");
@@ -1396,7 +1396,7 @@ router.get("/lol/spectator/:region/:name/:tag", async (req, env,) => {
     const elo1 = eloTierRank(eloAvg1);
     const elo2 = eloTierRank(eloAvg2);
     const eloObj = (arr, eloAvg) => {
-      return {value: eloAvg, tier: arr.tier, rank: arr.rank, rankInt: arr.rankInt, division: arr.division, tierFull: arr.tierFull};
+      return { value: eloAvg, tier: arr.tier, rank: arr.rank, rankInt: arr.rankInt, division: arr.division, tierFull: arr.tierFull };
     };
     match.team1.eloAvg = eloObj(elo1, eloAvg1);
     match.team2.eloAvg = eloObj(elo2, eloAvg2);
@@ -1410,7 +1410,7 @@ router.get("/lol/spectator/:region/:name/:tag", async (req, env,) => {
 });
 
 // LoL Profile (with Riot ID)
-router.get("/lol/profile/:region/:name/:tag", async (req, env,) => {
+router.get("/lol/profile/:region/:name/:tag", async (req, env) => {
   const { name, tag } = req.params;
   const { filter } = req.query;
   const region = (req.params.region).toLowerCase();
@@ -1419,7 +1419,7 @@ router.get("/lol/profile/:region/:name/:tag", async (req, env,) => {
   const riot = new riotApi(env.riot_token);
   const route = riot.RegionNameRouting(region);
   if (!route) {
-    return new JsonResponse({status_code: 404, errorName: "region"});
+    return new JsonResponse({ status_code: 404, errorName: "region" });
   }
   const cluster = riot.RegionalRouting(region);
   console.log(region, route, cluster);
@@ -1429,7 +1429,7 @@ router.get("/lol/profile/:region/:name/:tag", async (req, env,) => {
   const puuid = account.puuid;
   const summoner = await riot.getSummonerDataByPUUID(puuid, route);
   if (account?.status || summoner?.status) {
-    return new JsonResponse({status_code: 404, errorName: "riotId"});
+    return new JsonResponse({ status_code: 404, errorName: "riotId" });
   }
   const summoner_id = summoner.id;
   const challenges_data = await riot.getChellengesData(puuid, route);
@@ -1515,13 +1515,13 @@ router.get("/lol/profile/:region/:name/:tag", async (req, env,) => {
 });
 
 // LoL MMR (with Riot ID)
-router.get("/lol/mmr/:region/:name/:tag/:queue", async (req, env,) => {
+router.get("/lol/mmr/:region/:name/:tag/:queue", async (req, env) => {
   const { name, tag, queue } = req.params;
   const region = (req.params.region).toLowerCase();
   const riot = new riotApi(env.riot_token);
   const route = riot.RegionNameRouting(region);
   if (!route) {
-    return new JsonResponse({status_code: 404, errorName: "region"});
+    return new JsonResponse({ status_code: 404, errorName: "region" });
   }
   const cluster = riot.RegionalRouting(region);
   const queueId = queue.toLowerCase() === "flex" ? 440 : 420;
@@ -1532,7 +1532,7 @@ router.get("/lol/mmr/:region/:name/:tag/:queue", async (req, env,) => {
   const puuid = account.puuid;
   const summoner = await riot.getSummonerDataByPUUID(puuid, route);
   if (account?.status || summoner?.status) {
-    return new JsonResponse({status_code: 404, errorName: "riotId"});
+    return new JsonResponse({ status_code: 404, errorName: "riotId" });
   }
   const ddversionsF = await fetch(`https://ddragon.leagueoflegends.com/realms/${region}.json`);
   const ddversions = await ddversionsF.json();
@@ -1562,7 +1562,7 @@ router.get("/lol/mmr/:region/:name/:tag/:queue", async (req, env,) => {
           leaguePoints: el.leaguePoints,
           queueName: queueCase.short_name
         };
-        const matchesId = await riot.getMatches(puuid, cluster , 3, queueId);
+        const matchesId = await riot.getMatches(puuid, cluster, 3, queueId);
         for (const matches of matchesId) {
           const match_data = await riot.getMatchFromId(matches, cluster);
           const participants = match_data.info.participants;
@@ -1589,10 +1589,10 @@ router.get("/lol/mmr/:region/:name/:tag/:queue", async (req, env,) => {
             const eloNameSplit = eloName.split(" ");
             const eloTier = riot.tierCase(eloNameSplit[0]).full;
             const eloRank = eloNameSplit[0] !== "MASTER" && eloNameSplit[0] !== "GRANDMASTER" && eloNameSplit[0] !== "CHALLENGER" ? eloNameSplit[1] : "";
-            elo_data.avg = {tier: eloTier, rank: eloRank};
+            elo_data.avg = { tier: eloTier, rank: eloRank };
             break;
           } else {
-            elo_data.avg = {tier: "Desconocido", rank: "Desconocido"};
+            elo_data.avg = { tier: "Desconocido", rank: "Desconocido" };
           }
         }
         elo_data.status_code = 200;
@@ -1606,7 +1606,7 @@ router.get("/lol/mmr/:region/:name/:tag/:queue", async (req, env,) => {
   return new JsonResponse(elo_data);
 });
 
-router.get("/rank?", async (req, env,) => {
+router.get("/rank?", async (req, env) => {
   const { query } = req;
   const lol = query.lol;
   const val = encodeURIComponent(query.val);
@@ -1625,7 +1625,7 @@ router.get("/rank?", async (req, env,) => {
     }
   } else {
     lolRank = "Unranked";
-  };
+  }
   console.log(lolRank);
   const valFetch = await fetch("https://trackergg-scraper.ahmedrangel.repl.co/val-track?user=" + val);
   const valData = await valFetch.text();
@@ -1650,7 +1650,7 @@ router.get("/imgur/user-oauth?", async (req, env) => {
     const imgur = new imgurApi(env.imgur_client_id, env.imgur_client_secret);
     const { refresh_token, access_token, expires_in, account_username } = await imgur.OauthCallback(query.code);
     const key = "imgur_"+account_username;
-    await env.AUTH_USERS.put(key, refresh_token, {metadata: {value: refresh_token},});
+    await env.AUTH_USERS.put(key, refresh_token, { metadata: { value: refresh_token } });
     console.log(`ID: ${key}\nAccess Token: ${access_token}\nRefresh Token: ${refresh_token}\nExpires in: ${expires_in}`);
     return new JsResponse(`ID: ${key}\nAccess Token: ${access_token}\nRefresh Token: ${refresh_token}\nExpires in: ${expires_in}`);
   } else {
@@ -1663,7 +1663,7 @@ router.get("/imgur/me/gallery", async (req, env) => {
   const auth_list = (await env.AUTH_USERS.list()).keys;
   const imgur_user = "imgur_ahmedrangel";
   let json = [];
-  let imgur_data = (await Promise.all((auth_list.map(async(users_keys) => {
+  let imgur_data = (await Promise.all((auth_list.map(async (users_keys) => {
     if (imgur_user == users_keys.name) {
       const { access_token } = await imgur.RefreshToken(users_keys.metadata.value);
       const data = imgur.GetMyGallery(access_token);
@@ -1679,8 +1679,8 @@ router.get("/imgur/me/gallery", async (req, env) => {
     } else {
       discordUser = "";
     }
-    json.push({id: images.id, title: images.title, description: images.description, datetime: images.datetime, discordUser: discordUser});
-  };
+    json.push({ id: images.id, title: images.title, description: images.description, datetime: images.datetime, discordUser: discordUser });
+  }
   json = JSON.stringify(json);
   console.log(json);
   return new JsResponse(json);
@@ -1727,14 +1727,14 @@ router.get("/dc/instagram-video-scrapper?", async (req, env) => {
 
     if (!idUrl) {
       console.log("Invalid url");
-      return JSON.stringify({status: 400});
+      return JSON.stringify({ status: 400 });
     } else {
       const instagram = new igApi(env.ig_proxy_host);
       const items = await instagram.getMedia(url.includes("/stories") ? url : `https://instagram.com/p/${idUrl}`, "video");
       const video_url = items.url;
       const json_response = {
         video_url: video_url,
-        short_url: url.replace(/\?.*$/, "").replace("www.",""),
+        short_url: url.replace(/\?.*$/, "").replace("www.", ""),
         caption: items?.caption,
         status: items.status
       };
@@ -1751,7 +1751,7 @@ router.get("/dc/instagram-video-scrapper?", async (req, env) => {
         count++;
         return await retryScrap();
       } else {
-        const json_error = {status: 429};
+        const json_error = { status: 429 };
         return JSON.stringify(json_error);
       }
     }
@@ -1793,7 +1793,7 @@ router.get("/dc/youtube/mp3?", async (req, env) => {
       duration: duration,
       status: 200
     });
-  } catch(e) {
+  } catch (e) {
     console.log(e);
     return new JsonResponse({ status: 404 });
   }
@@ -1832,7 +1832,7 @@ router.get("/dc/youtube-video-scrapper?", async (req, env) => {
       duration: duration,
       status: 200
     });
-  } catch(e) {
+  } catch (e) {
     console.log(e);
     return new JsonResponse({ status: 404 });
   }
@@ -1843,7 +1843,7 @@ router.get("/dc/facebook-video-scrapper?", async (req, env) => {
   const url = decodeURIComponent(query.url);
   const fdownloader = new fdownloaderApi();
   let video_url;
-  const short_url = url.replace(/[?&](fs|s|mibextid)=[^&]+/g, "").replace("www.","");
+  const short_url = url.replace(/[?&](fs|s|mibextid)=[^&]+/g, "").replace("www.", "");
   console.log(short_url);
   let status;
   let maxAttempts = 4;
@@ -1881,7 +1881,7 @@ router.get("/dc/twitter-video-scrapper?", async (req, env) => {
     const id = obtenerIDDesdeURL(url);
     const result = await twitter.getTweet(id);
 
-    if(!result) return new JsonResponse({ status: 404 });
+    if (!result) return new JsonResponse({ status: 404 });
 
     return new JsonResponse(result);
   }
@@ -1906,9 +1906,9 @@ router.get("/dc/stable-diffusion?", async (req, env, ctx) => {
     extra_negative_prompt = ", (((NSFW))), ((unclothed))";
   }
   const openai = new OpenAI({
-    apiKey: env.openai_token,
+    apiKey: env.openai_token
   });
-  const IA = async() => {
+  const IA = async () => {
     const response = await openai.completions.create({
       model: "gpt-3.5-turbo-instruct",
       prompt: `Translate this words into 1. English\n${prompt.replace(/black/gi, "dark")}\n1. `,
@@ -1916,7 +1916,7 @@ router.get("/dc/stable-diffusion?", async (req, env, ctx) => {
       max_tokens: 256,
       top_p: 1,
       frequency_penalty: 0,
-      presence_penalty: 0,
+      presence_penalty: 0
     });
     return response.choices[0].text;
   };
@@ -1930,21 +1930,21 @@ router.get("/dc/stable-diffusion?", async (req, env, ctx) => {
         "Content-type": "application/json"
       },
       body: JSON.stringify({
-        "key": key,
-        "model_id": "anything-v5",
-        "prompt": translatedPrompt.replace(/black/gi, "dark") + extra_prompt,
-        "negative_prompt": "boring, bad art, (extra fingers), out of frame, mutated hands, poorly drawn hands, poorly drawn face, deformed, disfigured, ugly, blurry, bad anatomy, bad proportions, ((extra limbs)), cloned face, skinny, glitchy, (double torso), (double body), ((extra arms)), ((extra hands)), mangled fingers, missing lips, ugly face, distorted face, extra legs, watermark" + extra_negative_prompt,
-        "width": "816",
-        "height": "816",
-        "samples": "1",
-        "enhance_prompt": "no",
-        "num_inference_steps": "30",
-        "seed": null,
-        "guidance_scale": "7.5",
-        "safety_checker": "no",
-        "multi_lingual": "yes",
-        "webhook": null,
-        "track_id": null
+        key: key,
+        model_id: "anything-v5",
+        prompt: translatedPrompt.replace(/black/gi, "dark") + extra_prompt,
+        negative_prompt: "boring, bad art, (extra fingers), out of frame, mutated hands, poorly drawn hands, poorly drawn face, deformed, disfigured, ugly, blurry, bad anatomy, bad proportions, ((extra limbs)), cloned face, skinny, glitchy, (double torso), (double body), ((extra arms)), ((extra hands)), mangled fingers, missing lips, ugly face, distorted face, extra legs, watermark" + extra_negative_prompt,
+        width: "816",
+        height: "816",
+        samples: "1",
+        enhance_prompt: "no",
+        num_inference_steps: "30",
+        seed: null,
+        guidance_scale: "7.5",
+        safety_checker: "no",
+        multi_lingual: "yes",
+        webhook: null,
+        track_id: null
       })
     };
     const response = await fetch(apiUrl, options);
@@ -1966,7 +1966,7 @@ router.get("/dc/stable-diffusion?", async (req, env, ctx) => {
         const imgur = new imgurApi(env.imgur_client_id, env.imgur_client_secret);
         const auth_list = (await env.AUTH_USERS.list()).keys;
         const imgur_user = "imgur_ahmedrangel";
-        let imgur_url = (await Promise.all((auth_list.map(async(users_keys) => {
+        let imgur_url = (await Promise.all((auth_list.map(async (users_keys) => {
           if (imgur_user == users_keys.name) {
             const { access_token } = await imgur.RefreshToken(users_keys.metadata.value);
             const respuesta = await imgur.UploadImage(access_token, prompt, fetched.output[0], "Stable Diffusion: Anything-v5");
@@ -1976,10 +1976,10 @@ router.get("/dc/stable-diffusion?", async (req, env, ctx) => {
           }
         })))).filter(users_keys => users_keys);
         console.log("subido a imgur");
-        return {output: [imgur_url]};
+        return { output: [imgur_url] };
       } else {
         console.log("error");
-        return {output: ["error"]};
+        return { output: ["error"] };
       }
     } else {
       console.log("refetcheando");
@@ -1991,8 +1991,8 @@ router.get("/dc/stable-diffusion?", async (req, env, ctx) => {
           "Content-type": "application/json"
         },
         body: JSON.stringify({
-          "key": key,
-          "request_id": id
+          key: key,
+          request_id: id
         }),
         redirect: "follow"
       };
@@ -2042,14 +2042,14 @@ router.get("/lol/masteries/:region/:name/:tag", async (req, env) => {
   const riot = new riotApi(env.riot_token);
   const route = riot.RegionNameRouting(region);
   if (!route) {
-    return new JsonResponse({status_code: 404, errorName: "region"});
+    return new JsonResponse({ status_code: 404, errorName: "region" });
   }
   const cluster = riot.RegionalRouting(region);
   const account = await riot.getAccountByRiotID(name, tag, cluster);
   const puuid = account.puuid;
   const summoner = await riot.getSummonerDataByPUUID(puuid, route);
   if (account?.status || summoner?.status) {
-    return new JsonResponse({status_code: 404, errorName: "riotId"});
+    return new JsonResponse({ status_code: 404, errorName: "riotId" });
   }
   const ddversions = await fetch(`https://ddragon.leagueoflegends.com/realms/${region}.json`);
   const ddversions_data = await ddversions.json();
@@ -2058,7 +2058,7 @@ router.get("/lol/masteries/:region/:name/:tag", async (req, env) => {
   const icon = `https://ddragon.leagueoflegends.com/cdn/${ddversions_data.n.profileicon}/img/profileicon/${summoner.profileIconId}.png`;
   const masteriesData = await riot.getChampionMasteriesByPUUID(puuid, route, 10);
   if (masteriesData?.status) {
-    return new JsonResponse({status_code: 404, errorName: "mastery"});
+    return new JsonResponse({ status_code: 404, errorName: "mastery" });
   }
   const masteryScore = await riot.getChampionMasteryScoreByPUUID(puuid, route);
   const data = {
@@ -2221,10 +2221,10 @@ router.get("/twitch/subscribers/:user/total", async (req, env) => {
 router.all("*", () => new JsResponse("Not Found.", { status: 404 }));
 
 export default {
-  async fetch(req, env, ctx) {
+  async fetch (req, env, ctx) {
     return router.fetch(req, env, ctx);
   },
-  async scheduled(event, env, ctx) {
+  async scheduled (event, env, ctx) {
     switch (event.cron) {
       case "*/3 * * * *":
         await lolChampTagAdder(env);

@@ -39,13 +39,13 @@ class tiktokApi {
           version_name: "35.1.3",
           device_platform: "android",
           device_type: "Pixel 8 Pro",
-          os_version: 14,
+          os_version: 14
         };
 
         const headers = {
           "content-type": "application/x-www-form-urlencoded",
           "User-Agent": "com.zhiliaoapp.musically/2023501030 (Linux; U; Android 14; en_US; Pixel 8 Pro; Build/TP1A.220624.014;tt-ok/3.12.13.4-tiktok)",
-          "x-argus": "",
+          "x-argus": ""
         };
 
         const data = await $fetch(withQuery(`${this.base}/aweme/v1/multi/aweme/detail/`, query), { headers, ...defaultRetry }).catch(() => null);

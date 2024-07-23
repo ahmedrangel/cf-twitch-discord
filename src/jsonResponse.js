@@ -1,5 +1,5 @@
 class JsonResponse extends Response {
-  constructor(body, opt) {
+  constructor (body, opt) {
     const options = {
       headers: {
         "Content-Type": "application/json;charset=UTF-8",

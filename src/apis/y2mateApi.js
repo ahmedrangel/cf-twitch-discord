@@ -53,7 +53,7 @@ class y2mateApi {
       });
       const data = await response.json();
       return data.dlink;
-    } catch(e) {
+    } catch (e) {
       console.log(e);
       return null;
     }

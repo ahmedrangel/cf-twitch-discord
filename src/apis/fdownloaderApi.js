@@ -7,7 +7,7 @@ class fdownloaderApi {
   }
 
   async getMedia (link) {
-    function generarCadenaAleatoria(longitud) {
+    function generarCadenaAleatoria (longitud) {
       return [...Array(longitud)].map(() => "abcdefghijklmnopqrstuvwxyz0123456789".charAt(Math.floor(Math.random() * 36))).join("");
     }
     const token = generarCadenaAleatoria(64);
@@ -31,7 +31,7 @@ class fdownloaderApi {
       if (data.status === "ok") {
         const html = cheerio.load(String(data.data));
         const url = html("td a").attr("href");
-        return { url, status: 200};
+        return { url, status: 200 };
       }
       return { status: 429 };
     } catch (e) {

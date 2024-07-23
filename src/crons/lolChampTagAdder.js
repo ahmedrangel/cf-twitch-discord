@@ -3,7 +3,7 @@ import riotApi from "../apis/riotApi";
 import twitchApi from "../apis/twitchApi";
 import { SettedTwitchTagsResponse } from "../utils/helpers";
 
-export const lolChampTagAdder = async(env) => {
+export const lolChampTagAdder = async (env) => {
   const channelId = "491738569";
   const riot = new riotApi(env.riot_token);
   const twitch = new twitchApi(env.client_id, env.client_secret);
@@ -67,6 +67,6 @@ export const lolChampTagAdder = async(env) => {
           console.log(log);
         }
       }
-    };
+    }
   }
 };

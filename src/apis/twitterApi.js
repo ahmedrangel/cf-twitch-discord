@@ -3,12 +3,12 @@ import { $fetch } from "ofetch";
 import { withQuery } from "ufo";
 
 class twitterApi {
-  constructor(twitter_bearer_token, x_cookie) {
+  constructor (twitter_bearer_token, x_cookie) {
     this.twitter_bearer_token = twitter_bearer_token;
     this.x_cookie = x_cookie;
   }
 
-  async getTweet(id) {
+  async getTweet (id) {
     const _userAgent = randUA("desktop");
     const graphql = "https://twitter.com/i/api/graphql/xOhkmRac04YFZmOzU9PJHg/TweetDetail";
     const query = {
@@ -20,7 +20,7 @@ class twitterApi {
         withQuickPromoteEligibilityTweetFields: true,
         withBirdwatchNotes: true,
         withVoice: true,
-        withV2Timeline: true,
+        withV2Timeline: true
       },
       features: {
         rweb_lists_timeline_redesign_enabled: true,
@@ -42,10 +42,10 @@ class twitterApi {
         longform_notetweets_rich_text_read_enabled: true,
         longform_notetweets_inline_media_enabled: true,
         responsive_web_media_download_video_enabled: false,
-        responsive_web_enhance_cards_enabled: false,
+        responsive_web_enhance_cards_enabled: false
       },
       fieldToggles: {
-        withArticleRichContentState: false,
+        withArticleRichContentState: false
       }
     };
 

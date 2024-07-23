@@ -1,6 +1,6 @@
 class twitchApi {
 
-  constructor(client_id, client_secret, database) {
+  constructor (client_id, client_secret, database) {
     this.client_id = client_id;
     this.client_secret = client_secret;
     this.grant_type = "client_credentials";
@@ -9,7 +9,7 @@ class twitchApi {
     this.OAUTH_BASE = "https://id.twitch.tv/oauth2";
   }
 
-  async getAccessToken() {
+  async getAccessToken () {
     const oauth_url = `${this.OAUTH_BASE}/token`;
     const response = await fetch(oauth_url, {
       body: JSON.stringify(this),
@@ -32,14 +32,14 @@ class twitchApi {
         "Authorization": "Bearer " + accessToken
       };
 
-      if(!accessToken) {
+      if (!accessToken) {
         console.log("No Token");
         return null;
       } else {
-        const response = await fetch(api, {method: "GET", headers: headers});
+        const response = await fetch(api, { method: "GET", headers: headers });
         const body = await response.json();
         return body.data[0].display_name;
-      };
+      }
     } catch (e) {
       return false;
     }
@@ -57,15 +57,15 @@ class twitchApi {
           "Authorization": "Bearer " + accessToken
         };
 
-        if(!accessToken) {
+        if (!accessToken) {
           console.log("No Token");
           return null;
         } else {
-          const response = await fetch(api, {method: "GET", headers: headers});
+          const response = await fetch(api, { method: "GET", headers: headers });
           const { data } = await response.json();
-          await this.database.prepare(`INSERT OR REPLACE INTO twitch (id, display_name, login, avatar) VALUES ('${data[0].id}', '${data[0].display_name}', '${data[0].login}', '${data[0].profile_image_url.replace("https://static-cdn.jtvnw.net/","")}')`).first();
+          await this.database.prepare(`INSERT OR REPLACE INTO twitch (id, display_name, login, avatar) VALUES ('${data[0].id}', '${data[0].display_name}', '${data[0].login}', '${data[0].profile_image_url.replace("https://static-cdn.jtvnw.net/", "")}')`).first();
           return data[0].id;
-        };
+        }
       } catch (e) {
         return null;
       }
@@ -85,15 +85,15 @@ class twitchApi {
           "Authorization": "Bearer " + accessToken
         };
 
-        if(!accessToken) {
+        if (!accessToken) {
           console.log("No Token");
           return null;
         } else {
-          const response = await fetch(api, {method: "GET", headers: headers});
+          const response = await fetch(api, { method: "GET", headers: headers });
           const { data } = await response.json();
-          await this.database.prepare(`INSERT OR REPLACE INTO twitch (id, display_name, login, avatar) VALUES ('${data[0].id}', '${data[0].display_name}', '${data[0].login}', '${data[0].profile_image_url.replace("https://static-cdn.jtvnw.net/","")}')`).first();
+          await this.database.prepare(`INSERT OR REPLACE INTO twitch (id, display_name, login, avatar) VALUES ('${data[0].id}', '${data[0].display_name}', '${data[0].login}', '${data[0].profile_image_url.replace("https://static-cdn.jtvnw.net/", "")}')`).first();
           return data[0];
-        };
+        }
       } catch (e) {
         return null;
       }
@@ -101,7 +101,7 @@ class twitchApi {
     return database;
   }
 
-  async getBroadcasterInfo(channel_id) {
+  async getBroadcasterInfo (channel_id) {
     const accessToken = await this.getAccessToken();
     const api = `${this.API_BASE}/channels?broadcaster_id=${channel_id}`;
     const headers = {
@@ -109,17 +109,17 @@ class twitchApi {
       "Authorization": "Bearer " + accessToken
     };
 
-    if(!accessToken) {
+    if (!accessToken) {
       console.log("No Token");
       return null;
     } else {
-      const response = await fetch(api, {method: "GET", headers: headers});
+      const response = await fetch(api, { method: "GET", headers: headers });
       const body = await response.json();
       return body.data[0];
-    };
+    }
   }
   // user oauth call back for getting user access token, require oauth query code, require redirect uri
-  async OauthCallback(query_code, redirect_uri) {
+  async OauthCallback (query_code, redirect_uri) {
     const oauth_url = `${this.OAUTH_BASE}/token?client_id=${this.client_id}&client_secret=${this.client_secret}&code=${query_code}&grant_type=authorization_code&redirect_uri=${redirect_uri}`;
     const response = await fetch(oauth_url, {
       method: "POST",
@@ -132,7 +132,7 @@ class twitchApi {
   }
 
   // token validation
-  async Validate(user_access_token) {
+  async Validate (user_access_token) {
     const validate = `${this.OAUTH_BASE}/validate`;
     const validation = await fetch(validate, {
       method: "GET",
@@ -166,7 +166,7 @@ class twitchApi {
       headers: {
         "Client-ID": this.client_id,
         "Authorization": "Bearer " + user_access_token
-      }});
+      } });
     const { data } = await top_users.json();
     return data;
 
@@ -261,7 +261,7 @@ class twitchApi {
       headers: {
         "Client-ID": this.client_id,
         "Authorization": "Bearer " + user_access_token
-      }});
+      } });
     const { data } = await response.json();
     return data;
 
@@ -294,7 +294,7 @@ class twitchApi {
         headers: {
           "Client-ID": this.client_id,
           "Authorization": "Bearer " + user_access_token
-        }});
+        } });
       const { data, message } = await response.json();
       return data ? data[0] : { message };
     } catch (e) {
@@ -311,14 +311,14 @@ class twitchApi {
       "Authorization": "Bearer " + accessToken
     };
 
-    if(!accessToken) {
+    if (!accessToken) {
       console.log("No Token");
       return null;
     } else {
-      const response = await fetch(api, {method: "GET", headers: headers});
+      const response = await fetch(api, { method: "GET", headers: headers });
       const data = await response.json();
       return data.data[0];
-    };
+    }
   }
 }
 

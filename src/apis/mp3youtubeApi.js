@@ -15,7 +15,7 @@ class mp3youtubeApi {
         method: "POST",
         headers: {
           "User-Agent": _userAgent,
-          "Referer": `${this.base}/download/${id}`,
+          "Referer": `${this.base}/download/${id}`
         },
         body: formData
       });

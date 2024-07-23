@@ -13,7 +13,7 @@ class crossclipApi {
         headers: {
           "User-Agent": this._userAgent,
           "Authorization": "Bearer " + this.crossclip_token
-        },
+        }
       });
       const data = await response.json();
       return data.url;

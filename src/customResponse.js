@@ -1,5 +1,5 @@
 class CustomResponse extends Response {
-  constructor(body, opt) {
+  constructor (body, opt) {
     const options = {
       headers: {
         "Content-Type": opt?.type,

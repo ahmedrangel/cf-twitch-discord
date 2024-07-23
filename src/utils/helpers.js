@@ -151,9 +151,9 @@ export const jsonCustomSorterByProperty = (array, customOrderArray, property) =>
   });
 };
 
-export const SettedTwitchTagsResponse = async(env, channelId, auth_list, filteredTags, originalLength) => {
+export const SettedTwitchTagsResponse = async (env, channelId, auth_list, filteredTags, originalLength) => {
   const twitch = new twitchApi(env.client_id, env.client_secret);
-  const response = (await Promise.all((auth_list.map(async(users_keys) => {
+  const response = (await Promise.all((auth_list.map(async (users_keys) => {
     if (channelId == users_keys.name) {
       const access_token = await twitch.RefreshToken(users_keys.metadata.value);
       const tagsPatch = await twitch.SetTags(access_token, users_keys.name, filteredTags);
@@ -162,7 +162,7 @@ export const SettedTwitchTagsResponse = async(env, channelId, auth_list, filtere
       } else if (tagsPatch.status === 400 && originalLength > 10) {
         return "Error. La cantidad máxima de etiquetas que puedes establecer es de 10.";
       } else {
-        const newTags = String(filteredTags).replaceAll(/,/g,", ");
+        const newTags = String(filteredTags).replaceAll(/,/g, ", ");
         return `Etiquetas del canal actualizadas: ${newTags}`;
       }
     }
@@ -175,7 +175,7 @@ export const timeToSeconds = (time) => {
     return iso.match(/\d+[HMS]/g).reduce((total, time) => {
       const unit = time.charAt(time.length - 1);
       const value = parseInt(time);
-      const formatter = { "H": 3600, "M": 60, "S": 1 };
+      const formatter = { H: 3600, M: 60, S: 1 };
       return total + (value * formatter[unit]);
     }, 0);
   };

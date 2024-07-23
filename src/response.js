@@ -1,5 +1,5 @@
 class JsResponse extends Response {
-  constructor(body, opt) {
+  constructor (body, opt) {
     const options = {
       headers: {
         "Content-Type": "text/javascript;charset=UTF-8",
