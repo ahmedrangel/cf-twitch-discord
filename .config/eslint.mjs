@@ -12,7 +12,6 @@ export default [
       "@stylistic": stylistic
     },
     rules: {
-      "no-console": ["error", { allow: ["info", "warn"] }],
       "@stylistic/indent": ["error", 2, { SwitchCase: 1 }],
       "@stylistic/linebreak-style": ["error", process.platform === "win32" ? "windows" : "unix"],
       "@stylistic/quotes": ["error", "double"],
@@ -23,7 +22,7 @@ export default [
       "@stylistic/multiline-ternary": ["error", "never"],
       "@stylistic/member-delimiter-style": ["error", { multiline: { delimiter: "semi" }, singleline: { delimiter: "comma" } }],
       "@stylistic/arrow-spacing": ["error", { before: true, after: true }],
-      "@stylistic/brace-style": ["error", "stroustrup", { allowSingleLine: true }],
+      "@stylistic/brace-style": ["error", "1tbs", { allowSingleLine: true }],
       "@stylistic/no-multi-spaces": "error",
       "@stylistic/space-before-blocks": "error",
       "@stylistic/no-trailing-spaces": "error",
