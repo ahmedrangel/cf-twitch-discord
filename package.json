@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@ahmedrangel/rand-user-agent": "^2.0.17",
+    "@stylistic/eslint-plugin": "^2.3.0",
     "buffer": "^6.0.3",
     "cheerio": "1.0.0-rc.12",
     "detectlanguage": "^2.1.0",
