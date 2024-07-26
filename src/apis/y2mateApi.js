@@ -26,9 +26,10 @@ class y2mateApi {
       console.log(data);
       const q720 = data?.links?.mp4["22"]?.k; // 720p (shorts)
       const q480 = data?.links?.mp4["135"]?.k; // 480p
-      const q360p = data?.links?.mp4["18"]?.k; // 360p
+      const q360ps = data?.links?.mp4["18"]?.k; // 360p (shorts)
+      const q360p = data?.links?.mp4["134"]?.k;
       const q240p = data?.links?.mp4["133"]?.k; // 240p
-      const hd_token = q720 ? q720 : q480 ? q480 : q360p ? q360p : q240p;
+      const hd_token = q720 ? q720 : q480 ? q480 : q360p ? q360p : q360ps ? q360ps : q240p;
       return { hd_token };
     } catch (e) {
       console.log(e);
