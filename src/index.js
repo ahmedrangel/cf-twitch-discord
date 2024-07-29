@@ -20,6 +20,7 @@ import fdownloaderApi from "./apis/fdownloaderApi";
 import * as cheerio from "cheerio";
 import twitterApi from "./apis/twitterApi";
 import tiktokApi from "./apis/tiktokApi";
+import kickApi from "./apis/kickApi";
 
 const router = IttyRouter();
 // educar
@@ -2216,6 +2217,13 @@ router.get("/twitch/subscribers/:user/total", async (req, env) => {
   }
 
   return new JsonResponse({ total });
+});
+
+router.get("/dc/kick-video-scrapper?", async (req, env) => {
+  const { query } = req;
+  const kick = new kickApi();
+  const data = await kick.getMedia(decodeURIComponent(query.url));
+  return new JsonResponse(data);
 });
 
 router.all("*", () => new JsResponse("Not Found.", { status: 404 }));
