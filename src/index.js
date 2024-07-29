@@ -21,6 +21,7 @@ import * as cheerio from "cheerio";
 import twitterApi from "./apis/twitterApi";
 import tiktokApi from "./apis/tiktokApi";
 import kickApi from "./apis/kickApi";
+import { $fetch } from "ofetch";
 
 const router = IttyRouter();
 // educar
@@ -2112,19 +2113,9 @@ router.get("/dc/twitch-video-scrapper?", async (req, env) => {
 
 router.get("/kick/clip/:id", async (req, env) => {
   const { id } = req.params;
-  const tokens = [env.crossclip_token, env.crossclip_token2];
-  const random_token = tokens[Math.floor(Math.random() * tokens.length)];
-  const crossclip = new crossclipApi(random_token);
-  let url = await crossclip.getKickClip(id);
-  let maxAttempts = 4;
-  console.log(id);
-  while (!url && maxAttempts > 0) {
-    console.log("Retrying video download (attempt " + (5 - maxAttempts) + ")");
-    await new Promise(r => setTimeout(r, 7000));
-    url = await crossclip.getKickClip(id);
-    maxAttempts--;
-  }
-  if (url) console.log("Downloaded");
+  const { clipId } = await $fetch(`${env.kick_3rd_base}/clip/${id}`).catch(() => null);
+  if (!clipId) return new JsonResponse({ status: 404 });
+  const url = `https://clips.kick.com/tmp/${id}.mp4`;
   return new JsonResponse({ url });
 });
 
