@@ -1728,7 +1728,7 @@ router.get("/dc/instagram-video-scrapper?", async (req, env) => {
 
     if (!idUrl) {
       console.log("Invalid url");
-      return JSON.stringify({ status: 400 });
+      return { status: 400 };
     } else {
       const instagram = new igApi(env.ig_proxy_host);
       const items = await instagram.getMedia(url.includes("/stories") ? url : `https://instagram.com/p/${idUrl}`, "video");
@@ -1739,7 +1739,7 @@ router.get("/dc/instagram-video-scrapper?", async (req, env) => {
         caption: items?.caption,
         status: items.status
       };
-      return JSON.stringify(json_response);
+      return json_response;
     }
   };
 
@@ -1753,12 +1753,12 @@ router.get("/dc/instagram-video-scrapper?", async (req, env) => {
         return await retryScrap();
       } else {
         const json_error = { status: 429 };
-        return JSON.stringify(json_error);
+        return json_error;
       }
     }
   };
 
-  return new JsResponse(await retryScrap());
+  return new JsonResponse(await retryScrap());
 });
 
 router.get("/dc/youtube/mp3?", async (req, env) => {
