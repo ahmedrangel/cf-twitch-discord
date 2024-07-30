@@ -1720,9 +1720,9 @@ router.get("/dc/instagram-video-scrapper?", async (req, env) => {
     // const _xIgAppId = "936619743392459";
     const url = decodeURIComponent(query.url);
     const getInstagramId = (url) => {
-      const regex = /instagram.com\/(?:p|reels|reel|stories)\/([A-Za-z0-9-_]+)/;
+      const regex = /instagram.com\/(?:[A-Za-z0-9_.]+\/)?(p|reels|reel|stories)\/([A-Za-z0-9-_]+)/;
       const match = url.match(regex);
-      return match && match[1] ? match[1] : null;
+      return match && match[2] ? match[2] : null;
     };
 
     const idUrl = getInstagramId(url);
