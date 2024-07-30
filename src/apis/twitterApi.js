@@ -72,6 +72,7 @@ class twitterApi {
           const result = en?.content?.itemContent?.tweet_results?.result;
           entriesArr.push(result?.legacy || result?.tweet?.legacy);
           quotedArr.push(result?.quoted_status_result?.result?.legacy);
+          break;
         }
       }
 
