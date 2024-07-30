@@ -65,26 +65,29 @@ class twitterApi {
 
       const dataEntries = data?.threaded_conversation_with_injections_v2?.instructions[0]?.entries;
       const entriesArr = [];
+      const quotedArr = [];
 
       for (const en of dataEntries) {
         if (en?.entryId === `tweet-${id}`) {
-          entriesArr.push(en?.content?.itemContent?.tweet_results?.result?.legacy || en?.content?.itemContent?.tweet_results?.result?.tweet?.legacy);
+          const result = en?.content?.itemContent?.tweet_results?.result;
+          entriesArr.push(result?.legacy || result?.tweet?.legacy);
+          quotedArr.push(result?.quoted_status_result?.result?.legacy);
         }
       }
 
       const entries = entriesArr[0];
-      if (!entries?.extended_entities?.media[0]?.video_info) return null;
+      const quotedEntries = quotedArr.length ? quotedArr[0] : null;
 
-      const videos = entries.extended_entities.media[0].video_info.variants;
+      if (!entries?.extended_entities?.media[0]?.video_info && !quotedEntries?.extended_entities?.media[0]?.video_info) return null;
+
+      const videos = entries?.extended_entities?.media[0]?.video_info?.variants || quotedEntries?.extended_entities?.media[0]?.video_info?.variants;
       const filteredVideos = videos.filter(video => video.content_type === "video/mp4" && video.bitrate && (video.url.includes("avc1") || video.url.includes("/pu/vid/") || video.url.includes(".mp4?tag=12")));
       const maxBitrate = Math.max(...filteredVideos.map(video => video.bitrate));
       const video = filteredVideos.find(video => video.bitrate === maxBitrate);
 
-      console.log(video);
-
       const video_url = video?.url;
-      const short_url = entries.extended_entities.media[0].url;
-      const caption = entries.full_text.replace(/https:\/\/t\.co\/\w+/g, "").trim();
+      const short_url = `https://x.com/x/status/${id}`;
+      const caption = entries?.full_text?.replace(/https:\/\/t\.co\/\w+/g, "").trim();
 
       return { video_url, short_url, caption, status: 200 };
     } catch (e) {
