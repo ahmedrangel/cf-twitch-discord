@@ -7,7 +7,8 @@ class CustomResponse extends Response {
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "GET, POST, PUT, PATCH",
         "Access-Control-Allow-Credentials": "true",
-        "Cache-Control": opt?.cache
+        "Cache-Control": opt?.cache,
+        "etag": opt?.etag
       }
     };
     super(body, options);
