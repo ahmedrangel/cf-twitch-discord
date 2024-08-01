@@ -2246,19 +2246,20 @@ router.get("/dc/kick-video-scrapper?", async (req, env) => {
 router.get("/dc/fx?", async (req, env) => {
   const { query } = req;
   if (query.video_url) {
+    const path = query.video_url.replace("https://cdn.ahmedrangel.com/", "").replace(/[?&].*$/, "");
     const html = `
       <meta charset="UTF-8">
       <meta name="theme-color" content="#00a8fc"/>
       <meta http-equiv="refresh" content="0;url=${query?.redirect_url}"/>
-      <meta name="twitter:player:stream" content="${env.WORKER_URL}/cdn/proxy?url=${query?.video_url}"/>
+      <meta name="twitter:player:stream" content="${env.WORKER_URL}/cdn/proxy/${path}"/>
       <meta name="twitter:player:stream:content_type" content="video/mp4"/>
       <meta name="twitter:player:width" content="0"/>
       <meta name="twitter:player:height" content="0"/>
       <meta property="twitter:card" content="player"/>
 
       <meta property="og:url" content="${query?.redirect_url}"/>
-      <meta property="og:video" content="${env.WORKER_URL}/cdn/proxy?url=${query?.video_url}"/>
-      <meta property="og:video:secure_url" content="${env.WORKER_URL}/cdn/proxy?url=${query?.video_url}"/>
+      <meta property="og:video" content="${env.WORKER_URL}/cdn/proxy/${path}"/>
+      <meta property="og:video:secure_url" content="${env.WORKER_URL}/cdn/proxy/${path}"/>
       <meta property="og:video:type" content="video/mp4"/>
       <meta property="og:video:width" content="0"/>
       <meta property="og:video:height" content="0"/>
@@ -2267,12 +2268,13 @@ router.get("/dc/fx?", async (req, env) => {
   }
 });
 
-router.get("/cdn/proxy?", async (req, env) => {
-  const { url } = req.query;
-  const video = await env.R2cdn.get(url.replace("https://cdn.ahmedrangel.com/", ""));
+router.get("/cdn/proxy/videos/:social/:id.mp4", async (req, env) => {
+  const { social, id } = req.params;
+  const video = await env.R2cdn.get(`videos/${social}/${id}.mp4`);
   const contentType = video.httpMetadata.contentType;
+  const etag = video.httpEtag;
   const blob = await video.blob();
-  return new CustomResponse(blob, { type: contentType });
+  return new CustomResponse(blob, { type: contentType, cache: "max-age=14400", etag });
 });
 
 router.all("*", () => new JsResponse("Not Found.", { status: 404 }));
