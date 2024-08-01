@@ -2271,9 +2271,8 @@ router.get("/cdn/proxy?", async (req, env) => {
   const { url } = req.query;
   const video = await env.R2cdn.get(url.replace("https://cdn.ahmedrangel.com/", ""));
   const contentType = video.httpMetadata.contentType;
-  const contentDisposition = video.httpMetadata.contentDisposition;
   const blob = await video.blob();
-  return new CustomResponse(blob, { type: contentType, disposition: contentDisposition });
+  return new CustomResponse(blob, { type: contentType });
 });
 
 router.all("*", () => new JsResponse("Not Found.", { status: 404 }));

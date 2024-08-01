@@ -3,7 +3,7 @@ class CustomResponse extends Response {
     const options = {
       headers: {
         "Content-Type": opt?.type,
-        "Content-Disposition": opt?.disposition,
+        "Content-Disposition": opt?.disposition || "inline",
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "GET, POST, PUT, PATCH",
         "Access-Control-Allow-Credentials": "true",
