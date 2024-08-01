@@ -90,7 +90,7 @@ class twitterApi {
       const short_url = `https://x.com/x/status/${id}`;
       const caption = entries?.full_text?.replace(/https:\/\/t\.co\/\w+/g, "").trim();
 
-      return { video_url, short_url, caption, status: 200 };
+      return { id, video_url, short_url, caption, status: 200 };
     } catch (e) {
       console.log(e);
       return null;

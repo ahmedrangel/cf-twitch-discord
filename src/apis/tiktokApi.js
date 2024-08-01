@@ -54,7 +54,7 @@ class tiktokApi {
         const video_url = data?.aweme_details[0]?.video?.play_addr?.url_list[0];
         const short_url = "https://m.tiktok.com/v/" + data?.aweme_details[0]?.aweme_id;
         const caption = data?.aweme_details[0]?.desc?.trim().replace(/\s+$/, "");
-        return { video_url, short_url, caption, status: 200 };
+        return { id: tt_id, video_url, short_url, caption, status: 200 };
       } catch (e) {
         console.log(e);
         return null;
@@ -69,7 +69,7 @@ class tiktokApi {
       const video_url = data?.play;
       const short_url = "https://m.tiktok.com/v/" + data?.id;
       const caption = data?.title?.trim().replace(/\s+$/, "");
-      return { video_url, short_url, caption, status: 200 };
+      return { id: data?.id, video_url, short_url, caption, status: 200 };
     };
 
     return await method_1() || await method_2() || null;

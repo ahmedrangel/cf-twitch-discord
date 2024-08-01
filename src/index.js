@@ -22,6 +22,7 @@ import twitterApi from "./apis/twitterApi";
 import tiktokApi from "./apis/tiktokApi";
 import kickApi from "./apis/kickApi";
 import { $fetch } from "ofetch";
+import CustomResponse from "./customResponse";
 
 const router = IttyRouter();
 // educar
@@ -1126,33 +1127,44 @@ router.get("/put/discord-avatars?", async (req, env) => {
 
 router.get("/put/video?", async (req, env, ctx) => {
   const { query } = req;
-  const video_url = query.url;
-  const bot_name = query.bot_name.toLowerCase();
+  const video_url = query?.url;
+  const bot_name = query?.bot_name.toLowerCase();
+  const dir = query?.dir.toLowerCase();
+  const file_id = query?.file_id;
+
   if (video_url && bot_name) {
     const f = await fetch(video_url);
     const b = await f.blob();
     const type = "video/mp4";
-    const httpHeaders = { "Content-Type": type, "Content-Disposition": "attachment" };
+    const httpHeaders = { "Content-Type": type, "Content-Disposition": "inline" };
     const headers = new Headers(httpHeaders);
     const uniqueId = generateUniqueId();
-
-    const putR2 = async (id) => {
-      const object = await env.R2cdn.put(`${bot_name}/${id}.mp4`, b, { httpMetadata: headers });
-      console.log(`escrito: ${id}`);
-      return `https://cdn.ahmedrangel.com/${bot_name}/${id}.mp4`;
+    const custom = dir && file_id ? true : false;
+    const path = custom ? `${bot_name}/${dir}/${file_id}.mp4` : `${bot_name}/${uniqueId}.mp4`;
+    const cdn = "https://cdn.ahmedrangel.com";
+    const putR2 = async (path) => {
+      await env.R2cdn.put(path, b, { httpMetadata: headers });
+      console.log(`escrito: ${path}`);
+      return `${cdn}/${path}`;
     };
 
-    const comprobarCDN = async (id) => {
-      const comprobar = await fetch(`https://cdn.ahmedrangel.com/${bot_name}/${id}.mp4`);
+    const comprobarCDN = async (path) => {
+      console.log(`${cdn}/${path}`);
+      const comprobar = await fetch(`${cdn}/${path}`);
       if (comprobar.status === 200) {
-        console.log("existe, generar nuevo id, y volver a comprobar");
-        const uniqueId = generateUniqueId();
-        return await comprobarCDN(uniqueId);
+        if (!custom) {
+          console.log("existe, generar nuevo id, y volver a comprobar");
+          const uniqueId = generateUniqueId();
+          const newPath = `${bot_name}/${uniqueId}.mp4`;
+          return await comprobarCDN(newPath);
+        }
+        return `${cdn}/${path}`;
       }
       console.log("no existe, put en r2cdn");
-      return await putR2(id);
+      return await putR2(path);
     };
-    const response = await comprobarCDN(uniqueId);
+
+    const response = await comprobarCDN(path);
     return new JsResponse(response);
   }
   return new JsResponse("Error. No se ha encontrado un video.");
@@ -1735,6 +1747,7 @@ router.get("/dc/instagram-video-scrapper?", async (req, env) => {
       const items = await instagram.getMedia(url.includes("/stories") ? url : `https://instagram.com/p/${idUrl}`, "video");
       const video_url = items.url;
       const json_response = {
+        id: idUrl,
         video_url: video_url,
         short_url: url.replace(/\?.*$/, "").replace("www.", ""),
         caption: items?.caption,
@@ -1828,6 +1841,7 @@ router.get("/dc/youtube-video-scrapper?", async (req, env) => {
       });
     }
     return new JsonResponse({
+      id,
       video_url: video_url,
       caption: snippet.title,
       short_url: short_url,
@@ -1847,6 +1861,10 @@ router.get("/dc/facebook-video-scrapper?", async (req, env) => {
   let video_url;
   const short_url = url.replace(/([&?](?!v=)[^=]+=[^&]*)/g, "").replace("&", "?").replace("www.", "");
   console.log(short_url);
+  const regex = /(?:watch\/\?v=|watch\/|gg\/|videos\/|reel\/|reels\/|share\/[\w+]\/)(\w+)/;
+  const match = short_url.match(regex);
+  const id = match ? match[1] : null;
+
   let status;
   let maxAttempts = 4;
   while (!video_url && maxAttempts > 0) {
@@ -1857,7 +1875,7 @@ router.get("/dc/facebook-video-scrapper?", async (req, env) => {
     status = data?.status;
     maxAttempts--;
   }
-  return new JsonResponse({ video_url, short_url, status });
+  return new JsonResponse({ id, video_url, short_url, status });
 });
 
 router.get("/dc/tiktok-video-scrapper?", async (req, env) => {
@@ -2093,22 +2111,16 @@ router.get("/dc/twitch-video-scrapper?", async (req, env) => {
   const url = decodeURIComponent(query.url);
   const id = obtenerIDDesdeURL(url);
   const twitch = new twitchApi(env.client_id, env.client_secret, env.NB);
-  const obj = {};
   try {
     const data = await twitch.getClips(id);
     const thumbnailUrl = data?.thumbnail_url;
-    const videoUrl = thumbnailUrl.replace(/-preview-.*\.jpg/, ".mp4");
-    const clipUrl = data?.url;
-    const title = data?.title;
-    const channel = data?.broadcaster_name;
-    obj.video_url = videoUrl;
-    obj.short_url = clipUrl;
-    obj.caption = title;
-    obj.status = 200;
+    const video_url = thumbnailUrl.replace(/-preview-.*\.jpg/, ".mp4");
+    const short_url = data?.url;
+    const caption = data?.title;
+    return new JsonResponse({ id, video_url, short_url, caption, status: 200 });
   } catch (e) {
-    obj.status = 404;
+    return new JsonResponse({ status: 404 });
   }
-  return new JsonResponse(obj);
 });
 
 router.get("/kick/clip/:id", async (req, env) => {
@@ -2215,6 +2227,30 @@ router.get("/dc/kick-video-scrapper?", async (req, env) => {
   const kick = new kickApi();
   const data = await kick.getMedia(decodeURIComponent(query.url));
   return new JsonResponse(data);
+});
+
+router.get("/dc/fx?", async (req, env) => {
+  const { query } = req;
+  if (query.video_url) {
+    const html = `
+      <meta charset="UTF-8">
+      <meta name="theme-color" content="#00a8fc"/>
+      <meta http-equiv="refresh" content="0;url=${query?.redirect_url}"/>
+      <meta name="twitter:player:stream" content="https://envoy.lol/${query?.video_url}?"/>
+      <meta name="twitter:player:stream:content_type" content="video/mp4"/>
+      <meta name="twitter:player:width" content="0"/>
+      <meta name="twitter:player:height" content="0"/>
+      <meta property="twitter:card" content="player"/>
+
+      <meta property="og:url" content="${query?.redirect_url}"/>
+      <meta property="og:video" content="https://envoy.lol/${query?.video_url}"/>
+      <meta property="og:video:secure_url" content="https://envoy.lol/${query?.video_url}?"/>
+      <meta property="og:video:type" content="video/mp4"/>
+      <meta property="og:video:width" content="0"/>
+      <meta property="og:video:height" content="0"/>
+    `;
+    return new CustomResponse(html, { type: "text/html" });
+  }
 });
 
 router.all("*", () => new JsResponse("Not Found.", { status: 404 }));
