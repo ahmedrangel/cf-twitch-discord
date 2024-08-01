@@ -1128,8 +1128,8 @@ router.get("/put/discord-avatars?", async (req, env) => {
 router.get("/put/video?", async (req, env, ctx) => {
   const { query } = req;
   const video_url = query?.url;
-  const bot_name = query?.bot_name.toLowerCase();
-  const dir = query?.dir.toLowerCase();
+  const bot_name = query?.bot_name?.toLowerCase();
+  const dir = query?.dir?.toLowerCase();
   const file_id = query?.file_id;
 
   if (video_url && bot_name) {
@@ -1151,7 +1151,7 @@ router.get("/put/video?", async (req, env, ctx) => {
     const comprobarCDN = async (path) => {
       console.log(`${cdn}/${path}`);
       const comprobar = await fetch(`${cdn}/${path}`);
-      if (comprobar.status === 200) {
+      if (comprobar?.ok) {
         if (!custom) {
           console.log("existe, generar nuevo id, y volver a comprobar");
           const uniqueId = generateUniqueId();
