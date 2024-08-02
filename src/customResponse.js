@@ -4,6 +4,7 @@ class CustomResponse extends Response {
       headers: {
         "Content-Type": opt?.type,
         "Content-Disposition": opt?.disposition || "inline",
+        "Accept-Ranges": "bytes",
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "GET, POST, PUT, PATCH",
         "Access-Control-Allow-Credentials": "true",
