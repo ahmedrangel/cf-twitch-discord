@@ -2254,19 +2254,20 @@ router.get("/dc/fx?", async (req, env, ctx) => {
       return cachedResponse;
     }
 
-    const path = query.video_url.replace("https://cdn.ahmedrangel.com/", "").replace(/[?&].*$/, "");
+    // const path = query.video_url.replace("https://cdn.ahmedrangel.com/", "").replace(/[?&].*$/, "");
+    const proxy = "https://envoy.lol";
     const html = `
       <meta charset="UTF-8">
       <meta name="theme-color" content="#00a8fc"/>
       <meta http-equiv="refresh" content="0;url=${query?.redirect_url}"/>
-      <meta name="twitter:player:stream" content="${env.WORKER_URL}/cdn/proxy/${path}"/>
+      <meta name="twitter:player:stream" content="${proxy}/${query.video_url}"/>
       <meta name="twitter:player:stream:content_type" content="video/mp4"/>
       <meta name="twitter:player:width" content="0"/>
       <meta name="twitter:player:height" content="0"/>
       <meta property="twitter:card" content="player"/>
       <meta property="og:url" content="${query?.redirect_url}"/>
-      <meta property="og:video" content="${env.WORKER_URL}/cdn/proxy/${path}"/>
-      <meta property="og:video:secure_url" content="${env.WORKER_URL}/cdn/proxy/${path}"/>
+      <meta property="og:video" content="${proxy}/${query.video_url}"/>
+      <meta property="og:video:secure_url" content="${proxy}/${query.video_url}"/>
       <meta property="og:video:type" content="video/mp4"/>
       <meta property="og:video:width" content="0"/>
       <meta property="og:video:height" content="0"/>
