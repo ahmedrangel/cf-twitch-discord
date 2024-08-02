@@ -2242,9 +2242,18 @@ router.get("/dc/kick-video-scrapper?", async (req, env) => {
   return new JsonResponse(data);
 });
 
-router.get("/dc/fx?", async (req, env) => {
+router.get("/dc/fx?", async (req, env, ctx) => {
   const { query } = req;
-  if (query.video_url) {
+  if (query.video_url && query.redirect_url) {
+    const cacheKey = new Request(req.url, req);
+    const cache = caches.default;
+
+    const cachedResponse = await cache.match(cacheKey);
+    if (cachedResponse) {
+      console.log("Found in cache!");
+      return cachedResponse;
+    }
+
     const path = query.video_url.replace("https://cdn.ahmedrangel.com/", "").replace(/[?&].*$/, "");
     const html = `
       <meta charset="UTF-8">
@@ -2255,7 +2264,6 @@ router.get("/dc/fx?", async (req, env) => {
       <meta name="twitter:player:width" content="0"/>
       <meta name="twitter:player:height" content="0"/>
       <meta property="twitter:card" content="player"/>
-
       <meta property="og:url" content="${query?.redirect_url}"/>
       <meta property="og:video" content="${env.WORKER_URL}/cdn/proxy/${path}"/>
       <meta property="og:video:secure_url" content="${env.WORKER_URL}/cdn/proxy/${path}"/>
@@ -2263,17 +2271,42 @@ router.get("/dc/fx?", async (req, env) => {
       <meta property="og:video:width" content="0"/>
       <meta property="og:video:height" content="0"/>
     `.replace(/\n\s+/g, "\n");
-    return new CustomResponse(html, { type: "text/html" });
+    const response = new CustomResponse(html, { type: "text/html; charset=UTF-8", cache: "max-age=432000" });
+
+    console.info("Stored in cache!");
+    ctx.waitUntil(cache?.put(cacheKey, response.clone()));
+
+    return response;
   }
+
+  return new JsResponse(null, { status: 204 });
 });
 
-router.get("/cdn/proxy/videos/:social/:id.mp4", async (req, env) => {
+router.get("/cdn/proxy/videos/:social/:id.mp4", async (req, env, ctx) => {
   const { social, id } = req.params;
+  const cacheKey = new Request(req.url, req);
+  const cache = caches.default;
+
+  const cachedResponse = await cache.match(cacheKey);
+  if (cachedResponse) {
+    console.log("Found in cache!");
+    return cachedResponse;
+  }
+
   const video = await env.R2cdn.get(`videos/${social}/${id}.mp4`);
-  const contentType = video.httpMetadata.contentType;
-  const etag = video.httpEtag;
+  if (!video) return new JsResponse("Video not found", { status: 404 });
+
+  const contentType = video?.httpMetadata?.contentType;
+  const etag = video?.httpEtag;
   const blob = await video.blob();
-  return new CustomResponse(blob, { type: contentType, cache: "max-age=14400", etag });
+  const response = new CustomResponse(blob, { type: contentType, cache: "max-age=432000", etag });
+
+  if (blob) {
+    console.info("Stored in cache!");
+    ctx.waitUntil(cache?.put(cacheKey, response.clone()));
+  }
+
+  return response;
 });
 
 router.all("*", () => new JsResponse("Not Found.", { status: 404 }));
