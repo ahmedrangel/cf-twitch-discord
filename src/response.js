@@ -8,6 +8,7 @@ class JsResponse extends Response {
         "Cache-Control": opt?.cache
       }
     };
+    opt?.status ? options.status = opt.status : null;
     super(body, options);
   }
 }
