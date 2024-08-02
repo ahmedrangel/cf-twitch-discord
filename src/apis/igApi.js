@@ -1,4 +1,5 @@
 import { randUA } from "@ahmedrangel/rand-user-agent";
+import { $fetch } from "ofetch";
 import { snapsave } from "snapsave-media-downloader";
 
 class igApi {
@@ -21,11 +22,10 @@ class igApi {
       return { status: 200, url: url };
     }
 
-    const response = await fetch(`${this.domain}/ig/post?url=${link}`);
+    const response = await $fetch(`${this.domain}/post?url=${link}`).catch(() => null);
+    const data = response?.data?.shortcode_media ? response.data.shortcode_media : null;
 
-    const data = response.ok ? await response.json() : null;
-
-    if (!data?.video_url || !response.ok || !data) {
+    if (!data?.video_url || !data) {
       const { data } = await snapsave(link);
       if (!data) return { status: 404 };
       return { status: 200, url: data[0]?.url, caption: "" };
