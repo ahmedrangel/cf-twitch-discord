@@ -1862,8 +1862,7 @@ router.get("/dc/facebook-video-scrapper?", async (req, env) => {
   const fdownloader = new fdownloaderApi();
   let video_url;
   const short_url = url.replace(/([&?](?!v=)[^=]+=[^&]*)/g, "").replace("&", "?").replace("www.", "");
-  console.log(short_url);
-  const regex = /(?:watch\/\?v=|watch\/|gg\/|videos\/|reel\/|reels\/|share\/[\w+]\/)(\w+)/;
+  const regex = /(?:watch\?v=|watch\/|gg\/|videos\/|reel\/|reels\/|share\/[\w+]\/)(\w+)/;
   const match = short_url.match(regex);
   const id = match ? match[1] : null;
 
