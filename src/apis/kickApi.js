@@ -27,7 +27,7 @@ class kickApi {
     const caption = data?.clip?.title;
     const short_url = `https://kick.com/${slug}?clip=${id}`;
 
-    if (!video_url) return { status: 404 };
+    if (!video_url) return null;
     return { id, video_url, short_url, caption, status: 200 };
   }
 }

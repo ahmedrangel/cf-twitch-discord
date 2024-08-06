@@ -1,6 +1,7 @@
 import { randUA } from "@ahmedrangel/rand-user-agent";
 import { $fetch } from "ofetch";
 import { snapsave } from "snapsave-media-downloader";
+import { defaultRetry } from "../utils/helpers";
 
 class igApi {
   constructor (ig_proxy_host) {
@@ -9,31 +10,33 @@ class igApi {
   }
 
   async getMedia (link) {
+    const short_url = link.replace(/\?.*$/, "").replace("www.", "");
     const _userAgent = randUA("desktop");
     if (link.includes("stories")) {
-      const response = await fetch(this.domain_stories + `?url=${link}`, {
+      const data = await $fetch(this.domain_stories + `?url=${link}`, {
         headers: {
           "Accept": "application/json",
           "User-Agent": _userAgent
         }
       });
-      const data = await response.json();
-      const url = data.result[0].video_versions[0].url;
-      return { status: 200, url: url };
+      const url = data?.result[0]?.video_versions[0]?.url;
+      if (!url) return null;
+      return { status: 200, video_url: url, short_url, caption: null };
     }
 
-    const response = await $fetch(`${this.domain}/post?url=${link}`).catch(() => null);
+    const response = await $fetch(`${this.domain}/post?url=${link}`, { ...defaultRetry }).catch(() => null);
     const data = response?.data?.shortcode_media ? response.data.shortcode_media : null;
 
     if (!data?.video_url || !data) {
       const { data } = await snapsave(link);
-      if (!data) return { status: 404 };
-      return { status: 200, url: data[0]?.url, caption: "" };
+      if (!data) return null;
+      return { status: 200, video_url: data[0]?.url, short_url, caption: null };
     }
 
     return {
       status: 200,
-      url: data.video_url,
+      video_url: data.video_url,
+      short_url,
       caption: data?.edge_media_to_caption?.edges[0]?.node?.text
     };
   }

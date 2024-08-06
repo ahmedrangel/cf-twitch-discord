@@ -1,5 +1,5 @@
 import { IttyRouter } from "itty-router";
-import { generateUniqueId, getDateAgoFromTimeStamp, getRandom, obtenerIDDesdeURL, obtenerDiscordUserIdFromAvatarsCdn, getTimeUnitsFromISODate, KVSorterByValue, jsonCustomSorterByProperty, SettedTwitchTagsResponse, timeToSeconds } from "./utils/helpers";
+import { generateUniqueId, getDateAgoFromTimeStamp, getRandom, obtenerIDDesdeURL, obtenerDiscordUserIdFromAvatarsCdn, getTimeUnitsFromISODate, KVSorterByValue, jsonCustomSorterByProperty, SettedTwitchTagsResponse, timeToSeconds, socialsCache } from "./utils/helpers";
 import twitchApi from "./apis/twitchApi";
 import JsResponse from "./response";
 import JsonResponse from "./jsonResponse";
@@ -1725,56 +1725,39 @@ router.get("/d1/select?", async (req, env) => {
   console.log(select_data);
 });
 
-router.get("/dc/instagram-video-scrapper?", async (req, env) => {
-  let count = 0;
-  let maxTries = 3;
-  const scrap = async () => {
-    const { query } = req;
-    // const _cookie = env.ig_cookie;
-    // const _xIgAppId = "936619743392459";
-    const url = decodeURIComponent(query.url);
-    const getInstagramId = (url) => {
-      const regex = /instagram.com\/(?:[A-Za-z0-9_.]+\/)?(p|reels|reel|stories)\/([A-Za-z0-9-_]+)/;
-      const match = url.match(regex);
-      return match && match[2] ? match[2] : null;
-    };
+router.get("/dc/instagram-video-scrapper?", async (req, env, ctx) => {
+  const cacheKey = new Request(req.url, req);
+  const cache = caches.default;
+  const cachedResponse = await cache.match(cacheKey);
+  if (cachedResponse) return cachedResponse;
 
-    const idUrl = getInstagramId(url);
-
-    if (!idUrl) {
-      console.log("Invalid url");
-      return { status: 400 };
-    } else {
-      const instagram = new igApi(env.ig_proxy_host);
-      const items = await instagram.getMedia(url.includes("/stories") ? url : `https://instagram.com/p/${idUrl}`, "video");
-      const video_url = items.url;
-      const json_response = {
-        id: idUrl,
-        video_url: video_url,
-        short_url: url.replace(/\?.*$/, "").replace("www.", ""),
-        caption: items?.caption,
-        status: items.status
-      };
-      return json_response;
-    }
+  const { query } = req;
+  const url = decodeURIComponent(query.url);
+  const getInstagramId = (url) => {
+    const regex = /instagram.com\/(?:[A-Za-z0-9_.]+\/)?(p|reels|reel|stories)\/([A-Za-z0-9-_]+)/;
+    const match = url.match(regex);
+    return match && match[2] ? match[2] : null;
   };
 
-  const retryScrap = async () => {
+  const idUrl = getInstagramId(url);
+
+  if (!idUrl) {
+    console.log("Invalid url");
+    return { status: 400 };
+  } else {
     try {
-      return await scrap();
-    } catch (error) {
-      console.log(error);
-      if (count < maxTries) {
-        count++;
-        return await retryScrap();
-      } else {
-        const json_error = { status: 429 };
-        return json_error;
-      }
-    }
-  };
+      const instagram = new igApi(env.ig_proxy_host);
+      const data = await instagram.getMedia(url.includes("/stories") ? url : `https://instagram.com/p/${idUrl}`, "video");
+      if (!data) return new JsResponse(null, { status: 404 });
+      data.id = idUrl;
 
-  return new JsonResponse(await retryScrap());
+      const response = new JsonResponse(data, { cache: `max-age=${socialsCache.instagram}` });
+      ctx.waitUntil(cache?.put(cacheKey, response.clone()));
+      return response;
+    } catch (e) {
+      return new JsResponse({ status: 404 });
+    }
+  }
 });
 
 router.get("/dc/youtube/mp3?", async (req, env) => {
@@ -1812,12 +1795,18 @@ router.get("/dc/youtube/mp3?", async (req, env) => {
     });
   } catch (e) {
     console.log(e);
-    return new JsonResponse({ status: 404 });
+    return new JsResponse(null, { status: 404 });
   }
 });
 
 router.get("/dc/youtube-video-scrapper?", async (req, env) => {
   const { url, filter } = req.query;
+
+  const cacheKey = new Request(req.url, req);
+  const cache = caches.default;
+  const cachedResponse = await cache.match(cacheKey);
+  if (cachedResponse) return cachedResponse;
+
   const youtube = new youtubeApi(env.youtube_token);
   const y2mate = new y2mateApi();
   const regex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?|live)\/|\S*?[?&]v=|shorts\/)?|youtu\.be\/)([a-zA-Z0-9_-]+)/;
@@ -1842,17 +1831,21 @@ router.get("/dc/youtube-video-scrapper?", async (req, env) => {
         status: 500
       });
     }
-    return new JsonResponse({
+    const data = {
       id,
       video_url: video_url,
       caption: snippet.title,
       short_url: short_url,
       duration: duration,
       status: 200
-    });
+    };
+
+    const response = new JsonResponse(data, { cache: `max-age=${socialsCache.youtube}` });
+    ctx.waitUntil(cache?.put(cacheKey, response.clone()));
+    return response;
   } catch (e) {
     console.log(e);
-    return new JsonResponse({ status: 404 });
+    return new JsResponse(null, { status: 404 });
   }
 });
 
@@ -1879,45 +1872,48 @@ router.get("/dc/facebook-video-scrapper?", async (req, env) => {
   return new JsonResponse({ id, video_url, short_url, status });
 });
 
-router.get("/dc/tiktok-video-scrapper?", async (req, env) => {
-  const tiktok = new tiktokApi;
+router.get("/dc/tiktok-video-scrapper?", async (req, env, ctx) => {
   const { query } = req;
+
+  const cacheKey = new Request(req.url, req);
+  const cache = caches.default;
+  const cachedResponse = await cache.match(cacheKey);
+  if (cachedResponse) return cachedResponse;
+
+  const tiktok = new tiktokApi;
   const url = decodeURIComponent(query.url);
   if (url.includes("tiktok.com/")) {
     console.log("es link de tiktok");
     const data = await tiktok.getMedia(url);
-    if (!data) return new JsonResponse({ status: 404 });
-    return new JsonResponse(data);
+    if (!data) return new JsResponse(null, { status: 404 });
+
+    const response = new JsonResponse(data, { cache: `max-age=${socialsCache.tiktok}` });
+    ctx.waitUntil(cache?.put(cacheKey, response.clone()));
+    return response;
   } else {
     return new JsResponse("Url no válida");
   }
 });
 
-router.get("/dc/twitter-video-scrapper?", async (req, env) => {
+router.get("/dc/x-video-scrapper?", async (req, env, ctx) => {
   const { query } = req;
-  const url = decodeURIComponent(query.url);
-  if (url.includes("twitter.com/") || url.includes("x.com/")) {
-    console.log("es link de X");
-    const twitter = new twitterApi(env.twitter_bearer_token, env.x_cookie);
-    const id = obtenerIDDesdeURL(url);
-    const result = await twitter.getTweet(id);
-    if (!result) return new JsonResponse({ status: 404 });
-    return new JsonResponse(result);
-  }
-  console.log("no es link de X");
-  return new JsResponse("Url no válida");
-});
 
-router.get("/dc/x-video-scrapper?", async (req, env) => {
-  const { query } = req;
+  const cacheKey = new Request(req.url, req);
+  const cache = caches.default;
+  const cachedResponse = await cache.match(cacheKey);
+  if (cachedResponse) return cachedResponse;
+
   const url = decodeURIComponent(query.url);
   if (url.includes("twitter.com/") || url.includes("x.com/")) {
     console.log("es link de X");
     const twitter = new twitterApi(env.twitter_bearer_token, env.x_cookie);
     const id = obtenerIDDesdeURL(url);
     const result = await twitter.getTweet(id);
-    if (!result) return new JsonResponse({ status: 404 });
-    return new JsonResponse(result);
+    if (!result) return new JsResponse(null, { status: 404 });
+
+    const response = new JsonResponse(result, { cache: `max-age=${socialsCache.twitter}` });
+    ctx.waitUntil(cache?.put(cacheKey, response.clone()));
+    return response;
   }
   console.log("no es link de X");
   return new JsResponse("Url no válida");
@@ -2119,8 +2115,14 @@ router.get("/lol/masteries/:region/:name/:tag", async (req, env) => {
   return new JsonResponse(data);
 });
 
-router.get("/dc/twitch-video-scrapper?", async (req, env) => {
+router.get("/dc/twitch-video-scrapper?", async (req, env, ctx) => {
   const { query } = req;
+
+  const cacheKey = new Request(req.url, req);
+  const cache = caches.default;
+  const cachedResponse = await cache.match(cacheKey);
+  if (cachedResponse) return cachedResponse;
+
   const url = decodeURIComponent(query.url);
   const id = obtenerIDDesdeURL(url);
   const twitch = new twitchApi(env.client_id, env.client_secret, env.NB);
@@ -2130,16 +2132,19 @@ router.get("/dc/twitch-video-scrapper?", async (req, env) => {
     const video_url = thumbnailUrl.replace(/-preview-.*\.jpg/, ".mp4");
     const short_url = data?.url;
     const caption = data?.title;
-    return new JsonResponse({ id, video_url, short_url, caption, status: 200 });
+    const response = new JsonResponse({ id, video_url, short_url, caption, status: 200 }, { cache: `max-age=${socialsCache.twitch}` });
+
+    ctx.waitUntil(cache?.put(cacheKey, response.clone()));
+    return response;
   } catch (e) {
-    return new JsonResponse({ status: 404 });
+    return new JsResponse(null, { status: 404 });
   }
 });
 
 router.get("/kick/clip/:id", async (req, env) => {
   const { id } = req.params;
   const { clipId } = await $fetch(`${env.kick_3rd_base}/clip/${id}`).catch(() => null);
-  if (!clipId) return new JsonResponse({ status: 404 });
+  if (!clipId) return new JsResponse(null, { status: 404 });
   const url = `https://clips.kick.com/tmp/${id}.mp4`;
   return new JsonResponse({ url });
 });
@@ -2235,11 +2240,21 @@ router.get("/twitch/subscribers/:user/total", async (req, env) => {
   return new JsonResponse({ total });
 });
 
-router.get("/dc/kick-video-scrapper?", async (req, env) => {
+router.get("/dc/kick-video-scrapper?", async (req, env, ctx) => {
   const { query } = req;
+
+  const cacheKey = new Request(req.url, req);
+  const cache = caches.default;
+  const cachedResponse = await cache.match(cacheKey);
+  if (cachedResponse) return cachedResponse;
+
   const kick = new kickApi();
   const data = await kick.getMedia(decodeURIComponent(query.url));
-  return new JsonResponse(data);
+  if (!data) return new JsResponse(null, { status: 404 });
+  const response = new JsonResponse(data, { cache: `max-age=${socialsCache.kick}` });
+
+  ctx.waitUntil(cache?.put(cacheKey, response.clone()));
+  return response;
 });
 
 router.get("/dc/fx?", async (req, env, ctx) => {

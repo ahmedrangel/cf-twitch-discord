@@ -196,3 +196,12 @@ export const timeToSeconds = (time) => {
 export const defaultRetry = {
   retry: 3, retryDelay: 1000
 };
+
+export const socialsCache = {
+  instagram: 1209600,
+  tiktok: 1209600,
+  twitter: 604800,
+  kick: 86400,
+  youtube: 3600,
+  twitch: 1209600
+};
