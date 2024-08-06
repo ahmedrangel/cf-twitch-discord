@@ -1799,7 +1799,7 @@ router.get("/dc/youtube/mp3?", async (req, env) => {
   }
 });
 
-router.get("/dc/youtube-video-scrapper?", async (req, env) => {
+router.get("/dc/youtube-video-scrapper?", async (req, env, ctx) => {
   const { url, filter } = req.query;
 
   const cacheKey = new Request(req.url, req);
