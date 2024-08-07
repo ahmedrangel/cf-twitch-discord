@@ -1,8 +1,8 @@
 import { IttyRouter } from "itty-router";
-import { generateUniqueId, getDateAgoFromTimeStamp, getRandom, obtenerIDDesdeURL, obtenerDiscordUserIdFromAvatarsCdn, getTimeUnitsFromISODate, KVSorterByValue, jsonCustomSorterByProperty, SettedTwitchTagsResponse, timeToSeconds, socialsCache } from "./utils/helpers";
+import { generateUniqueId, getDateAgoFromTimeStamp, getRandom, obtenerIDDesdeURL, obtenerDiscordUserIdFromAvatarsCdn, getTimeUnitsFromISODate, KVSorterByValue, jsonCustomSorterByProperty, SettedTwitchTagsResponse, timeToSeconds, socialsCache, mimeType } from "./utils/helpers";
 import twitchApi from "./apis/twitchApi";
-import JsResponse from "./response";
-import JsonResponse from "./jsonResponse";
+import JsResponse from "./responses/response";
+import JsonResponse from "./responses/jsonResponse";
 import { OpenAI } from "openai";
 import spotifyApi from "./apis/spotifyApi";
 import riotApi, { eloValues } from "./apis/riotApi";
@@ -22,8 +22,10 @@ import twitterApi from "./apis/twitterApi";
 import tiktokApi from "./apis/tiktokApi";
 import kickApi from "./apis/kickApi";
 import { $fetch } from "ofetch";
-import CustomResponse from "./customResponse";
+import CustomResponse from "./responses/customResponse";
 import { withQuery } from "ufo";
+import ErrorResponse from "./responses/ErrorResponse";
+import { Error } from "./utils/errors";
 
 const router = IttyRouter();
 // educar
@@ -665,7 +667,7 @@ router.get("/dc/ai/:user/:prompt", async (req, env) => {
     await env.R2gpt.put("history.json", JSON.stringify(historyJson), { httpMetadata: headers });
     return new JsonResponse({ status: 200, message: response.choices[0].text });
   } catch (e) {
-    return new JsonResponse({ status: 400 });
+    return new ErrorResponse(Error.BAD_REQUEST);
   }
 });
 
@@ -1171,6 +1173,22 @@ router.get("/put/video?", async (req, env, ctx) => {
     return new JsResponse(response);
   }
   return new JsResponse("Error. No se ha encontrado un video.");
+});
+
+router.put("/cdn", async (req, env, ctx) => {
+  const cdnAuth = req.headers.get("x-cdn-auth");
+  if (cdnAuth !== env.CDN_TOKEN) return new ErrorResponse(Error.UNAUTHORIZED, { message: "Unauthorized" });
+
+  const { source, prefix, file_name, httpMetadata } = await req.json();
+  if (!source) return new ErrorResponse(Error.BAD_REQUEST, { message: "Missing required fields" });
+
+  const b = await $fetch(source, { responseType: "blob" });
+  const path = prefix && file_name ? `${prefix}/${file_name}` : `${file_name}`;
+  const cdn = "https://cdn.ahmedrangel.com";
+
+  await env.R2cdn.put(path, b, { httpMetadata: new Headers(httpMetadata) });
+  console.log(`escrito: ${path}`);
+  return new JsonResponse({ url: `${cdn}/${path}` });
 });
 
 router.get("/lol/live?", async (req, env) => {
@@ -1744,19 +1762,19 @@ router.get("/dc/instagram-video-scrapper?", async (req, env, ctx) => {
 
   if (!idUrl) {
     console.log("Invalid url");
-    return { status: 400 };
+    return new ErrorResponse(Error.BAD_REQUEST);
   } else {
     try {
       const instagram = new igApi(env.ig_proxy_host);
       const data = await instagram.getMedia(url.includes("/stories") ? url : `https://instagram.com/p/${idUrl}`, "video");
-      if (!data) return new JsResponse(null, { status: 404 });
+      if (!data) return new ErrorResponse(Error.NOT_FOUND);
       data.id = idUrl;
 
       const response = new JsonResponse(data, { cache: `max-age=${socialsCache.instagram}` });
       ctx.waitUntil(cache?.put(cacheKey, response.clone()));
       return response;
     } catch (e) {
-      return new JsResponse({ status: 404 });
+      return new ErrorResponse(Error.NOT_FOUND);
     }
   }
 });
@@ -1782,10 +1800,7 @@ router.get("/dc/youtube/mp3?", async (req, env) => {
       maxAttempts--;
     }
     if (!video_url) {
-      return new JsonResponse({
-        error: "No se pudo obtener el video después de varios intentos",
-        status: 500
-      });
+      return new ErrorResponse(Error.TOO_MANY_REQUESTS);
     }
     return new JsonResponse({
       video_url: video_url,
@@ -1796,7 +1811,7 @@ router.get("/dc/youtube/mp3?", async (req, env) => {
     });
   } catch (e) {
     console.log(e);
-    return new JsResponse(null, { status: 404 });
+    return new ErrorResponse(Error.NOT_FOUND);
   }
 });
 
@@ -1827,10 +1842,7 @@ router.get("/dc/youtube-video-scrapper?", async (req, env, ctx) => {
       maxAttempts--;
     }
     if (!video_url) {
-      return new JsonResponse({
-        error: "No se pudo obtener el video después de varios intentos",
-        status: 500
-      });
+      return new ErrorResponse(Error.TOO_MANY_REQUESTS);
     }
     const data = {
       id,
@@ -1846,7 +1858,7 @@ router.get("/dc/youtube-video-scrapper?", async (req, env, ctx) => {
     return response;
   } catch (e) {
     console.log(e);
-    return new JsResponse(null, { status: 404 });
+    return new ErrorResponse(Error.NOT_FOUND);
   }
 });
 
@@ -1886,7 +1898,7 @@ router.get("/dc/tiktok-video-scrapper?", async (req, env, ctx) => {
   if (url.includes("tiktok.com/")) {
     console.log("es link de tiktok");
     const data = await tiktok.getMedia(url);
-    if (!data) return new JsResponse(null, { status: 404 });
+    if (!data) new ErrorResponse(Error.NOT_FOUND);
 
     const response = new JsonResponse(data, { cache: `max-age=${socialsCache.tiktok}` });
     ctx.waitUntil(cache?.put(cacheKey, response.clone()));
@@ -1910,7 +1922,7 @@ router.get("/dc/x-video-scrapper?", async (req, env, ctx) => {
     const twitter = new twitterApi(env.twitter_bearer_token, env.x_cookie);
     const id = obtenerIDDesdeURL(url);
     const result = await twitter.getTweet(id);
-    if (!result) return new JsResponse(null, { status: 404 });
+    if (!result) return new ErrorResponse(Error.NOT_FOUND);
 
     const response = new JsonResponse(result, { cache: `max-age=${socialsCache.twitter}` });
     ctx.waitUntil(cache?.put(cacheKey, response.clone()));
@@ -2138,14 +2150,14 @@ router.get("/dc/twitch-video-scrapper?", async (req, env, ctx) => {
     ctx.waitUntil(cache?.put(cacheKey, response.clone()));
     return response;
   } catch (e) {
-    return new JsResponse(null, { status: 404 });
+    return new ErrorResponse(Error.NOT_FOUND);
   }
 });
 
 router.get("/kick/clip/:id", async (req, env) => {
   const { id } = req.params;
   const { clipId } = await $fetch(`${env.kick_3rd_base}/clip/${id}`).catch(() => null);
-  if (!clipId) return new JsResponse(null, { status: 404 });
+  if (!clipId) new ErrorResponse(Error.NOT_FOUND);
   const url = `https://clips.kick.com/tmp/${id}.mp4`;
   return new JsonResponse({ url });
 });
@@ -2251,7 +2263,7 @@ router.get("/dc/kick-video-scrapper?", async (req, env, ctx) => {
 
   const kick = new kickApi();
   const data = await kick.getMedia(decodeURIComponent(query.url));
-  if (!data) return new JsResponse(null, { status: 404 });
+  if (!data) return new ErrorResponse(Error.NOT_FOUND);
   const response = new JsonResponse(data, { cache: `max-age=${socialsCache.kick}` });
 
   ctx.waitUntil(cache?.put(cacheKey, response.clone()));
@@ -2270,7 +2282,10 @@ router.get("/dc/fx?", async (req, env, ctx) => {
       return cachedResponse;
     }
 
-    const video_url = withQuery(query.video_url, { c: 1 });
+    const video_url = withQuery(query.video_url, { c: 0 });
+    const checkCdn = await $fetch.raw(video_url).catch(() => null);
+    if (!checkCdn?.ok) return new ErrorResponse(Error.NOT_FOUND);
+
     const html = `
       <meta charset="UTF-8">
       <meta name="theme-color" content="#00a8fc"/>
@@ -2295,37 +2310,10 @@ router.get("/dc/fx?", async (req, env, ctx) => {
     return response;
   }
 
-  return new JsResponse(null, { status: 204 });
+  return new ErrorResponse(Error.BAD_REQUEST);
 });
 
-router.get("/cdn/proxy/videos/:social/:id.mp4", async (req, env, ctx) => {
-  const { social, id } = req.params;
-  const cacheKey = new Request(req.url, req);
-  const cache = caches.default;
-
-  const cachedResponse = await cache.match(cacheKey);
-  if (cachedResponse) {
-    console.log("Found in cache!");
-    return cachedResponse;
-  }
-
-  const video = await env.R2cdn.get(`videos/${social}/${id}.mp4`);
-  if (!video) return new JsResponse("Video not found", { status: 404 });
-
-  const contentType = video?.httpMetadata?.contentType;
-  const etag = video?.httpEtag;
-  const blob = await video.blob();
-  const response = new CustomResponse(blob, { type: contentType, cache: "max-age=432000", etag });
-
-  if (blob) {
-    console.info("Stored in cache!");
-    ctx.waitUntil(cache?.put(cacheKey, response.clone()));
-  }
-
-  return response;
-});
-
-router.all("*", () => new JsResponse("Not Found.", { status: 404 }));
+router.all("*", () => new ErrorResponse(Error.NOT_FOUND));
 
 export default {
   async fetch (req, env, ctx) {

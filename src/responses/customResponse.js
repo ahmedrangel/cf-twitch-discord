@@ -1,5 +1,6 @@
 class CustomResponse extends Response {
   constructor (body, opt) {
+    body = body || {};
     const options = {
       headers: {
         "Content-Type": opt?.type,
@@ -12,6 +13,7 @@ class CustomResponse extends Response {
         "etag": opt?.etag
       }
     };
+    body?.status ? options.status = body.status : null;
     super(body, options);
   }
 }

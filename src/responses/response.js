@@ -1,5 +1,6 @@
 class JsResponse extends Response {
   constructor (body, opt) {
+    body = body || {};
     const options = {
       headers: {
         "Content-Type": "text/javascript;charset=UTF-8",
@@ -8,7 +9,7 @@ class JsResponse extends Response {
         "Cache-Control": opt?.cache
       }
     };
-    opt?.status ? options.status = opt.status : null;
+    body?.status ? options.status = body.status : null;
     super(body, options);
   }
 }

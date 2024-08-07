@@ -1,5 +1,6 @@
 class JsonResponse extends Response {
   constructor (body, opt) {
+    body = body || {};
     const options = {
       headers: {
         "Content-Type": "application/json;charset=UTF-8",
@@ -8,6 +9,7 @@ class JsonResponse extends Response {
         "Cache-Control": opt?.cache
       }
     };
+    body?.status ? options.status = body.status : null;
     super(JSON.stringify(body), options);
   }
 }
