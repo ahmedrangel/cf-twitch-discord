@@ -1128,53 +1128,6 @@ router.get("/put/discord-avatars?", async (req, env) => {
   return new JsResponse(JSON.stringify(object));
 });
 
-router.get("/put/video?", async (req, env, ctx) => {
-  const { query } = req;
-  const video_url = query?.url;
-  const bot_name = query?.bot_name?.toLowerCase();
-  const prefix = query?.prefix;
-  const dir = query?.dir?.toLowerCase();
-  const file_id = query?.file_id;
-
-  if (video_url && (bot_name || prefix)) {
-    const f = await fetch(video_url);
-    const b = await f.blob();
-    const type = "video/mp4";
-    const httpHeaders = { "Content-Type": type, "Content-Disposition": "inline" };
-    const headers = new Headers(httpHeaders);
-    const uniqueId = generateUniqueId();
-    const custom = dir && file_id ? true : false;
-    const mainPrefix = prefix || bot_name;
-    const path = custom ? `${mainPrefix}/${dir}/${file_id}.mp4` : `${mainPrefix}/${uniqueId}.mp4`;
-    const cdn = "https://cdn.ahmedrangel.com";
-    const putR2 = async (path) => {
-      await env.R2cdn.put(path, b, { httpMetadata: headers });
-      console.log(`escrito: ${path}`);
-      return `${cdn}/${path}`;
-    };
-
-    const comprobarCDN = async (path) => {
-      console.log(`${cdn}/${path}`);
-      const comprobar = await fetch(`${cdn}/${path}`);
-      if (comprobar?.ok) {
-        if (!custom) {
-          console.log("existe, generar nuevo id, y volver a comprobar");
-          const uniqueId = generateUniqueId();
-          const newPath = `${mainPrefix}/${uniqueId}.mp4`;
-          return await comprobarCDN(newPath);
-        }
-        return `${cdn}/${path}`;
-      }
-      console.log("no existe, put en r2cdn");
-      return await putR2(path);
-    };
-
-    const response = await comprobarCDN(path);
-    return new JsResponse(response);
-  }
-  return new JsResponse("Error. No se ha encontrado un video.");
-});
-
 router.put("/cdn", async (req, env, ctx) => {
   const cdnAuth = req.headers.get("x-cdn-auth");
   if (cdnAuth !== env.CDN_TOKEN) return new ErrorResponse(Error.UNAUTHORIZED, { message: "Unauthorized" });
