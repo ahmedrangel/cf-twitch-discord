@@ -23,6 +23,7 @@ import tiktokApi from "./apis/tiktokApi";
 import kickApi from "./apis/kickApi";
 import { $fetch } from "ofetch";
 import CustomResponse from "./customResponse";
+import { withQuery } from "ufo";
 
 const router = IttyRouter();
 // educar
@@ -2269,20 +2270,19 @@ router.get("/dc/fx?", async (req, env, ctx) => {
       return cachedResponse;
     }
 
-    // const path = query.video_url.replace("https://cdn.ahmedrangel.com/", "").replace(/[?&].*$/, "");
-    const proxy = "https://envoy.lol";
+    const video_url = withQuery(query.video_url, { c: 1 });
     const html = `
       <meta charset="UTF-8">
       <meta name="theme-color" content="#00a8fc"/>
       <meta http-equiv="refresh" content="0;url=${query?.redirect_url}"/>
-      <meta name="twitter:player:stream" content="${proxy}/${query.video_url}"/>
+      <meta name="twitter:player:stream" content="${video_url}"/>
       <meta name="twitter:player:stream:content_type" content="video/mp4"/>
       <meta name="twitter:player:width" content="0"/>
       <meta name="twitter:player:height" content="0"/>
       <meta property="twitter:card" content="player"/>
       <meta property="og:url" content="${query?.redirect_url}"/>
-      <meta property="og:video" content="${proxy}/${query.video_url}"/>
-      <meta property="og:video:secure_url" content="${proxy}/${query.video_url}"/>
+      <meta property="og:video" content="${video_url}"/>
+      <meta property="og:video:secure_url" content="${video_url}"/>
       <meta property="og:video:type" content="video/mp4"/>
       <meta property="og:video:width" content="0"/>
       <meta property="og:video:height" content="0"/>
