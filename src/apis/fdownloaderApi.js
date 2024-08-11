@@ -1,5 +1,5 @@
 import { randUA } from "@ahmedrangel/rand-user-agent";
-import * as cheerio from "cheerio";
+import { load } from "cheerio";
 import { $fetch } from "ofetch";
 import { defaultRetry } from "../utils/helpers";
 
@@ -31,7 +31,7 @@ class fdownloaderApi {
         body: formData
       });
       if (data.status === "ok") {
-        const html = cheerio.load(String(data.data));
+        const html = load(String(data.data));
         const url = html("td a").attr("href");
         return { url, status: 200 };
       }

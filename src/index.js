@@ -17,7 +17,7 @@ import mp3youtubeApi from "./apis/mp3youtubeApi";
 import y2mateApi from "./apis/y2mateApi";
 import crossclipApi from "./apis/crossclipApi";
 import fdownloaderApi from "./apis/fdownloaderApi";
-import * as cheerio from "cheerio";
+import { load } from "cheerio";
 import twitterApi from "./apis/twitterApi";
 import tiktokApi from "./apis/tiktokApi";
 import kickApi from "./apis/kickApi";
@@ -2192,7 +2192,7 @@ router.get("/twitch/subscribers/:user/total", async (req, env) => {
         }
       });
       const html = await response.text();
-      const $ = cheerio.load(html);
+      const $ = load(html);
       const divSubs = $(".g-x-s-label.color-gold");
       const firstSpan = divSubs.parent().find("span").first();
       total = firstSpan.text();
