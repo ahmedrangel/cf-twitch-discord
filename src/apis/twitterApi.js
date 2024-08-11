@@ -8,7 +8,11 @@ class twitterApi {
     this.x_cookie = x_cookie;
   }
 
-  async getTweet (id) {
+  async getTweet (url) {
+    const regex = /status\/(\d+)(?:\/video\/(\d+))?/;
+    const match = url.match(regex);
+    const id = match ? match[1] : null;
+    const videoNumber = match && match[2] ? Number(match[2]) - 1 : 0;
     const _userAgent = randUA("desktop");
     const graphql = "https://twitter.com/i/api/graphql/xOhkmRac04YFZmOzU9PJHg/TweetDetail";
     const query = {
@@ -79,9 +83,9 @@ class twitterApi {
       const entries = entriesArr[0];
       const quotedEntries = quotedArr.length ? quotedArr[0] : null;
 
-      if (!entries?.extended_entities?.media[0]?.video_info && !quotedEntries?.extended_entities?.media[0]?.video_info) return null;
+      if (!entries?.extended_entities?.media[videoNumber]?.video_info && !quotedEntries?.extended_entities?.media[videoNumber]?.video_info) return null;
 
-      const videos = entries?.extended_entities?.media[0]?.video_info?.variants || quotedEntries?.extended_entities?.media[0]?.video_info?.variants;
+      const videos = entries?.extended_entities?.media[videoNumber]?.video_info?.variants || quotedEntries?.extended_entities?.media[videoNumber]?.video_info?.variants;
       const filteredVideos = videos.filter(video => video.content_type === "video/mp4" && video.bitrate && (video.url.includes("avc1") || video.url.includes("/pu/vid/") || video.url.includes(".mp4?tag=12")));
       const maxBitrate = Math.max(...filteredVideos.map(video => video.bitrate));
       const video = filteredVideos.find(video => video.bitrate === maxBitrate);

@@ -1870,11 +1870,11 @@ router.get("/dc/x-video-scrapper?", async (req, env, ctx) => {
   if (cachedResponse) return cachedResponse;
 
   const url = decodeURIComponent(query.url);
-  if (url.includes("twitter.com/") || url.includes("x.com/")) {
+  if (url.includes("twitter.com/") || url.includes("x.com/") || url.includes("t.co/")) {
     console.log("es link de X");
     const twitter = new twitterApi(env.twitter_bearer_token, env.x_cookie);
-    const id = obtenerIDDesdeURL(url);
-    const result = await twitter.getTweet(id);
+    const tco = url.includes("t.co/") ? (await $fetch(url, { headers: { "User-Agent": randUA("desktop") } }).catch(() => null)).match(/location\.replace\("([^"]+)"\)/)[1] : null;
+    const result = await twitter.getTweet(tco?.replace(/\\/g, "") || url);
     if (!result) return new ErrorResponse(Error.NOT_FOUND);
 
     const response = new JsonResponse(result, { cache: `max-age=${socialsCache.twitter}` });
