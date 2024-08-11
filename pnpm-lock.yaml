@@ -39,8 +39,8 @@ importers:
         specifier: ^4.55.4
         version: 4.55.4(zod@3.23.8)
       snapsave-media-downloader:
-        specifier: ^1.0.5
-        version: 1.0.5
+        specifier: ^1.0.6
+        version: 1.0.6
       ufo:
         specifier: ^1.5.4
         version: 1.5.4
@@ -1055,8 +1055,8 @@ packages:
     resolution: {integrity: sha512-g9Q1haeby36OSStwb4ntCGGGaKsaVSjQ68fBxoQcutl5fS1vuY18H3wSt3jFyFtrkx+Kz0V1G85A4MyAdDMi2Q==}
     engines: {node: '>=8'}
 
-  snapsave-media-downloader@1.0.5:
-    resolution: {integrity: sha512-KQSTl4hnNoh+WEky+8PDnzYBTM3iXgBHmJiteA4eaaYIaKXW+NzNJJepE+nnK4EkZqnWDgiaQadmMROpaQi+uw==}
+  snapsave-media-downloader@1.0.6:
+    resolution: {integrity: sha512-Cge6vlOk8uCA9J1rRDsx1SSS52plvbzt9maHeO0B2Y3eaSd1NF3Y/9q9Yt5x0S9WrC/5zcFkMYWxozpgrXVi4w==}
 
   source-map@0.6.1:
     resolution: {integrity: sha512-UjgapumWlbMhkBgzT7Ykc5YXUT46F0iKu8SGXq0bcwP5dz/h0Plj6enJqjz1Zbq2l5WaqYnrVbwWOWMyF3F47g==}
@@ -2200,7 +2200,7 @@ snapshots:
 
   slash@3.0.0: {}
 
-  snapsave-media-downloader@1.0.5: {}
+  snapsave-media-downloader@1.0.6: {}
 
   source-map@0.6.1: {}
 
