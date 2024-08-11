@@ -1,5 +1,7 @@
 import { randUA } from "@ahmedrangel/rand-user-agent";
 import * as cheerio from "cheerio";
+import { $fetch } from "ofetch";
+import { defaultRetry } from "../utils/helpers";
 
 class fdownloaderApi {
   constructor () {
@@ -19,7 +21,8 @@ class fdownloaderApi {
       formData.append("v", "v2");
       formData.append("web", "fdownloader.net");
       formData.append("k_token", token);
-      const response = await fetch(`${this.base}/ajaxSearch`, {
+      const data = await $fetch(`${this.base}/ajaxSearch`, {
+        ...defaultRetry,
         method: "POST",
         headers: {
           "Accept": "application/json",
@@ -27,7 +30,6 @@ class fdownloaderApi {
         },
         body: formData
       });
-      const data = await response.json();
       if (data.status === "ok") {
         const html = cheerio.load(String(data.data));
         const url = html("td a").attr("href");
