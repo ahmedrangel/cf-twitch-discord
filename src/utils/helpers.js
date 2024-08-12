@@ -203,7 +203,8 @@ export const socialsCache = {
   twitter: 604800,
   kick: 86400,
   youtube: 3600,
-  twitch: 1209600
+  twitch: 1209600,
+  reddit: 86400
 };
 
 export const mimeType = {

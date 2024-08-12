@@ -27,6 +27,7 @@ import { withQuery } from "ufo";
 import ErrorResponse from "./responses/ErrorResponse";
 import { Error } from "./utils/errors";
 import twitchGQL from "./apis/twitchGQL";
+import redditApi from "./apis/redditApi";
 
 const router = IttyRouter();
 // educar
@@ -2216,6 +2217,23 @@ router.get("/dc/kick-video-scrapper?", async (req, env, ctx) => {
   const data = await kick.getMedia(decodeURIComponent(query.url));
   if (!data) return new ErrorResponse(Error.NOT_FOUND);
   const response = new JsonResponse(data, { cache: `max-age=${socialsCache.kick}` });
+
+  ctx.waitUntil(cache?.put(cacheKey, response.clone()));
+  return response;
+});
+
+router.get("/dc/reddit-video-scrapper?", async (req, env, ctx) => {
+  const { query } = req;
+
+  const cacheKey = new Request(req.url, req);
+  const cache = caches.default;
+  const cachedResponse = await cache.match(cacheKey);
+  if (cachedResponse) return cachedResponse;
+
+  const reddit = new redditApi();
+  const data = await reddit.getMedia(decodeURIComponent(query.url));
+  if (!data) return new ErrorResponse(Error.NOT_FOUND);
+  const response = new JsonResponse(data, { cache: `max-age=${socialsCache.reddit}` });
 
   ctx.waitUntil(cache?.put(cacheKey, response.clone()));
   return response;
