@@ -20,7 +20,7 @@ class redditApi {
       url = data?.url;
     }
 
-    const regex = /\/(?:comments\/|s\/)([a-zA-Z0-9]{7})/;
+    const regex = /\/(?:comments\/|s\/)([a-zA-Z0-9]+)/;
     const id = url.match(regex)[1];
 
     const { data } = await $fetch(withQuery(`${this.apiBase}/info.json`, { id: `t3_${id}` }), { headers }).catch(() => null);
@@ -31,9 +31,14 @@ class redditApi {
     const caption = data?.children[0]?.data?.title;
 
     if (short_url.includes(".gif")) return { id, video_url: short_url, short_url, caption, format: "gif", status: 200 };
+
     const fallback_video = data?.children[0]?.data?.media?.reddit_video?.fallback_url;
     if (data?.children[0]?.data?.media?.reddit_video?.is_gif) return { id, video_url: fallback_video, short_url, caption, status: 200 };
-    const fallback_audio = `${short_url}/DASH_AUDIO_128.mp4`;
+
+    const dash = data?.children[0]?.data?.media?.reddit_video?.dash_url;
+    const xmlString = await $fetch(dash, { responseType: "text" }).catch(() => null);
+    const dashAudio = xmlString.match(/<AdaptationSet[^>]+contentType="audio"[^>]*>[\s\S]+?<BaseURL>(.*?)<\/BaseURL>/)[1];
+    const fallback_audio = `${short_url}/${dashAudio}`;
 
     const download = await $fetch(withQuery(`${this.downloaderBase}/download-link`, {
       token: {
