@@ -26,6 +26,7 @@ import CustomResponse from "./responses/customResponse";
 import { withQuery } from "ufo";
 import ErrorResponse from "./responses/ErrorResponse";
 import { Error } from "./utils/errors";
+import twitchGQL from "./apis/twitchGQL";
 
 const router = IttyRouter();
 // educar
@@ -2091,18 +2092,15 @@ router.get("/dc/twitch-video-scrapper?", async (req, env, ctx) => {
 
   const url = decodeURIComponent(query.url);
   const id = obtenerIDDesdeURL(url);
-  const twitch = new twitchApi(env.client_id, env.client_secret, env.NB);
+  const twitch = new twitchGQL();
   try {
-    const data = await twitch.getClips(id);
-    const thumbnailUrl = data?.thumbnail_url;
-    const video_url = thumbnailUrl.replace(/-preview-.*\.jpg/, ".mp4");
-    const short_url = data?.url;
-    const caption = data?.title;
-    const response = new JsonResponse({ id, video_url, short_url, caption, status: 200 }, { cache: `max-age=${socialsCache.twitch}` });
-
+    const data = await twitch.getClip(id);
+    console.log(data);
+    const response = new JsonResponse(data, { cache: `max-age=${socialsCache.twitch}` });
     ctx.waitUntil(cache?.put(cacheKey, response.clone()));
     return response;
   } catch (e) {
+    console.log(e);
     return new ErrorResponse(Error.NOT_FOUND);
   }
 });
