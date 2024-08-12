@@ -2230,7 +2230,7 @@ router.get("/dc/reddit-video-scrapper?", async (req, env, ctx) => {
   const cachedResponse = await cache.match(cacheKey);
   if (cachedResponse) return cachedResponse;
 
-  const reddit = new redditApi();
+  const reddit = new redditApi(env.reddit_token);
   const data = await reddit.getMedia(decodeURIComponent(query.url));
   if (!data) return new ErrorResponse(Error.NOT_FOUND);
   const response = new JsonResponse(data, { cache: `max-age=${socialsCache.reddit}` });
