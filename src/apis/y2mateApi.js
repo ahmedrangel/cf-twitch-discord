@@ -1,4 +1,6 @@
 import { randUA } from "@ahmedrangel/rand-user-agent";
+import { $fetch } from "ofetch";
+import { defaultRetry } from "../utils/helpers";
 
 class y2mateApi {
   constructor () {
@@ -13,7 +15,8 @@ class y2mateApi {
       formData.append("k_page", "home");
       formData.append("hl", "en");
       formData.append("q_auto", "1");
-      const response = await fetch(`${this.base}/mates/en948/analyzeV2/ajax`, {
+      const data = await fetch(`${this.base}/mates/en948/analyzeV2/ajax`, {
+        ...defaultRetry,
         method: "POST",
         headers: {
           "User-Agent": this._userAgent,
@@ -21,9 +24,8 @@ class y2mateApi {
           "Origin": this.base
         },
         body: formData
-      });
-      const data = await response.json();
-      console.log(data);
+      }).catch(() => null);
+      if (!data) return null;
       const q720 = data?.links?.mp4["22"]?.k; // 720p (shorts)
       const q480 = data?.links?.mp4["135"]?.k; // 480p
       const q360ps = data?.links?.mp4["18"]?.k; // 360p (shorts)
@@ -44,7 +46,8 @@ class y2mateApi {
       const formData = new FormData();
       formData.append("vid", id);
       formData.append("k", hd_token);
-      const response = await fetch(`${this.base}/mates/convertV2/index`, {
+      const data = await $fetch(`${this.base}/mates/convertV2/index`, {
+        ...defaultRetry,
         method: "POST",
         headers: {
           "User-Agent": this._userAgent,
@@ -52,8 +55,8 @@ class y2mateApi {
           "Origin": this.base
         },
         body: formData
-      });
-      const data = await response.json();
+      }).catch(() => null);
+      if (!data) return null;
       return data.dlink;
     } catch (e) {
       console.log(e);
