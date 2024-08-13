@@ -15,7 +15,7 @@ class redditApi {
 
   async getMedia (url) {
     const headers = this.headers;
-    if (url.includes("v.redd.it")) {
+    if (url.includes("v.redd.it") || url.includes("/s/")) {
       const data = await $fetch.raw(url.replace("v.redd.it", "www.reddit.com/video"), { headers }).catch((e) => console.log(e));
       url = data?.url;
     }
