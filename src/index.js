@@ -582,9 +582,7 @@ router.get("/ia/:prompt/:user", async (req, env) => {
 // Openai GPT-3.5-turbo-instruct Translator AI  with Language detection
 router.get("/ai/translate/:prompt", async (req, env) => {
   const { prompt } = req.params;
-  const openai = new OpenAI({
-    apiKey: env.openai_token
-  });
+  const openai = new OpenAI({ apiKey: env.openai_token });
   const detectlanguage_url = "https://ws.detectlanguage.com/0.2/detect";
   const detect = await fetch(detectlanguage_url, {
     method: "POST",
@@ -635,9 +633,7 @@ router.get("/dc/ai/:user/:prompt", async (req, env) => {
     const botName = "Gemi-Chan";
     console.log("User: "+user);
     console.log("Prompt: "+prompt);
-    const openai = new OpenAI({
-      apiKey: env.openai_token
-    });
+    const openai = new OpenAI({ apiKey: env.openai_token });
     let context = "";
     const history = await env.R2gpt.get("history.json");
     const historyJson = await history?.json() || [];
@@ -678,9 +674,7 @@ router.get("/dc/image-generation/:prompt", async (req, env) => {
   prompt = decodeURIComponent(prompt);
   let image_url = "";
   try {
-    const openai = new OpenAI({
-      apiKey: env.openai_token
-    });
+    const openai = new OpenAI({ apiKey: env.openai_token });
     const response = await openai.images.generate({
       prompt: prompt,
       n: 1,
@@ -717,7 +711,7 @@ router.get("/dc/image-generation/:prompt", async (req, env) => {
 router.get("/dc/image-variation/:url", async (req, env) => {
   let { url } = req.params;
   let image_url = "";
-  let url_fetch;
+  let blob;
   let cloudinary_url = "";
   url = decodeURIComponent(url);
   const filename = url.replace(/^.*[\\\/]/, "").replace(/\?.*$/, "");
@@ -732,41 +726,35 @@ router.get("/dc/image-variation/:url", async (req, env) => {
   const cloudinary_api = "https://api.cloudinary.com/v1_1/dqkzmhvhf/image/upload";
   if (file_extension == "jpg") {
     console.log("es JPG");
-    const cloudinary_fetch = await fetch(cloudinary_api, {
+    const cloudinary_response = await $fetch(cloudinary_api, {
       method: "POST",
       body: fdCloudinary
-    });
-    const cloudinary_response = await cloudinary_fetch.json();
+    }).catch(() => null);
     cloudinary_url = cloudinary_response.secure_url;
-    url_fetch = await fetch(cloudinary_url);
+    blob = await $fetch(cloudinary_url).catch(() => null);
   } else {
     console.log("es PNG");
-    const cloudinary_fetch = await fetch(cloudinary_api, {
+    const cloudinary_response = await $fetch(cloudinary_api, {
       method: "POST",
       body: fdCloudinary
-    });
-    const cloudinary_response = await cloudinary_fetch.json();
+    }).catch(() => null);
     cloudinary_url = cloudinary_response.secure_url;
-    url_fetch = await fetch(url);
+    blob = await $fetch(cloudinary_url, { responseType: "blob" }).catch(() => null);
   }
-  const blob = await url_fetch.blob();
-  const blob_png = new Blob([blob], { type: "image/png" });
   try {
-    const file = blob_png;
     const formData = new FormData();
-    formData.append("image", file, "image.png");
+    formData.append("image", blob, "image.png");
     formData.append("n", "1");
     formData.append("size", "1024x1024");
     formData.append("response_format", "b64_json");
     const variation_fetch = "https://api.openai.com/v1/images/variations";
-    const openaifetch = await fetch(variation_fetch, {
+    const response = await $fetch(variation_fetch, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${env.openai_token}`
       },
       body: formData
-    });
-    const response = await openaifetch.json();
+    }).catch(() => null);
     let openai_b64 = response.data[0].b64_json;
     const imgur = new imgurApi(env.imgur_client_id, env.imgur_client_secret);
     const auth_list = (await env.AUTH_USERS.list()).keys;
