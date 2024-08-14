@@ -14,8 +14,8 @@ class y2mateApi {
       formData.append("k_query", `https://youtu.be/${id}`);
       formData.append("k_page", "home");
       formData.append("hl", "en");
-      formData.append("q_auto", "1");
-      const data = await fetch(`${this.base}/mates/en948/analyzeV2/ajax`, {
+      formData.append("q_auto", "0");
+      const data = await $fetch(`${this.base}/mates/en948/analyzeV2/ajax`, {
         ...defaultRetry,
         method: "POST",
         headers: {
