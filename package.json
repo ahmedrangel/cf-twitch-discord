@@ -24,6 +24,6 @@
     "ufo": "^1.5.4"
   },
   "devDependencies": {
-    "wrangler": "^3.70.0"
+    "wrangler": "^3.71.0"
   }
 }
