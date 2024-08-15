@@ -202,7 +202,7 @@ export const socialsCache = {
   tiktok: 1209600,
   twitter: 604800,
   kick: 86400,
-  youtube: 3600,
+  youtube: 21116,
   twitch: 1209600,
   reddit: 86400
 };
