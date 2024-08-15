@@ -25,9 +25,10 @@ class igApi {
     }
 
     const response = await $fetch(`${this.domain}/post?url=${link}`, { ...defaultRetry }).catch(() => null);
-    const data = response?.data?.shortcode_media ? response.data.shortcode_media : null;
+    const proxyData = response?.data?.shortcode_media?.video_url ? response.data.shortcode_media : null;
+    console.log(proxyData);
 
-    if (!data?.video_url || !data) {
+    if (!proxyData) {
       const { data } = await snapsave(link);
       if (!data) return null;
       return { status: 200, video_url: data[0]?.url, short_url, caption: null };
@@ -35,9 +36,9 @@ class igApi {
 
     return {
       status: 200,
-      video_url: data.video_url,
+      video_url: proxyData.video_url,
       short_url,
-      caption: data?.edge_media_to_caption?.edges[0]?.node?.text
+      caption: proxyData?.edge_media_to_caption?.edges[0]?.node?.text
     };
   }
 }
