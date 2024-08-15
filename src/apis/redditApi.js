@@ -24,18 +24,21 @@ class redditApi {
     const id = url.match(regex)[1];
 
     const { data } = await $fetch(withQuery(`${this.apiBase}/info.json`, { id: `t3_${id}` }), { headers }).catch(() => null);
+    const is_video = data?.children[0]?.data?.is_video;
+    const is_gif = data?.children[0]?.data?.url.includes(".gif");
+    const is_crosspost_video = data?.children[0]?.data?.crosspost_parent_list?.[0]?.is_video;
+    const is_crosspost_gif = data?.children[0]?.data?.crosspost_parent_list?.[0]?.url.includes(".gif");
 
-    if (!data || (!data?.children[0]?.data?.is_video && !data?.children[0]?.data?.url.includes(".gif"))) return null;
-
-    const short_url = data?.children[0]?.data?.url;
-    const caption = data?.children[0]?.data?.title;
+    if (!data || (!is_video && !is_gif && !is_crosspost_video && !is_crosspost_gif)) return null;
+    const short_url = data?.children[0]?.data?.url || data?.children[0]?.data?.crosspost_parent_list?.[0]?.url;
+    const caption = data?.children[0]?.data?.title || data?.children[0]?.data?.crosspost_parent_list?.[0]?.title;
 
     if (short_url.includes(".gif")) return { id, video_url: short_url, short_url, caption, format: "gif", status: 200 };
 
-    const fallback_video = data?.children[0]?.data?.media?.reddit_video?.fallback_url;
-    if (data?.children[0]?.data?.media?.reddit_video?.is_gif) return { id, video_url: fallback_video, short_url, caption, status: 200 };
+    const fallback_video = data?.children[0]?.data?.media?.reddit_video?.fallback_url || data?.children[0]?.data?.crosspost_parent_list?.[0]?.media?.reddit_video?.fallback_url;
+    if (data?.children[0]?.data?.media?.reddit_video?.is_gif || data?.children[0]?.data?.crosspost_parent_list?.[0]?.media?.reddit_video?.is_gif) return { id, video_url: fallback_video, short_url, caption, status: 200 };
 
-    const dash = data?.children[0]?.data?.media?.reddit_video?.dash_url;
+    const dash = data?.children[0]?.data?.media?.reddit_video?.dash_url || data?.children[0]?.data?.crosspost_parent_list?.[0]?.media?.reddit_video?.dash_url;
     const xmlString = await $fetch(dash, { responseType: "text" }).catch(() => null);
     const dashAudio = xmlString.match(/<AdaptationSet[^>]+contentType="audio"[^>]*>[\s\S]+?<BaseURL>(.*?)<\/BaseURL>/)[1];
     const fallback_audio = `${short_url}/${dashAudio}`;
