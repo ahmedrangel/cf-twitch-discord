@@ -35,9 +35,9 @@ class fdownloaderApi {
         const url = html("td a").attr("href");
         return { url, status: 200 };
       }
-      return { status: 429 };
+      return null;
     } catch (e) {
-      return { status: 404 };
+      return null;
     }
   }
 }

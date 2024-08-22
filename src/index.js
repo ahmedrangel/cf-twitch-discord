@@ -1805,8 +1805,14 @@ router.get("/dc/youtube-video-scrapper?", async (req, env, ctx) => {
   }
 });
 
-router.get("/dc/facebook-video-scrapper?", async (req, env) => {
+router.get("/dc/facebook-video-scrapper?", async (req, env, ctx) => {
   const { query } = req;
+
+  const cacheKey = new Request(req.url, req);
+  const cache = caches.default;
+  const cachedResponse = await cache.match(cacheKey);
+  if (cachedResponse) return cachedResponse;
+
   const url = decodeURIComponent(query.url);
   const fdownloader = new fdownloaderApi();
   let video_url;
@@ -1825,7 +1831,13 @@ router.get("/dc/facebook-video-scrapper?", async (req, env) => {
     status = data?.status;
     maxAttempts--;
   }
-  return new JsonResponse({ id, video_url, short_url, status });
+
+  if (!video_url) new ErrorResponse(Error.NOT_FOUND);
+
+  const data = { id, video_url, short_url, status };
+  const response = new JsonResponse(data, { cache: `max-age=${socialsCache.facebook}` });
+  ctx.waitUntil(cache?.put(cacheKey, response.clone()));
+  return new JsonResponse(data);
 });
 
 router.get("/dc/tiktok-video-scrapper?", async (req, env, ctx) => {
