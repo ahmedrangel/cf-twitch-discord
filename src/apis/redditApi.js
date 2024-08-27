@@ -38,7 +38,9 @@ class redditApi {
 
     const dash = data?.media?.reddit_video?.dash_url || data?.crosspost_parent_list?.[0]?.media?.reddit_video?.dash_url;
     const xmlString = await $fetch(dash, { responseType: "text" }).catch(() => null);
-    const dashAudio = xmlString.match(/<AdaptationSet[^>]+contentType="audio"[^>]*>[\s\S]+?<BaseURL>(.*?)<\/BaseURL>/)[1];
+    const dashAudio = xmlString.match(/<AdaptationSet[^>]+contentType="audio"[^>]*>[\s\S]+?<BaseURL>(.*?)<\/BaseURL>/)?.[1];
+    if (!dashAudio) return { id, video_url: fallback_video, short_url, caption, status: 200 };
+
     const fallback_audio = `${short_url}/${dashAudio}`;
 
     const download = await $fetch(withQuery(`${this.downloaderBase}/download-link`, {
