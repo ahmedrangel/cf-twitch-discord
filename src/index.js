@@ -1121,13 +1121,20 @@ router.get("/put/discord-avatars?", async (req, env) => {
 router.put("/cdn", async (req, env, ctx) => {
   const cdnAuth = req.headers.get("x-cdn-auth");
   if (cdnAuth !== env.CDN_TOKEN) return new ErrorResponse(Error.UNAUTHORIZED, { message: "Unauthorized" });
+  const contentType = req.headers.get("Content-Type");
+  const isFormData = contentType.includes("multipart/form-data");
+  const obj = isFormData ? await req.formData() : await req.json();
+  const file = isFormData ? obj.get("file") : null;
+  const source = obj.source;
+  const prefix = !isFormData ? obj.prefix : obj.get("prefix");
+  const file_name = !isFormData ? obj.file_name : file.name;
+  const httpMetadata = !isFormData ? obj.httpMetadata : JSON.parse(obj.get("httpMetadata"));
 
-  const { source, prefix, file_name, httpMetadata } = await req.json();
-  if (!source) return new ErrorResponse(Error.BAD_REQUEST, { message: "Missing required fields" });
+  if (!source && !file) return new ErrorResponse(Error.BAD_REQUEST, { message: "Missing required fields" });
 
-  const b = await $fetch(source, { responseType: "blob" });
-  const path = prefix && file_name ? `${prefix}/${file_name}` : `${file_name}`;
   const cdn = "https://cdn.ahmedrangel.com";
+  const b = source ? await $fetch(source, { responseType: "blob" }, { headers: { "User-Agent": randUA("desktop") } }) : file;
+  const path = prefix && file_name || prefix ? `${prefix}/${file_name}` : `${file_name}`;
 
   await env.R2cdn.put(path, b, { httpMetadata: new Headers(httpMetadata) });
   console.log(`escrito: ${path}`);
