@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@ahmedrangel/rand-user-agent": "^2.0.18",
-    "@stylistic/eslint-plugin": "^2.6.4",
+    "@stylistic/eslint-plugin": "^2.7.1",
     "buffer": "^6.0.3",
     "cheerio": "1.0.0",
     "detectlanguage": "^2.1.0",
@@ -19,11 +19,11 @@
     "itty-router": "^5.0.18",
     "jsonpath": "^1.1.1",
     "ofetch": "^1.3.4",
-    "openai": "^4.56.0",
+    "openai": "^4.57.0",
     "snapsave-media-downloader": "^1.0.6",
     "ufo": "^1.5.4"
   },
   "devDependencies": {
-    "wrangler": "^3.72.2"
+    "wrangler": "^3.72.3"
   }
 }
