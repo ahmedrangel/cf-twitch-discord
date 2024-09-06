@@ -649,7 +649,7 @@ router.get("/dc/ai/:user/:prompt", async (req, env) => {
       model: "gpt-3.5-turbo-instruct",
       prompt: contextPlusPrompt,
       temperature: 0.7,
-      max_tokens: 1200,
+      max_tokens: 1000,
       top_p: 1,
       frequency_penalty: 0,
       presence_penalty: 0
@@ -665,6 +665,7 @@ router.get("/dc/ai/:user/:prompt", async (req, env) => {
     await env.R2gpt.put("history.json", JSON.stringify(historyJson), { httpMetadata: headers });
     return new JsonResponse({ status: 200, message: response.choices[0].text });
   } catch (e) {
+    console.log(e);
     return new ErrorResponse(Error.BAD_REQUEST);
   }
 });
