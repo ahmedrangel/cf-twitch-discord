@@ -27,10 +27,10 @@ class tiktokApi {
         const json = JSON.parse(scripts);
         const tt_id = json["__DEFAULT_SCOPE__"]["webapp.video-detail"].itemInfo.itemStruct.id;
         const device_id = json["__DEFAULT_SCOPE__"]["webapp.app-context"].wid;
-        // const known_iid = ["7351144126450059040", "7351149742343391009", "7351153174894626592"];
+        const known_iid = ["7351144126450059040", "7351149742343391009", "7351153174894626592"];
         const query = {
           aweme_ids: `[${tt_id}]`,
-          iid: 0,
+          iid: known_iid[Math.floor(Math.random() * known_iid.length)],
           device_id,
           channel: "googleplay",
           aid: 1233,
