@@ -10,20 +10,20 @@
     "tail": "wrangler tail"
   },
   "dependencies": {
-    "@ahmedrangel/rand-user-agent": "^2.0.18",
-    "@stylistic/eslint-plugin": "^2.7.1",
+    "@ahmedrangel/rand-user-agent": "^2.0.19",
+    "@stylistic/eslint-plugin": "^2.8.0",
     "buffer": "^6.0.3",
     "cheerio": "1.0.0",
     "detectlanguage": "^2.1.0",
-    "eslint": "^9.9.1",
+    "eslint": "^9.10.0",
     "itty-router": "^5.0.18",
     "jsonpath": "^1.1.1",
     "ofetch": "^1.3.4",
-    "openai": "^4.57.0",
-    "snapsave-media-downloader": "^1.0.6",
+    "openai": "^4.58.2",
+    "snapsave-media-downloader": "^1.0.7",
     "ufo": "^1.5.4"
   },
   "devDependencies": {
-    "wrangler": "^3.72.3"
+    "wrangler": "^3.76.0"
   }
 }
