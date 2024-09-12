@@ -36,8 +36,8 @@ importers:
         specifier: ^1.3.4
         version: 1.3.4
       openai:
-        specifier: ^4.58.2
-        version: 4.58.2(zod@3.23.8)
+        specifier: ^4.59.0
+        version: 4.59.0(zod@3.23.8)
       snapsave-media-downloader:
         specifier: ^1.0.7
         version: 1.0.7
@@ -914,8 +914,8 @@ packages:
   ohash@1.1.3:
     resolution: {integrity: sha512-zuHHiGTYTA1sYJ/wZN+t5HKZaH23i4yI1HMwbuXm24Nid7Dv0KcuRlKoNKS9UNfAVSBlnGLcuQrnOKWOZoEGaw==}
 
-  openai@4.58.2:
-    resolution: {integrity: sha512-hIalypYELt7/PcryFpz4Gi1z/8ZDzukWyOhr+jKM6L/GVE+t4NseaENXKt+OxnkkIm/1R2EkdGxgnHrZ0kB5bQ==}
+  openai@4.59.0:
+    resolution: {integrity: sha512-3bn7FypMt2R1ZDuO0+GcXgBEnVFhIzrpUkb47pQRoYvyfdZ2fQXcuP14aOc4C8F9FvCtZ/ElzJmVzVqnP4nHNg==}
     hasBin: true
     peerDependencies:
       zod: ^3.23.8
@@ -2060,7 +2060,7 @@ snapshots:
 
   ohash@1.1.3: {}
 
-  openai@4.58.2(zod@3.23.8):
+  openai@4.59.0(zod@3.23.8):
     dependencies:
       '@types/node': 18.19.34
       '@types/node-fetch': 2.6.11
