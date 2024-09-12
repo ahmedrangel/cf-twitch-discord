@@ -2265,19 +2265,16 @@ router.get("/dc/fx?", async (req, env, ctx) => {
 
     const html = `
       <meta charset="UTF-8">
-      <meta name="theme-color" content="#00a8fc"/>
-      <meta http-equiv="refresh" content="0;url=${query?.redirect_url}"/>
       <meta name="twitter:player:stream" content="${video_url}"/>
       <meta name="twitter:player:stream:content_type" content="video/mp4"/>
-      <meta name="twitter:player:width" content="0"/>
-      <meta name="twitter:player:height" content="0"/>
       <meta property="twitter:card" content="player"/>
+      <meta property="twitter:image" content="0"/>
+      <meta property="og:type" content="video"/>
       <meta property="og:url" content="${query?.redirect_url}"/>
       <meta property="og:video" content="${video_url}"/>
+      <meta property="og:video:url" content="${video_url}"/>
       <meta property="og:video:secure_url" content="${video_url}"/>
       <meta property="og:video:type" content="video/mp4"/>
-      <meta property="og:video:width" content="0"/>
-      <meta property="og:video:height" content="0"/>
     `.replace(/\n\s+/g, "\n");
     const response = new CustomResponse(html, { type: "text/html; charset=UTF-8", cache: "max-age=432000" });
 
