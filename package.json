@@ -19,11 +19,11 @@
     "itty-router": "^5.0.18",
     "jsonpath": "^1.1.1",
     "ofetch": "^1.3.4",
-    "openai": "^4.59.0",
+    "openai": "^4.61.0",
     "snapsave-media-downloader": "^1.0.7",
     "ufo": "^1.5.4"
   },
   "devDependencies": {
-    "wrangler": "^3.76.0"
+    "wrangler": "^3.78.2"
   }
 }
