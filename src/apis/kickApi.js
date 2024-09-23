@@ -7,9 +7,11 @@ class kickApi {
   }
 
   async getMedia (url) {
-    const link = new URL(url);
-    const id = link.searchParams.get("clip");
-    const slug = obtenerIDDesdeURL(link);
+    const idRegex = /^https?:\/\/kick\.com\/[^\\/]+(?:\/clips\/(clip_\w+)|\?clip=(clip_\w+))$/;
+    const match = idRegex.exec(url);
+    if (!match) return null;
+
+    const id = match[1] || match[2];
     const endpoint = `${this.base}/api/clip/${id}`;
 
     const data = await $fetch(endpoint).catch(() => null);
@@ -24,8 +26,9 @@ class kickApi {
     }
 
     console.log(data);
+    const slug = data?.clip?.channel?.slug;
     const caption = data?.clip?.title;
-    const short_url = `https://kick.com/${slug}?clip=${id}`;
+    const short_url = `https://kick.com/${slug || "u"}/clips/${id}`;
 
     if (!video_url) return null;
     return { id, video_url, short_url, caption, status: 200 };
