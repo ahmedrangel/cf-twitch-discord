@@ -2265,6 +2265,7 @@ router.get("/dc/fx?", async (req, env, ctx) => {
 
     const html = `
       <meta charset="UTF-8">
+      <meta http-equiv="refresh" content="0;url=${query?.redirect_url}"/>
       <meta name="twitter:player:stream" content="${video_url}"/>
       <meta name="twitter:player:stream:content_type" content="video/mp4"/>
       <meta property="twitter:card" content="player"/>
