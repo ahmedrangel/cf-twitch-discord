@@ -6,7 +6,7 @@ import { defaultRetry } from "../utils/helpers";
 class igApi {
   constructor (ig_proxy_host) {
     this.domain = "https://www.instagram.com/api/graphql";
-    this.domain_stories = "https://igram.world/api/ig/story";
+    this.domain_stories = "https://api-ig.igram.world/api/story";
   }
 
   async getMedia (link, id) {
