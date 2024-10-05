@@ -5,11 +5,11 @@ import { defaultRetry } from "../utils/helpers";
 
 class igApi {
   constructor (ig_proxy_host) {
-    this.domain = ig_proxy_host;
+    this.domain = "https://www.instagram.com/api/graphql";
     this.domain_stories = "https://igram.world/api/ig/story";
   }
 
-  async getMedia (link) {
+  async getMedia (link, id) {
     const short_url = link.replace(/\?.*$/, "").replace("www.", "");
     const _userAgent = randUA("desktop");
     if (link.includes("stories")) {
@@ -24,11 +24,28 @@ class igApi {
       return { status: 200, video_url: url, short_url, caption: null };
     }
 
-    const response = await $fetch(`${this.domain}/post?url=${link}`, { ...defaultRetry }).catch(() => null);
-    const proxyData = response?.data?.shortcode_media?.video_url ? response.data.shortcode_media : null;
-    console.log(proxyData);
+    const graphql = new URL(this.domain);
+    graphql.searchParams.set("variables", JSON.stringify({ shortcode: id }));
+    graphql.searchParams.set("doc_id", "10015901848480474");
+    graphql.searchParams.set("lsd", "AVqbxe3J_YA");
 
-    if (!proxyData) {
+    const response = await $fetch(graphql, {
+      ...defaultRetry,
+      method: "POST",
+      responseType: "json",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "X-IG-App-ID": "936619743392459",
+        "X-FB-LSD": "AVqbxe3J_YA",
+        "X-ASBD-ID": "129477",
+        "Sec-Fetch-Site": "same-origin",
+        "User-Agent": _userAgent
+      }
+    }).catch(() => null);
+    const postData = response?.data?.xdt_shortcode_media?.video_url ? response.data.xdt_shortcode_media : null;
+    console.log(postData);
+
+    if (!postData) {
       const { data } = await snapsave(link);
       if (!data) return null;
       return { status: 200, video_url: data[0]?.url, short_url, caption: null };
@@ -36,9 +53,9 @@ class igApi {
 
     return {
       status: 200,
-      video_url: proxyData.video_url,
+      video_url: postData.video_url,
       short_url,
-      caption: proxyData?.edge_media_to_caption?.edges[0]?.node?.text
+      caption: postData?.edge_media_to_caption?.edges[0]?.node?.text
     };
   }
 }
