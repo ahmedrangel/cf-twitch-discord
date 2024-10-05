@@ -24,14 +24,14 @@ class igApi {
       return { status: 200, video_url: url, short_url, caption: null };
     }
 
-    const graphql = new URL(this.domain);
-    graphql.searchParams.set("variables", JSON.stringify({ shortcode: id }));
-    graphql.searchParams.set("doc_id", "10015901848480474");
-    graphql.searchParams.set("lsd", "AVqbxe3J_YA");
-
-    const response = await $fetch(graphql, {
+    const response = await $fetch(this.domain, {
       ...defaultRetry,
       method: "POST",
+      params: {
+        doc_id: "10015901848480474",
+        lsd: "AVqbxe3J_YA",
+        variables: { shortcode: id }
+      },
       responseType: "json",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
