@@ -631,20 +631,17 @@ router.get("/dc/ai/:user/:prompt", async (req, env) => {
     const prompt = decodeURIComponent(req.params.prompt);
     const user = decodeURIComponent(req.params.user);
     const botName = "Gemi-Chan";
-    console.log("User: "+user);
-    console.log("Prompt: "+prompt);
     const openai = new OpenAI({ apiKey: env.openai_token });
     let context = "";
     const history = await env.R2gpt.get("history.json");
     const historyJson = await history?.json() || [];
     if (historyJson && historyJson.length) {
-      historyJson.length > 4 ? historyJson.shift() : null;
+      historyJson.length > 2 ? historyJson.shift() : null;
       for (const h of historyJson) {
         context = context + `${h.name}:${h.message}\n`;
       }
     }
     const contextPlusPrompt = `${context}${user}:${prompt}\n${botName}:`;
-    console.log(contextPlusPrompt);
     const response = await openai.completions.create({
       model: "gpt-3.5-turbo-instruct",
       prompt: contextPlusPrompt,
