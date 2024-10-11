@@ -14,7 +14,7 @@ class y2mateApi {
     this.cookie = `_ga=GA1.1.${this.sessionUserId}.${this.sessionTimestamp}`;
   }
 
-  async get360pMedia (id, filter) {
+  async get360pMedia (id) {
     try {
       const data = await $fetch(this.base2, {
         ...defaultRetry,
@@ -48,7 +48,7 @@ class y2mateApi {
     }
   }
 
-  async getVideoToken (id, filter) {
+  async getVideoToken (id) {
     try {
       const formData = new FormData();
       formData.append("k_query", `https://youtu.be/${id}`);
@@ -82,8 +82,8 @@ class y2mateApi {
     }
   }
 
-  async getMedia (id, filter) {
-    const videoToken = await this.getVideoToken(id, filter);
+  async getVideo (id) {
+    const videoToken = await this.getVideoToken(id);
     const hd_token = videoToken?.hd_token;
     if (!hd_token) return this.get360pMedia(id);
     try {

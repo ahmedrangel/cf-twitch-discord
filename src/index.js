@@ -28,6 +28,7 @@ import ErrorResponse from "./responses/ErrorResponse";
 import { Error } from "./utils/errors";
 import twitchGQL from "./apis/twitchGQL";
 import redditApi from "./apis/redditApi";
+import ytsavetubeApi from "./apis/ytsavetube";
 
 const router = IttyRouter();
 // educar
@@ -1764,7 +1765,7 @@ router.get("/dc/youtube/mp3?", async (req, env) => {
 });
 
 router.get("/dc/youtube-video-scrapper?", async (req, env, ctx) => {
-  const { url, filter } = req.query;
+  const { url } = req.query;
 
   const cacheKey = new Request(req.url, req);
   const cache = caches.default;
@@ -1772,6 +1773,7 @@ router.get("/dc/youtube-video-scrapper?", async (req, env, ctx) => {
   if (cachedResponse) return cachedResponse;
 
   const youtube = new youtubeApi(env.youtube_token);
+  const ytsave = new ytsavetubeApi();
   const y2mate = new y2mateApi();
   const regex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?|live)\/|\S*?[?&]v=|shorts\/)?|youtu\.be\/)([a-zA-Z0-9_-]+)/;
   const videoUrl = decodeURIComponent(url);
@@ -1781,14 +1783,7 @@ router.get("/dc/youtube-video-scrapper?", async (req, env, ctx) => {
     const { snippet, contentDetails } = items[0];
     const duration = timeToSeconds(contentDetails.duration);
     const short_url = "https://youtu.be/" + id;
-    let video_url = await y2mate.getMedia(id, filter);
-    let maxAttempts = 4;
-    while (!video_url && maxAttempts > 0) {
-      console.log("Retrying video download (attempt " + (4 - maxAttempts) + ")");
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      video_url = await y2mate.getMedia(id, filter);
-      maxAttempts--;
-    }
+    const video_url = await ytsave.getVideo(id) || await y2mate.getVideo(id);
     if (!video_url) {
       return new ErrorResponse(Error.TOO_MANY_REQUESTS);
     }
