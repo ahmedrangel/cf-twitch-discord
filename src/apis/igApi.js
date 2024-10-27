@@ -43,8 +43,6 @@ class igApi {
       }
     }).catch(() => null);
     const postData = response?.data?.xdt_shortcode_media?.video_url ? response.data.xdt_shortcode_media : null;
-    console.log(postData);
-
     if (!postData) {
       const { data } = await snapsave(link);
       if (!data) return null;
