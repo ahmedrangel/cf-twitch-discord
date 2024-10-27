@@ -15,15 +15,15 @@
     "buffer": "^6.0.3",
     "cheerio": "1.0.0",
     "detectlanguage": "^2.1.0",
-    "eslint": "^9.12.0",
+    "eslint": "^9.13.0",
     "itty-router": "^5.0.18",
     "jsonpath": "^1.1.1",
     "ofetch": "^1.4.1",
-    "openai": "^4.67.3",
+    "openai": "^4.68.4",
     "snapsave-media-downloader": "^1.1.0",
     "ufo": "^1.5.4"
   },
   "devDependencies": {
-    "wrangler": "^3.80.3"
+    "wrangler": "^3.83.0"
   }
 }
