@@ -1,5 +1,6 @@
 import { randUA } from "@ahmedrangel/rand-user-agent";
 import { $fetch } from "ofetch";
+import { defaultRetry } from "../utils/helpers";
 
 class ytsavetubeApi {
   constructor () {
@@ -16,6 +17,7 @@ class ytsavetubeApi {
     if (!info) return null;
 
     const download = await $fetch(`${this.base}/download/video/1080/${info.data.key}`, {
+      ...defaultRetry,
       headers: { "User-Agent": this._userAgent }
     }).catch(() => null);
 
