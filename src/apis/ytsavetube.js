@@ -16,7 +16,7 @@ class ytsavetubeApi {
 
     if (!info) return null;
 
-    const download = await $fetch(`${this.base}/download/video/1080/${info.data.key}`, {
+    const download = await $fetch(`${this.base}/download/video/720/${info.data.key}`, {
       ...defaultRetry,
       headers: { "User-Agent": this._userAgent }
     }).catch(() => null);
