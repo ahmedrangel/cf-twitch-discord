@@ -42,12 +42,14 @@ class igApi {
         "User-Agent": _userAgent
       }
     }).catch(() => null);
-    const postData = response?.data?.xdt_shortcode_media?.video_url ? response.data.xdt_shortcode_media : null;
+    const postData = response?.data?.xdt_shortcode_media || null;
     if (!postData) {
       const { data } = await snapsave(link);
       if (!data) return null;
       return { status: 200, video_url: data[0]?.url, short_url, caption: null };
     }
+
+    if (!postData.is_video) return { status: 200, short_url, is_photo: true };
 
     return {
       status: 200,

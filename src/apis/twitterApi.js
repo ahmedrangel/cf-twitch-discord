@@ -82,11 +82,13 @@ class twitterApi {
 
       const entries = entriesArr[0];
       const quotedEntries = quotedArr.length ? quotedArr[0] : null;
+      if (!entries && !quotedEntries) return null;
+      if (entries?.extended_entities?.media[videoNumber]?.type === "photo" || quotedEntries?.extended_entities?.media[videoNumber]?.type === "photo")
+        return { id, is_photo: true, status: 200, short_url: `https://x.com/x/status/${id}` };
 
       if (!entries?.extended_entities?.media[videoNumber]?.video_info && !quotedEntries?.extended_entities?.media[videoNumber]?.video_info) return null;
-
       const videos = entries?.extended_entities?.media[videoNumber]?.video_info?.variants || quotedEntries?.extended_entities?.media[videoNumber]?.video_info?.variants;
-      const filteredVideos = videos.filter(video => video.content_type === "video/mp4" && video.bitrate && (video.url.includes("avc1") || video.url.includes("/pu/vid/") || video.url.includes(".mp4?tag=12")));
+      const filteredVideos = videos.filter(video => video.content_type === "video/mp4" && (video.url.includes("avc1") || video.url.includes("/pu/vid/") || video.url.includes(".mp4?tag=12") || video.url.includes("/tweet_video/")));
       const maxBitrate = Math.max(...filteredVideos.map(video => video.bitrate));
       const video = filteredVideos.find(video => video.bitrate === maxBitrate);
 

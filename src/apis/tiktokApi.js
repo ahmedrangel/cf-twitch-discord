@@ -65,10 +65,10 @@ class tiktokApi {
       const query = { url };
       const { data } = await $fetch(withQuery(this.base_3rd, query), { ...defaultRetry }).catch((e) => console.log(e), null);
       if (!data) return null;
-
       const video_url = data?.play;
       const short_url = "https://m.tiktok.com/v/" + data?.id;
       const caption = data?.title?.trim().replace(/\s+$/, "");
+      if (data?.images?.length) return { id: data?.id, short_url, caption, is_photo: true, status: 200 };
       return { id: data?.id, video_url, short_url, caption, status: 200 };
     };
 
