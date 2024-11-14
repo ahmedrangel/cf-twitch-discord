@@ -1853,7 +1853,7 @@ router.get("/dc/tiktok-video-scrapper?", async (req, env, ctx) => {
   if (url.includes("tiktok.com/")) {
     console.log("es link de tiktok");
     const data = await tiktok.getMedia(url);
-    if (!data) new ErrorResponse(Error.NOT_FOUND);
+    if (!data) return new ErrorResponse(Error.NOT_FOUND);
 
     const response = new JsonResponse(data, { cache: `max-age=${socialsCache.tiktok}` });
     ctx.waitUntil(cache?.put(cacheKey, response.clone()));
