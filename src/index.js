@@ -1827,7 +1827,7 @@ router.get("/dc/facebook-video-scrapper?", async (req, env, ctx) => {
     console.log("Retrying video download (attempt " + (4 - maxAttempts) + ")");
     await new Promise(resolve => setTimeout(resolve, 1000));
     const data = await fdownloader.getMedia(url);
-    video_url = data?.url;
+    video_url = data?.video_url;
     status = data?.status;
     maxAttempts--;
   }
