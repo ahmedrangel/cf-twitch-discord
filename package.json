@@ -20,10 +20,10 @@
     "jsonpath": "^1.1.1",
     "ofetch": "^1.4.1",
     "openai": "^4.72.0",
-    "snapsave-media-downloader": "^2.0.2",
+    "snapsave-media-downloader": "^2.1.0",
     "ufo": "^1.5.4"
   },
   "devDependencies": {
-    "wrangler": "^3.86.1"
+    "wrangler": "^3.87.0"
   }
 }

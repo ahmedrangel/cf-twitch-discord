@@ -46,7 +46,8 @@ class igApi {
     if (!postData) {
       const { data } = await snapsave(link);
       if (!data) return null;
-      return { status: 200, video_url: data?.media[0]?.url, short_url, caption: null };
+      const is_photo = data?.media[0]?.type === "image";
+      return { status: 200, video_url: data?.media[0]?.url, short_url, is_photo, caption: null };
     }
 
     if (!postData.is_video) return { status: 200, short_url, is_photo: true };
