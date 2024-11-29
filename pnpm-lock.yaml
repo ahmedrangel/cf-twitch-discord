@@ -39,8 +39,8 @@ importers:
         specifier: ^4.73.1
         version: 4.73.1(zod@3.23.8)
       snapsave-media-downloader:
-        specifier: ^2.1.0
-        version: 2.1.0
+        specifier: ^2.1.1
+        version: 2.1.1
       ufo:
         specifier: ^1.5.4
         version: 1.5.4
@@ -1006,8 +1006,8 @@ packages:
     resolution: {integrity: sha512-7++dFhtcx3353uBaq8DDR4NuxBetBzC7ZQOhmTQInHEd6bSrXdiEyzCvG07Z44UYdLShWUyXt5M/yhz8ekcb1A==}
     engines: {node: '>=8'}
 
-  snapsave-media-downloader@2.1.0:
-    resolution: {integrity: sha512-o9k9fPC22twj+eVTado2ue3ByxnxG5GeR/7QdYix5PferDexut6MZ7WbOw9e2/7JErvTLBG+kAnUKwj3osqe4A==}
+  snapsave-media-downloader@2.1.1:
+    resolution: {integrity: sha512-iKKlum/0uLgEDnZlehYEoF11d6r2olgztevBI2uxrPWDuFYVOT+tW65pmdBaYS783kIiSrHUwe9nYQxpybNJRA==}
 
   source-map@0.6.1:
     resolution: {integrity: sha512-UjgapumWlbMhkBgzT7Ykc5YXUT46F0iKu8SGXq0bcwP5dz/h0Plj6enJqjz1Zbq2l5WaqYnrVbwWOWMyF3F47g==}
@@ -2085,7 +2085,7 @@ snapshots:
 
   shebang-regex@3.0.0: {}
 
-  snapsave-media-downloader@2.1.0:
+  snapsave-media-downloader@2.1.1:
     dependencies:
       cheerio: 1.0.0
 
