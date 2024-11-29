@@ -1715,7 +1715,7 @@ router.get("/dc/instagram-video-scrapper?", async (req, env, ctx) => {
   } else {
     try {
       const instagram = new igApi(env.ig_proxy_host);
-      const data = await instagram.getMedia(url.includes("/stories") ? url : `https://instagram.com/p/${idUrl}`, idUrl);
+      const data = await instagram.getMedia(url.includes("/stories") || url.includes("/share") ? url : `https://instagram.com/p/${idUrl}`, idUrl);
       if (!data) return new ErrorResponse(Error.NOT_FOUND);
       data.id = idUrl;
 
