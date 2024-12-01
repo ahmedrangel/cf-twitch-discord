@@ -2106,12 +2106,19 @@ router.get("/dc/twitch-video-scrapper?", async (req, env, ctx) => {
   }
 });
 
-router.get("/kick/clip/:id", async (req, env) => {
-  const { id } = req.params;
-  const { clipId } = await $fetch(`${env.kick_3rd_base}/clip/${id}`).catch(() => null);
-  if (!clipId) new ErrorResponse(Error.NOT_FOUND);
-  const url = `https://clips.kick.com/tmp/${id}.mp4`;
-  return new JsonResponse({ url });
+router.get("/kick/clip?", async (req, env) => {
+  const { url } = req.query;
+  const idRegex = /^https?:\/\/kick\.com\/[^\\/]+(?:\/clips\/(clip_\w+)|\?clip=(clip_\w+))$/;
+  const match = idRegex.exec(url);
+  if (!match) return new ErrorResponse(Error.NOT_FOUND);
+  const id = match[1] || match[2];
+  const data = await $fetch(`${env.kick_3rd_base}/clip`, {
+    method: "POST",
+    body: { url }
+  }).catch(() => null);
+  if (!data?.success) return new ErrorResponse(Error.NOT_FOUND);
+  const video = `https://clips.kick.com/tmp/${id}.mp4`;
+  return new JsonResponse({ url: video });
 });
 
 router.get("/lol/elo?", async (req, env) => {
@@ -2283,9 +2290,12 @@ router.get("/dc/fx?", async (req, env, ctx) => {
 router.get("/vue-telescope?", async (req, env, ctx) => {
   const { url } = req.query;
   if (!url) return new ErrorResponse(Error.BAD_REQUEST);
-  const result = await $fetch(`${env.digitalocean}:2082/vue-telescope/analyze`, { query: { url } }).catch(() => null);
-  if (!result) return new ErrorResponse(Error.INTERNAL_SERVER_ERROR);
-  return new JsonResponse(result);
+  try {
+    const result = await $fetch(`${env.digitalocean}:2082/vue-telescope/analyze`, { query: { url } });
+    return new JsonResponse(result);
+  } catch (e) {
+    return new ErrorResponse(Error.INTERNAL_SERVER_ERROR, e.data);
+  }
 });
 
 router.all("*", () => new ErrorResponse(Error.NOT_FOUND));

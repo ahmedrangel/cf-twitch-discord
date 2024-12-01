@@ -12,16 +12,16 @@ class kickApi {
     if (!match) return null;
 
     const id = match[1] || match[2];
-    const endpoint = `${this.base}/api/clip/${id}`;
+    const endpoint = `${this.base}/api/clip`;
 
-    const data = await $fetch(endpoint).catch(() => null);
+    const data = await $fetch(endpoint + "/" + id).catch(() => null);
     const tmp = await $fetch.raw(`https://clips.kick.com/tmp/${id}.mp4`).catch(() => null);
 
     let video_url;
     if (tmp?.headers?.get("content-type") === "video/mp4") {
       video_url = `https://clips.kick.com/tmp/${id}.mp4`;
     } else {
-      const trigger = await $fetch(endpoint, { method: "POST" }).catch(() => null);
+      const trigger = await $fetch(endpoint, { method: "POST", body: { url } }).catch(() => null);
       video_url = trigger?.url;
     }
 
