@@ -25,7 +25,6 @@ class kickApi {
       video_url = trigger?.url;
     }
 
-    console.log(data);
     const slug = data?.clip?.channel?.slug;
     const caption = data?.clip?.title;
     const short_url = `https://kick.com/${slug || "u"}/clips/${id}`;
