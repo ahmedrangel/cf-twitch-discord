@@ -1698,34 +1698,14 @@ router.get("/dc/instagram-video-scrapper?", async (req, env, ctx) => {
   const cache = caches.default;
   const cachedResponse = await cache.match(cacheKey);
   if (cachedResponse) return cachedResponse;
-
   const { query } = req;
   const url = decodeURIComponent(query.url);
-  const getInstagramId = (url) => {
-    const regex = /instagram.com\/(?:[A-Za-z0-9_.]+\/)?(p|reels|reel|stories|share)\/([A-Za-z0-9-_]+)/;
-    const match = url.match(regex);
-    return match && match[2] ? match[2] : null;
-  };
-
-  const idUrl = getInstagramId(url);
-
-  if (!idUrl) {
-    console.log("Invalid url");
-    return new ErrorResponse(Error.BAD_REQUEST);
-  } else {
-    try {
-      const instagram = new igApi(env.ig_proxy_host);
-      const data = await instagram.getMedia(url.includes("/stories") || url.includes("/share") ? url : `https://instagram.com/p/${idUrl}`, idUrl);
-      if (!data) return new ErrorResponse(Error.NOT_FOUND);
-      data.id = idUrl;
-
-      const response = new JsonResponse(data, { cache: `max-age=${socialsCache.instagram}` });
-      ctx.waitUntil(cache?.put(cacheKey, response.clone()));
-      return response;
-    } catch (e) {
-      return new ErrorResponse(Error.NOT_FOUND);
-    }
-  }
+  const instagram = new igApi(env.ig_proxy_host);
+  const data = await instagram.getMedia(url);
+  if (!data) return new ErrorResponse(Error.NOT_FOUND);
+  const response = new JsonResponse(data, { cache: `max-age=${socialsCache.instagram}` });
+  ctx.waitUntil(cache?.put(cacheKey, response.clone()));
+  return response;
 });
 
 router.get("/dc/youtube/mp3?", async (req, env) => {
