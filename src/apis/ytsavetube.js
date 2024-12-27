@@ -5,10 +5,29 @@ import { defaultRetry } from "../utils/helpers";
 class ytsavetubeApi {
   constructor () {
     this.base = "https://cdn53.savetube.su";
+    this.base2 = "https://p.oceansaver.in/ajax";
     this._userAgent = randUA("desktop");
   }
 
   async getVideo (id) {
+    const osaver = await $fetch(`${this.base2}/download.php`, {
+      ...defaultRetry,
+      params: {
+        copyright: 0,
+        format: 720,
+        url: `https://www.youtube.com/watch?v=${id}`
+      }
+    }).catch(() => null);
+    if (osaver?.id) {
+      const osaverProgress = await $fetch(`${this.base2}/progress.php`, {
+        ...defaultRetry,
+        params: {
+          id: osaver.id
+        }
+      }).catch(() => null);
+      if (osaverProgress?.download_url) return osaverProgress.download_url;
+    }
+
     const info = await $fetch(`${this.base}/info`, {
       method: "POST",
       body: { url: `https://www.youtube.com/watch?v=${id}` },

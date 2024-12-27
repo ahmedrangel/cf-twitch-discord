@@ -55,12 +55,12 @@ class y2mateApi {
       formData.append("k_page", "home");
       formData.append("hl", "en");
       formData.append("q_auto", "0");
-      const data = await $fetch(`${this.base}/mates/en948/analyzeV2/ajax`, {
+      const data = await $fetch(`${this.base}/mates/en949/analyzeV2/ajax`, {
         ...defaultRetry,
         method: "POST",
         headers: {
           "User-Agent": this._userAgent,
-          "Referer": `${this.base}/en948/`,
+          "Referer": `${this.base}/en949/`,
           "Origin": this.base,
           "Cookie": this.cookie
         },
