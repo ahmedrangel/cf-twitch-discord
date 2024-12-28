@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@ahmedrangel/rand-user-agent':
-        specifier: ^2.0.22
-        version: 2.0.22
+        specifier: ^2.0.23
+        version: 2.0.23
       '@stylistic/eslint-plugin':
         specifier: ^2.12.1
         version: 2.12.1(eslint@9.17.0)(typescript@5.6.3)
@@ -51,9 +51,9 @@ importers:
 
 packages:
 
-  '@ahmedrangel/rand-user-agent@2.0.22':
-    resolution: {integrity: sha512-zcWz/D8d+wIU+HeMUIkX/KWtiUGs2Xg97SJhvGc61yYvcGMMa9HzTlfr1+WdyKBK0365y1XIk4Ij3Ot/lW6Tmg==}
-    engines: {node: '>=17.1.0'}
+  '@ahmedrangel/rand-user-agent@2.0.23':
+    resolution: {integrity: sha512-0ROa5Ckk96NKduPVyYe+/Rvp7Uu3IcI5kUmD5hN8rtMQCD8L+zLCLuhL4qIb9YJ4w23FUdM1S9s8GXCuMzEAJg==}
+    engines: {node: '>=22.11.0'}
 
   '@cloudflare/kv-asset-handler@0.3.4':
     resolution: {integrity: sha512-YLPHc8yASwjNkmcDMQMY35yiWjoKAKnhUbPRszBRS0YgH+IXtsMp61j+yTcnCE3oO2DgP0U3iejLC8FTtKDC8Q==}
@@ -1155,7 +1155,7 @@ packages:
 
 snapshots:
 
-  '@ahmedrangel/rand-user-agent@2.0.22': {}
+  '@ahmedrangel/rand-user-agent@2.0.23': {}
 
   '@cloudflare/kv-asset-handler@0.3.4':
     dependencies:

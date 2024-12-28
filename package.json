@@ -10,7 +10,7 @@
     "tail": "wrangler tail"
   },
   "dependencies": {
-    "@ahmedrangel/rand-user-agent": "^2.0.22",
+    "@ahmedrangel/rand-user-agent": "^2.0.23",
     "@stylistic/eslint-plugin": "^2.12.1",
     "buffer": "^6.0.3",
     "cheerio": "1.0.0",
