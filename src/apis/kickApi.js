@@ -7,7 +7,7 @@ class kickApi {
   }
 
   async getMedia (url) {
-    const idRegex = /^https?:\/\/kick\.com\/[^\\/]+(?:\/clips\/(clip_\w+)|\?clip=(clip_\w+))$/;
+    const idRegex = /^https?:\/\/kick\.com\/[^\\/]+(?:\/clips\/(clip_\w+)|\?clip=(clip_\w+))(?:\&.*|\?.*)?$/;
     const match = idRegex.exec(url);
     if (!match) return null;
 
