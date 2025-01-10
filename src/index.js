@@ -2267,17 +2267,6 @@ router.get("/dc/fx?", async (req, env, ctx) => {
   return new ErrorResponse(Error.BAD_REQUEST);
 });
 
-router.get("/vue-telescope?", async (req, env, ctx) => {
-  const { url } = req.query;
-  if (!url) return new ErrorResponse(Error.BAD_REQUEST);
-  try {
-    const result = await $fetch(`${env.digitalocean}:2082/vue-telescope/analyze`, { query: { url } });
-    return new JsonResponse(result);
-  } catch (e) {
-    return new ErrorResponse(Error.INTERNAL_SERVER_ERROR, e.data);
-  }
-});
-
 router.all("*", () => new ErrorResponse(Error.NOT_FOUND));
 
 export default {
