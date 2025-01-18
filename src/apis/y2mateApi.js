@@ -1,8 +1,8 @@
 import { randUA } from "@ahmedrangel/rand-user-agent";
 import { $fetch } from "ofetch";
-import { defaultRetry } from "../utils/helpers";
 import { load } from "cheerio";
 import { getQuery } from "ufo";
+import { defaultRetry } from "../utils/helpers";
 
 class y2mateApi {
   constructor () {

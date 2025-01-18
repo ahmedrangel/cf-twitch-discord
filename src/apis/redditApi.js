@@ -1,7 +1,7 @@
 import { randUA } from "@ahmedrangel/rand-user-agent";
 import { load } from "cheerio";
 import { $fetch } from "ofetch";
-import { withQuery, parseURL } from "ufo";
+import { parseURL, withQuery } from "ufo";
 
 class redditApi {
   constructor (reddit_token) {

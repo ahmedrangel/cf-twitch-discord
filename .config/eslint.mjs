@@ -1,15 +1,15 @@
 import stylistic from "@stylistic/eslint-plugin";
+import importPlugin from "eslint-plugin-import";
 
 export default [
   {
-    files: ["**/*.js", "**/*.mjs", "**/*.ts"],
+    files: ["**/*.js", "**/*.mjs"],
     ignores: [
-      "node_modules/**/*",
-      "dist/**/*",
-      ".wrangler/**/*"
+      "node_modules/**/*"
     ],
     plugins: {
-      "@stylistic": stylistic
+      "@stylistic": stylistic,
+      "import": importPlugin
     },
     rules: {
       "@stylistic/indent": ["error", 2, { SwitchCase: 1 }],
@@ -39,7 +39,15 @@ export default [
       "@stylistic/require-default-prop": "off",
       "@stylistic/space-in-parens": ["error", "never"],
       "@stylistic/template-curly-spacing": "error",
-      "@stylistic/quote-props": ["error", "consistent-as-needed"]
+      "@stylistic/quote-props": ["error", "consistent-as-needed"],
+      "sort-imports": ["error", { ignoreDeclarationSort: true }],
+      "import/first": "error",
+      "import/no-duplicates": "error",
+      "import/no-mutable-exports": "error",
+      "import/no-named-default": "error",
+      "import/no-self-import": "error",
+      "import/order": "error",
+      "import/newline-after-import": ["error", { count: 1 }]
     }
   }
 ];

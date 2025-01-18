@@ -1,4 +1,5 @@
 import { Buffer } from "buffer";
+
 class spotifyApi {
 
   constructor (spotify_client_id, spotify_client_secret) {
