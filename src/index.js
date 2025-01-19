@@ -29,6 +29,7 @@ import { Error } from "./utils/errors";
 import twitchGQL from "./apis/twitchGQL";
 import redditApi from "./apis/redditApi";
 import ytsavetubeApi from "./apis/ytsavetube";
+import ytproxyApi from "./apis/ytproxyApi";
 
 const router = IttyRouter();
 // educar
@@ -1755,6 +1756,7 @@ router.get("/dc/youtube-video-scrapper?", async (req, env, ctx) => {
   const youtube = new youtubeApi(env.youtube_token);
   const ytsave = new ytsavetubeApi();
   const y2mate = new y2mateApi();
+  const ytproxy = new ytproxyApi();
   const regex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?|live)\/|\S*?[?&]v=|shorts\/)?|youtu\.be\/)([a-zA-Z0-9_-]+)/;
   const videoUrl = decodeURIComponent(url);
   const id = videoUrl.match(regex)[1];
@@ -1763,7 +1765,8 @@ router.get("/dc/youtube-video-scrapper?", async (req, env, ctx) => {
     const { snippet, contentDetails } = items[0];
     const duration = timeToSeconds(contentDetails.duration);
     const short_url = "https://youtu.be/" + id;
-    const video_url = (await $fetch("https://youtube-converter.ahmedrangel.com/720/download", { params: { url: videoUrl } }))?.url || await ytsave.getVideo(id) || await y2mate.getVideo(id);
+    console.log(short_url);
+    const video_url = await ytproxy.getVideo(videoUrl) || await ytsave.getVideo(id) || await y2mate.getVideo(id);
     if (!video_url) {
       return new ErrorResponse(Error.TOO_MANY_REQUESTS);
     }
