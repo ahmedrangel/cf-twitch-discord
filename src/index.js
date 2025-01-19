@@ -1763,7 +1763,10 @@ router.get("/dc/youtube-video-scrapper?", async (req, env, ctx) => {
     const { snippet, contentDetails } = items[0];
     const duration = timeToSeconds(contentDetails.duration);
     const short_url = "https://youtu.be/" + id;
-    const video_url = withQuery("https://youtube-converter.ahmedrangel.com/720/download", { url: videoUrl });
+    const video_url = (await $fetch("https://youtube-converter.ahmedrangel.com/720/download", { params: { url: videoUrl } }))?.url || await ytsave.getVideo(id) || await y2mate.getVideo(id);
+    if (!video_url) {
+      return new ErrorResponse(Error.TOO_MANY_REQUESTS);
+    }
     const data = {
       id,
       video_url: video_url,
