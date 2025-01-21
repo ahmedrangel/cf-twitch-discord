@@ -1,4 +1,3 @@
-import { withQuery } from "ufo";
 import { $fetch } from "ofetch";
 import { randUA } from "@ahmedrangel/rand-user-agent";
 import { load } from "cheerio";
@@ -48,7 +47,7 @@ class tiktokApi {
           "x-argus": ""
         };
 
-        const data = await $fetch(withQuery(`${this.base}/aweme/v1/multi/aweme/detail/`, query), { headers, ...defaultRetry }).catch(() => null);
+        const data = await $fetch(`${this.base}/aweme/v1/multi/aweme/detail/`, { query, headers, ...defaultRetry }).catch(() => null);
         if (!data) return null;
 
         const video_url = data?.aweme_details[0]?.video?.play_addr?.url_list[0];
@@ -63,7 +62,7 @@ class tiktokApi {
 
     const method_2 = async () => {
       const query = { url };
-      const { data } = await $fetch(withQuery(this.base_3rd, query), { ...defaultRetry }).catch((e) => console.log(e), null);
+      const { data } = await $fetch(this.base_3rd, { query, ...defaultRetry }).catch((e) => console.log(e), null);
       if (!data) return null;
       const video_url = data?.play;
       const short_url = "https://m.tiktok.com/v/" + data?.id;
