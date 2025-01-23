@@ -5,9 +5,10 @@ class ytproxyApi {
   constructor () {}
 
   async getVideo (url) {
-    const data = await $fetch("https://youtube-converter.ahmedrangel.com/720/download", {
+    const data = await $fetch("https://youtube-converter.ahmedrangel.com/download", {
+      method: "POST",
       ...defaultRetry,
-      query: { url }
+      body: { url, quality: "720" }
     }).catch((e) => {
       console.log(e);
       return null;
