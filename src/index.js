@@ -636,11 +636,12 @@ router.get("/dc/ai/:user/:prompt", async (req, env) => {
     const openai = new OpenAI({ apiKey: env.openai_token });
     let context = "";
     const history = await env.R2gpt.get("history.json");
-    const historyJson = await history?.json() || [];
+    let historyJson = await history?.json() || [];
     if (historyJson && historyJson.length) {
-      historyJson.length > 2 ? historyJson.shift() : null;
+      if (historyJson.length > 2) historyJson = historyJson.slice(historyJson.length - 2);
       for (const h of historyJson) {
-        context = context + `${h.name}:${h.message}\n`;
+        if (h.name && h.message)
+          context = context + `${h.name}:${h.message}\n`;
       }
     }
     const contextPlusPrompt = `${context}${user}:${prompt}\n${botName}:`;
@@ -651,7 +652,8 @@ router.get("/dc/ai/:user/:prompt", async (req, env) => {
       max_tokens: 1000,
       top_p: 1,
       frequency_penalty: 0,
-      presence_penalty: 0
+      presence_penalty: 0,
+      stop: "|endoftext|" // This is the stop sequence for the model
     });
     const completion = (String.raw`${(response.choices[0].text)}`).replaceAll(/\\/g, "\\\\");
     historyJson.push(

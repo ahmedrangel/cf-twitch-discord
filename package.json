@@ -17,7 +17,7 @@
     "itty-router": "^5.0.18",
     "jsonpath": "^1.1.1",
     "ofetch": "^1.4.1",
-    "openai": "^4.79.1",
+    "openai": "^4.81.0",
     "snapsave-media-downloader": "^2.1.1",
     "ufo": "^1.5.4"
   },
