@@ -17,14 +17,14 @@
     "itty-router": "^5.0.18",
     "jsonpath": "^1.1.1",
     "ofetch": "^1.4.1",
-    "openai": "^4.81.0",
+    "openai": "^4.82.0",
     "snapsave-media-downloader": "^2.1.1",
     "ufo": "^1.5.4"
   },
   "devDependencies": {
-    "@stylistic/eslint-plugin": "^2.13.0",
-    "eslint": "^9.18.0",
+    "@stylistic/eslint-plugin": "^3.0.1",
+    "eslint": "^9.19.0",
     "eslint-plugin-import": "^2.31.0",
-    "wrangler": "^3.103.2"
+    "wrangler": "^3.107.2"
   }
 }
