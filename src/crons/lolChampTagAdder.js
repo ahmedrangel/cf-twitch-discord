@@ -5,10 +5,9 @@ import { SettedTwitchTagsResponse } from "../utils/helpers";
 
 export const lolChampTagAdder = async (env) => {
   const channelId = "491738569";
-  const riot = new riotApi(env.riot_token);
+  const riot = new riotApi({ token: env.riot_token, region: "las" });
   const twitch = new twitchApi(env.client_id, env.client_secret);
-  const region = riot.RegionNameRouting("las");
-  const { participants } = await riot.LiveGameData(env.zihnee_lol_id_las, region);
+  const { participants } = await riot.LiveGameData(env.zihnee_lol_id_las);
   const champion_data = await fetch("https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/es_mx/v1/champion-summary.json");
   const data = await champion_data.json();
   const channelInfo = await twitch.getBroadcasterInfo(channelId);

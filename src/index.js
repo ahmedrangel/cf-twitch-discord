@@ -10,7 +10,7 @@ import twitchApi from "./apis/twitchApi";
 import JsResponse from "./responses/response";
 import JsonResponse from "./responses/jsonResponse";
 import spotifyApi from "./apis/spotifyApi";
-import riotApi, { eloValues } from "./apis/riotApi";
+import riotApi from "./apis/riotApi";
 import imgurApi from "./apis/imgurApi";
 import { lolChampTagAdder } from "./crons/lolChampTagAdder";
 import { nbCum, nbFuck, nbFuckAngar, nbHug, nbHugAngar, nbKiss, nbKissAngar, nbKissChino } from "./utils/nightbotEmotes";
@@ -1145,7 +1145,7 @@ router.put("/cdn", async (req, env, ctx) => {
 
 router.get("/lol/live?", async (req, env) => {
   const { query } = req;
-  const riot = new riotApi(env.riot_token);
+  const riot = new riotApi({ token: env.riot_token, region });
   const default_riot = decodeURIComponent(query.default).split("-");
   const roles = ["TOP", "JUNGLE", "MIDDLE", "BOTTOM", "UTILITY"];
   let data = [];
@@ -1177,15 +1177,13 @@ router.get("/lol/live?", async (req, env) => {
   return new JsResponse(await responseBuild(riotName, riotTag, region));
 
   async function responseBuild (riotName, riotTag, region) {
-    const cluster = riot.RegionalRouting(region);
-    const route = riot.RegionNameRouting(region);
-    const { puuid, gameName, tagLine } = await riot.getAccountByRiotID(riotName, riotTag, cluster);
+    const { puuid, gameName, tagLine } = await riot.getAccountByRiotID(riotName, riotTag);
     if (!puuid) return new JsResponse("Usuario no encontrado. Asegúrate de escribir correctamente el comando con el siguiente formato:  !elo <Nombre#Tag> <Región>");
     const ddversions = await fetch(`https://ddragon.leagueoflegends.com/realms/${region}.json`);
     const ddversions_data = await ddversions.json();
     const champion_list = await fetch(`https://ddragon.leagueoflegends.com/cdn/${ddversions_data.n.champion}/data/es_MX/champion.json`);
     const champion_data = await champion_list.json();
-    const live_game_data = await riot.LiveGameData(puuid, route);
+    const live_game_data = await riot.LiveGameData(puuid);
     const game_type = riot.queueCase(live_game_data.gameQueueConfigId);
     if (live_game_data.participants) {
       const participants = live_game_data.participants;
@@ -1193,10 +1191,10 @@ router.get("/lol/live?", async (req, env) => {
       for (let i = 0; i < team_size; i++) {
         if (participants[i].teamId == 100) {
           const blue_team = "🔵";
-          await AdjustParticipants(participants[i], team1, game_type.profile_rank_type, blue_team, champion_data, route);
+          await AdjustParticipants(participants[i], team1, game_type.profile_rank_type, blue_team, champion_data, riot.route);
         } else if (participants[i].teamId == 200) {
           const red_team = "🔴";
-          await AdjustParticipants(participants[i], team2, game_type.profile_rank_type, red_team, champion_data, route);
+          await AdjustParticipants(participants[i], team2, game_type.profile_rank_type, red_team, champion_data, riot.route);
         }
       }
       const ratesFetch = await fetch("https://cdn.merakianalytics.com/riot/lol/resources/latest/en-US/championrates.json");
@@ -1276,19 +1274,18 @@ router.get("/lol/spectator/:region/:name/:tag", async (req, env) => {
   const team1 = [], team2 = [];
   const match = {};
   match.status_code = 404;
-  const riot = new riotApi(env.riot_token);
-  const region_route = riot.RegionNameRouting(region);
-  const cluster = riot.RegionalRouting(region);
+  const riot = new riotApi({ token: env.riot_token, region });
   const ddversions = await fetch(`https://ddragon.leagueoflegends.com/realms/${region.toLowerCase()}.json`);
   const ddversions_data = await ddversions.json();
   const champion_list = await fetch(`https://ddragon.leagueoflegends.com/cdn/${ddversions_data.n.champion}/data/es_MX/champion.json`);
   const champion_data = await champion_list.json();
-  const account_data = await riot.getAccountByRiotID(riotName, riotTag, cluster);
+  const account_data = await riot.getAccountByRiotID(riotName, riotTag);
   const puuid = account_data.puuid;
-  const live_game_data = await riot.LiveGameData(puuid, region_route);
+  const live_game_data = await riot.LiveGameData(puuid);
   const game_type = riot.queueCase(live_game_data?.gameQueueConfigId);
+  const eloValues = riot.eloValues;
   const participantsHandler = async (p, merakiRates, game_type, team, color) => {
-    const ranked_data = await riot.RankedData(p.summonerId, region_route);
+    const ranked_data = await riot.RankedData(p.summonerId);
     const current_rank_type = (String(jp.query(ranked_data, `$..[?(@.queueType=="${game_type.profile_rank_type}")].queueType`)));
     const role = riot.championRole(p.championId, merakiRates);
     const championName = (String(jp.query(champion_data.data, `$..[?(@.key==${p.championId})].name`)));
@@ -1403,23 +1400,16 @@ router.get("/lol/profile/:region/:name/:tag", async (req, env) => {
   const region = (req.params.region).toLowerCase();
   let profile_data;
   const rank_profile = [], match_history = [];
-  const riot = new riotApi(env.riot_token);
-  const route = riot.RegionNameRouting(region);
-  if (!route) {
-    return new JsonResponse({ status_code: 404, errorName: "region" });
-  }
-  const cluster = riot.RegionalRouting(region);
-  console.log(region, route, cluster);
-  const ddversionsFetch = await fetch(`https://ddragon.leagueoflegends.com/realms/${region}.json`);
-  const ddversions = await ddversionsFetch.json();
-  const account = await riot.getAccountByRiotID(name, tag, cluster);
+  const riot = new riotApi({ token: env.riot_token, region });
+  const ddversions = await $fetch(`https://ddragon.leagueoflegends.com/realms/${region}.json`);
+  const account = await riot.getAccountByRiotID(name, tag);
   const puuid = account.puuid;
-  const summoner = await riot.getSummonerDataByPUUID(puuid, route);
+  const summoner = await riot.getSummonerDataByPUUID(puuid);
   if (account?.status || summoner?.status) {
     return new JsonResponse({ status_code: 404, errorName: "riotId" });
   }
   const summoner_id = summoner.id;
-  const challenges_data = await riot.getChellengesData(puuid, route);
+  const challenges_data = await riot.getChellengesData(puuid);
   const titleId = challenges_data.preferences.title;
   const challenges_assets = titleId !== "" ? await fetch("https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/es_mx/v1/challenges.json") : null;
   const challenges_json = titleId !== "" ? await challenges_assets.json() : null;
@@ -1433,10 +1423,10 @@ router.get("/lol/profile/:region/:name/:tag", async (req, env) => {
     summonerLevel: summoner.summonerLevel,
     profileIconUrl: `https://ddragon.leagueoflegends.com/cdn/${ddversions.n.profileicon}/img/profileicon/${summoner.profileIconId}.png`,
     region: region,
-    route: route,
+    route: riot.route,
     titleName: titleName
   };
-  const ranked_data = await riot.RankedData(summoner.id, route);
+  const ranked_data = await riot.RankedData(summoner.id);
   ranked_data.forEach((rankedData) => {
     if (rankedData.queueType !== "CHERRY") {
       const tier = riot.tierCase(rankedData.tier).full;
@@ -1459,12 +1449,12 @@ router.get("/lol/profile/:region/:name/:tag", async (req, env) => {
     return soloIndex - flexIndex;
   });
   profile_data.rankProfile = rank_profile;
-  const matchesId = await riot.getMatches(puuid, cluster, 10, riot.queueToId(filter));
+  const matchesId = await riot.getMatches(puuid, 10, riot.queueToId(filter));
   console.log(matchesId);
   const champion_list = await fetch(`https://ddragon.leagueoflegends.com/cdn/${ddversions.n.champion}/data/es_MX/champion.json`);
   const champion_data = await champion_list.json();
   for (let i = 0; i < matchesId.length; i++) {
-    const match_data = await riot.getMatchFromId(matchesId[i], cluster);
+    const match_data = await riot.getMatchFromId(matchesId[i]);
     if (match_data?.status?.status_code !== 404) {
       const gameEndTimestamp = match_data?.info?.gameEndTimestamp;
       const queueId = match_data?.info?.queueId;
@@ -1505,19 +1495,14 @@ router.get("/lol/profile/:region/:name/:tag", async (req, env) => {
 router.get("/lol/mmr/:region/:name/:tag/:queue", async (req, env) => {
   const { name, tag, queue } = req.params;
   const region = (req.params.region).toLowerCase();
-  const riot = new riotApi(env.riot_token);
-  const route = riot.RegionNameRouting(region);
-  if (!route) {
-    return new JsonResponse({ status_code: 404, errorName: "region" });
-  }
-  const cluster = riot.RegionalRouting(region);
+  const riot = new riotApi({ token: env.riot_token, region });
   const queueId = queue.toLowerCase() === "flex" ? 440 : 420;
   const queueCase = riot.queueCase(queueId);
   let elo_data;
   const samples = [], elo_samples = [];
-  const account = await riot.getAccountByRiotID(name, tag, cluster);
+  const account = await riot.getAccountByRiotID(name, tag);
   const puuid = account.puuid;
-  const summoner = await riot.getSummonerDataByPUUID(puuid, route);
+  const summoner = await riot.getSummonerDataByPUUID(puuid);
   if (account?.status || summoner?.status) {
     return new JsonResponse({ status_code: 404, errorName: "riotId" });
   }
@@ -1529,9 +1514,9 @@ router.get("/lol/mmr/:region/:name/:tag/:queue", async (req, env) => {
     summonerLevel: summoner.summonerLevel,
     profileIconUrl: `https://ddragon.leagueoflegends.com/cdn/${ddversions.n.profileicon}/img/profileicon/${summoner.profileIconId}.png`,
     region: region,
-    route: route
+    route: riot.route
   };
-  const ranked_data = await riot.RankedData(summoner.id, route);
+  const ranked_data = await riot.RankedData(summoner.id);
   console.log(ranked_data);
   if (ranked_data.length === 0) {
     elo_data.status_code = 404;
@@ -1549,9 +1534,9 @@ router.get("/lol/mmr/:region/:name/:tag/:queue", async (req, env) => {
           leaguePoints: el.leaguePoints,
           queueName: queueCase.short_name
         };
-        const matchesId = await riot.getMatches(puuid, cluster, 3, queueId);
+        const matchesId = await riot.getMatches(puuid, 3, queueId);
         for (const matches of matchesId) {
-          const match_data = await riot.getMatchFromId(matches, cluster);
+          const match_data = await riot.getMatchFromId(matches);
           const participants = match_data.info.participants;
           participants.forEach((p) => {
             if (p.puuid !== puuid) {
@@ -1561,7 +1546,7 @@ router.get("/lol/mmr/:region/:name/:tag/:queue", async (req, env) => {
         }
         const fixedSamples = [...new Set(samples)];
         for (const s of fixedSamples) {
-          const ranked_data = await riot.RankedData(s, route);
+          const ranked_data = await riot.RankedData(s);
           for (const el of ranked_data) {
             if (el?.queueType === queueCase.profile_rank_type) {
               elo_samples.push(eloValues[el.tier + " " + el.rank]);
@@ -1599,9 +1584,9 @@ router.get("/rank?", async (req, env) => {
   const val = encodeURIComponent(query.val);
   console.log(val);
   const region = "la2";
-  const riot = new riotApi(env.riot_token);
-  const { id } = await riot.SummonerDataByName(lol, region);
-  const rankedData = await riot.RankedData(id, region);
+  const riot = new riotApi({ token: env.riot_token, region });
+  const { id } = await riot.SummonerDataByName(lol);
+  const rankedData = await riot.RankedData(id);
   let lolRank;
   console.log(rankedData.length);
   if (rankedData.length !== 0) {
@@ -2021,15 +2006,10 @@ router.get("/followage/:channel/:touser?", async (req, env) => {
 router.get("/lol/masteries/:region/:name/:tag", async (req, env) => {
   const { name, tag } = req.params;
   const region = (req.params.region).toLowerCase();
-  const riot = new riotApi(env.riot_token);
-  const route = riot.RegionNameRouting(region);
-  if (!route) {
-    return new JsonResponse({ status_code: 404, errorName: "region" });
-  }
-  const cluster = riot.RegionalRouting(region);
-  const account = await riot.getAccountByRiotID(name, tag, cluster);
+  const riot = new riotApi({ token: env.riot_token, region });
+  const account = await riot.getAccountByRiotID(name, tag);
   const puuid = account.puuid;
-  const summoner = await riot.getSummonerDataByPUUID(puuid, route);
+  const summoner = await riot.getSummonerDataByPUUID(puuid);
   if (account?.status || summoner?.status) {
     return new JsonResponse({ status_code: 404, errorName: "riotId" });
   }
@@ -2038,11 +2018,11 @@ router.get("/lol/masteries/:region/:name/:tag", async (req, env) => {
   const champion_list = await fetch(`https://ddragon.leagueoflegends.com/cdn/${ddversions_data.n.champion}/data/es_MX/champion.json`);
   const champion_data = await champion_list.json();
   const icon = `https://ddragon.leagueoflegends.com/cdn/${ddversions_data.n.profileicon}/img/profileicon/${summoner.profileIconId}.png`;
-  const masteriesData = await riot.getChampionMasteriesByPUUID(puuid, route, 10);
+  const masteriesData = await riot.getChampionMasteriesByPUUID(puuid, 10);
   if (masteriesData?.status) {
     return new JsonResponse({ status_code: 404, errorName: "mastery" });
   }
-  const masteryScore = await riot.getChampionMasteryScoreByPUUID(puuid, route);
+  const masteryScore = await riot.getChampionMasteryScoreByPUUID(puuid);
   const data = {
     riotName: account.gameName,
     riotTag: account.tagLine,
@@ -2108,7 +2088,6 @@ router.get("/kick/clip?", async (req, env) => {
 
 router.get("/lol/elo?", async (req, env) => {
   const { query } = req;
-  const riot = new riotApi(env.riot_token);
   const default_riot = decodeURIComponent(query.default).split("-");
   let soloq;
   let flex;
@@ -2116,13 +2095,12 @@ router.get("/lol/elo?", async (req, env) => {
     const riotName = default_riot[0].replace(/ /g, "");
     const riotTag = default_riot[1];
     const region = default_riot[2].toLowerCase();
-    const cluster = riot.RegionalRouting(region);
-    const route = riot.RegionNameRouting(region);
-    const { puuid, gameName, tagLine } = await riot.getAccountByRiotID(riotName, riotTag, cluster);
+    const riot = new riotApi({ token: env.riot_token, region });
+    const { puuid, gameName, tagLine } = await riot.getAccountByRiotID(riotName, riotTag);
     if (!puuid) return new JsResponse("Usuario no encontrado. Asegúrate de escribir correctamente el comando con el siguiente formato:  !elo <Nombre#Tag> <Región>");
-    const { id } = await riot.getSummonerDataByPUUID(puuid, route);
+    const { id } = await riot.getSummonerDataByPUUID(puuid);
     if (!id) return new JsResponse("Usuario no encontrado.");
-    const leagueData = await riot.RankedData(id, route);
+    const leagueData = await riot.RankedData(id);
     for (const d of leagueData) {
       if (d.queueType === "RANKED_SOLO_5x5") {
         const tier = riot.tierCase(d.tier).full;
@@ -2145,14 +2123,13 @@ router.get("/lol/elo?", async (req, env) => {
   const riotName = matches[1];
   const riotTag = matches[2];
   const region = matches[3].toLowerCase();
+  const riot = new riotApi({ token: env.riot_token, region });
   console.log(riotName, riotTag, region);
-  const cluster = riot.RegionalRouting(region);
-  const route = riot.RegionNameRouting(region);
-  const { puuid, gameName, tagLine } = await riot.getAccountByRiotID(riotName, riotTag, cluster);
+  const { puuid, gameName, tagLine } = await riot.getAccountByRiotID(riotName, riotTag);
   if (!puuid) return new JsResponse("Usuario no encontrado. Asegúrate de escribir correctamente el comando con el siguiente formato:  !elo <Nombre#Tag> <Región>");
-  const { id } = await riot.getSummonerDataByPUUID(puuid, route);
+  const { id } = await riot.getSummonerDataByPUUID(puuid);
   if (!id) return new JsResponse("Usuario no encontrado.");
-  const leagueData = await riot.RankedData(id, route);
+  const leagueData = await riot.RankedData(id);
   for (const d of leagueData) {
     if (d.queueType === "RANKED_SOLO_5x5") {
       const tier = riot.tierCase(d.tier).full;
