@@ -12,6 +12,13 @@ class kickApi {
       if (!match) return null;
       const id = match[1];
       const short_url = `https://kickbot.com/clip/${id}`;
+      const test = await $fetch(`https://clips.kickbotcdn.com/kickbot-hls/${id}/${id}.mp4`, {
+        responseType: "blob"
+      }).catch((e) => {
+        console.log(e);
+        return null;
+      });
+      console.log(test.size, test.type);
       return { id, video_url: `https://clips.kickbotcdn.com/kickbot-hls/${id}/${id}.mp4`, short_url, status: 200 };
     }
 
