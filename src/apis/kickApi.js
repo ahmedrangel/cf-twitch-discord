@@ -1,5 +1,4 @@
 import { $fetch } from "ofetch";
-import { obtenerIDDesdeURL } from "../utils/helpers";
 
 class kickApi {
   constructor () {
@@ -7,6 +6,15 @@ class kickApi {
   }
 
   async getMedia (url) {
+    if (url.includes("kickbot.com/clip/")) {
+      const idRegex = /^https?:\/\/kickbot\.com\/clip\/(\w+)/;
+      const match = idRegex.exec(url);
+      if (!match) return null;
+      const id = match[1];
+      const short_url = `https://kickbot.com/clip/${id}`;
+      return { id, video_url: `https://clips.kickbotcdn.com/kickbot-hls/${id}/${id}.mp4`, short_url, status: 200 };
+    }
+
     const idRegex = /^https?:\/\/kick\.com\/[^\\/]+(?:\/clips\/(clip_\w+)|\?clip=(clip_\w+))(?:\&.*|\?.*)?$/;
     const match = idRegex.exec(url);
     if (!match) return null;
