@@ -1,0 +1,29 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "twitch",
+  "main": "src/index.js",
+  "compatibility_date": "2025-03-23",
+  "compatibility_flags": ["nodejs_compat"],
+  "kv_namespaces": [
+    { "binding": "AUTH_USERS", "id": "f995852ab9c34f74a9f21d5ea86451f9" },
+    { "binding": "CUM", "id": "10609ec1a1024baa833e5f0987640f15" },
+    { "binding": "EDUCAR", "id": "b7b57f718d0d49e687f934187acab46a" },
+    { "binding": "FUCK", "id": "8b1399a176974e9ea357e41617e59573" },
+    { "binding": "GPT", "id": "064407f00455407c9c4fbd1bee16afcb" },
+    { "binding": "HUG", "id": "301c9dfa6739434b8653c2ea0c924f72" },
+    { "binding": "KISS", "id": "438fcee4874747369ecd54651c825334" },
+    { "binding": "SPANK", "id": "394ddc0e32e14ad1a9ac0e1ad911ea61" }
+  ],
+  "r2_buckets": [
+    { "binding": "R2gpt", "bucket_name": "gpt", "preview_bucket_name": "" },
+    { "binding": "R2cdn", "bucket_name": "assets", "preview_bucket_name": "" }
+  ],
+  "triggers": {
+    "crons": []
+  },
+  "d1_databases": [
+    { "binding": "ImgurDiscord", "database_name": "imgur", "database_id": "d987199f-3513-4bc2-b0ea-6576e1e0bc32" },
+    { "binding": "NB", "database_name": "nightbot", "database_id": "584dd3e0-b9f8-40ed-b8a9-d4598da372de" },
+    { "binding": "KB", "database_name": "kickbot", "database_id": "7b308ca8-f878-4608-bfe7-9ab76ba437ce" },
+  ]
+}
