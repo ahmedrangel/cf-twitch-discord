@@ -50,7 +50,7 @@ class igApi {
 
     const id = getInstagramId(link);
     const short_url = formatShortURL(link);
-    const { img_index } = getQuery(link);
+    const { img_index, igsh } = getQuery(link);
 
     const response = await $fetch(this.domain, {
       ...defaultRetry,
@@ -74,8 +74,8 @@ class igApi {
 
     const edgeSideCar = postData?.edge_sidecar_to_children?.edges || [];
     if (edgeSideCar.length) {
-      const media = edgeSideCar[Number(img_index) - 1 || 0]?.node || null;
-      const mediaId = img_index > 1 ? `${id}-${Number(img_index)}` : id;
+      const media = edgeSideCar[igsh ? img_index : Number(img_index) - 1 || 0]?.node || null;
+      const mediaId = img_index > 1 ? `${id}-${igsh ? "m" : "w"}${Number(img_index)}` : id;
       if (!media) return null;
       if (!media?.is_video) return { status: 200, id: mediaId, short_url, is_photo: true };
       return { status: 200, id: mediaId, video_url: media.video_url, short_url, caption: postData?.edge_media_to_caption?.edges[0]?.node?.text };
