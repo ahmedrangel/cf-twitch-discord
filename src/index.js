@@ -1792,20 +1792,25 @@ router.get("/dc/youtube-video-scrapper?", async (req, env, ctx) => {
 
 router.get("/dc/facebook-video-scrapper?", async (req, env, ctx) => {
   const { query } = req;
-
   const cacheKey = new Request(req.url, req);
   const cache = caches.default;
   const cachedResponse = await cache.match(cacheKey);
   if (cachedResponse) return cachedResponse;
 
-  const url = decodeURIComponent(query.url);
+  const decodedURL = decodeURIComponent(query.url);
+  const fbFetch = await $fetch.raw(decodedURL, {
+    headers: {
+      "Accept": "*/*",
+      "User-Agent": "Cloudflare Workers/dev.ahmedrangel.com"
+    }
+  }).catch(() => null);
+  const url = fbFetch?.url ? fbFetch?.url : decodedURL;
   const fdownloader = new fdownloaderApi();
   let video_url;
   const short_url = url.replace(/([&?](?!v=)[^=]+=[^&]*)/g, "").replace("&", "?").replace("www.", "");
   const regex = /(?:watch\?v=|watch\/|gg\/|videos\/|reel\/|reels\/|share\/[\w+]\/)(\w+)/;
   const match = short_url.match(regex);
   const id = match ? match[1] : null;
-
   let status;
   let maxAttempts = 4;
   while (!video_url && maxAttempts > 0) {
