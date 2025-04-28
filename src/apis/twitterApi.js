@@ -10,13 +10,17 @@ class twitterApi {
   }
 
   async getTweet (url) {
+    const _userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36";
     const html = await $fetch("https://x.com", {
-      query: { prefetchTimestamp: Date.now() },
       headers: {
-        "cookie": this.x_cookie,
-        "user-agent": randUA({ device: "desktop" }),
-        "sec-fetch-site": "same-origin",
-        "Accept": "*/*"
+        "Authority": "x.com",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Cache-Control": "no-cache",
+        "Cookie": this.x_cookie,
+        "Referer": "https://x.com",
+        "User-Agent": _userAgent,
+        "X-Twitter-Active-User": "yes",
+        "X-Twitter-Client-Language": "en"
       },
       responseType: "text"
     });
@@ -33,7 +37,6 @@ class twitterApi {
     const videoNumber = match && match[2] ? Number(match[2]) - 1 : 0;
 
     const graphql = `https://x.com${graphqlPath}`;
-    const _userAgent = randUA({ device: "desktop" });
     const query = {
       variables: {
         focalTweetId: id,
