@@ -127,7 +127,7 @@ class twitterApi {
       const video = filteredVideos.find(video => video.bitrate === maxBitrate);
 
       const video_url = video?.url;
-      const short_url = `https://x.com/x/status/${id}`;
+      const short_url = `https://x.com/i/status/${id}`;
       const caption = entries?.full_text?.replace(/https:\/\/t\.co\/\w+/g, "").trim();
 
       return { id, video_url, short_url, caption, status: 200 };
