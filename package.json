@@ -11,21 +11,22 @@
   },
   "dependencies": {
     "@ahmedrangel/rand-user-agent": "^2.0.23",
+    "@lami/x-client-transaction-id": "npm:@jsr/lami__x-client-transaction-id@^0.1.2",
     "buffer": "^6.0.3",
     "cheerio": "1.0.0",
     "detectlanguage": "^2.1.0",
     "itty-router": "^5.0.18",
     "jsonpath": "^1.1.1",
     "ofetch": "^1.4.1",
-    "openai": "^4.93.0",
+    "openai": "^4.96.0",
     "snapsave-media-downloader": "^2.1.1",
     "ufo": "^1.6.1"
   },
   "devDependencies": {
     "@stylistic/eslint-plugin": "^4.2.0",
-    "eslint": "^9.24.0",
+    "eslint": "^9.25.1",
     "eslint-plugin-import": "^2.31.0",
     "uncrypto": "^0.1.3",
-    "wrangler": "^4.10.0"
+    "wrangler": "^4.13.2"
   }
 }

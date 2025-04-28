@@ -1,6 +1,6 @@
 import { randUA } from "@ahmedrangel/rand-user-agent";
 import { $fetch } from "ofetch";
-import { withQuery } from "ufo";
+import { ClientTransaction, handleXMigration } from "@lami/x-client-transaction-id";
 
 class twitterApi {
   constructor (twitter_bearer_token, x_cookie) {
@@ -9,64 +9,85 @@ class twitterApi {
   }
 
   async getTweet (url) {
+    const document = await handleXMigration();
+    const transaction = await ClientTransaction.create(document);
+    const graphqlPath = "/i/api/graphql/_8aYOgEDz35BrBcBal1-_w/TweetDetail";
+    const transactionId = await transaction.generateTransactionId("GET", graphqlPath);
+
     const regex = /status\/(\d+)(?:\/video\/(\d+))?/;
     const match = url.match(regex);
     const id = match ? match[1] : null;
     const videoNumber = match && match[2] ? Number(match[2]) - 1 : 0;
-    const _userAgent = randUA("desktop");
-    const graphql = "https://twitter.com/i/api/graphql/xOhkmRac04YFZmOzU9PJHg/TweetDetail";
+
+    const graphql = `https://x.com${graphqlPath}`;
+    const _userAgent = randUA({ device: "desktop" });
     const query = {
       variables: {
         focalTweetId: id,
-        withRuxInjections: false,
+        with_rux_injections: false,
+        rankingMode: "Relevance",
         includePromotedContent: true,
         withCommunity: true,
         withQuickPromoteEligibilityTweetFields: true,
         withBirdwatchNotes: true,
-        withVoice: true,
-        withV2Timeline: true
-      },
+        withVoice: true },
       features: {
-        rweb_lists_timeline_redesign_enabled: true,
-        responsive_web_graphql_exclude_directive_enabled: true,
+        rweb_video_screen_enabled: false,
+        profile_label_improvements_pcf_label_in_post_enabled: true,
+        rweb_tipjar_consumption_enabled: true,
         verified_phone_label_enabled: false,
         creator_subscriptions_tweet_preview_api_enabled: true,
         responsive_web_graphql_timeline_navigation_enabled: true,
         responsive_web_graphql_skip_user_profile_image_extensions_enabled: false,
-        tweetypie_unmention_optimization_enabled: true,
+        premium_content_api_read_enabled: false,
+        communities_web_enable_tweet_community_results_fetch: true,
+        c9s_tweet_anatomy_moderator_badge_enabled: true,
+        responsive_web_grok_analyze_button_fetch_trends_enabled: false,
+        responsive_web_grok_analyze_post_followups_enabled: true,
+        responsive_web_jetfuel_frame: false,
+        responsive_web_grok_share_attachment_enabled: true,
+        articles_preview_enabled: true,
         responsive_web_edit_tweet_api_enabled: true,
         graphql_is_translatable_rweb_tweet_is_translatable_enabled: true,
         view_counts_everywhere_api_enabled: true,
         longform_notetweets_consumption_enabled: true,
-        responsive_web_twitter_article_tweet_consumption_enabled: false,
+        responsive_web_twitter_article_tweet_consumption_enabled: true,
         tweet_awards_web_tipping_enabled: false,
+        responsive_web_grok_show_grok_translated_post: false,
+        responsive_web_grok_analysis_button_from_backend: true,
+        creator_subscriptions_quote_tweet_preview_enabled: false,
         freedom_of_speech_not_reach_fetch_enabled: true,
         standardized_nudges_misinfo: true,
         tweet_with_visibility_results_prefer_gql_limited_actions_policy_enabled: true,
         longform_notetweets_rich_text_read_enabled: true,
         longform_notetweets_inline_media_enabled: true,
-        responsive_web_media_download_video_enabled: false,
-        responsive_web_enhance_cards_enabled: false
-      },
+        responsive_web_grok_image_annotation_enabled: true,
+        responsive_web_enhance_cards_enabled: false },
       fieldToggles: {
-        withArticleRichContentState: false
-      }
+        withArticleRichContentState: true,
+        withArticlePlainText: false,
+        withGrokAnalyze: false,
+        withDisallowedReplyControls: false }
     };
-
     try {
-      const { data } = await $fetch(withQuery(graphql, query), {
+      const { data } = await $fetch(graphql, {
+        query,
         headers: {
           "cookie": this.x_cookie,
           "user-agent": _userAgent,
-          ["sec-fetch-site"]: "same-origin",
+          "sec-fetch-site": "same-origin",
           "Authorization": `Bearer ${this.twitter_bearer_token}`,
+          "Referer": url,
+          "Accept": "*/*",
+          "Content-Type": "application/json",
           "X-Twitter-Active-User": "yes",
           "X-Twitter-Auth-Type": "OAuth2Session",
           "X-Twitter-Client-Language": "en",
-          "X-Csrf-Token": "0144e92ab3ad369187f2103484b8feec2d908204fdd66c97d891c468e07f7a57f2ced9f28b923d2e884f4854bf0d9b2accc07444d50a5d35b0e1afbb9bf563b926e5310e13dd28a34c098d6e3169a402"
+          "X-Client-Transaction-Id": transactionId,
+          "X-Client-Uuid": "255acf8c-2354-472b-90f5-69b4a6751939",
+          "X-Csrf-Token": "334134b5a792413c07a7e60e81e5061ca3fd297b55c626e03aa5c0ca67757d4bd4baeb0855ddc3ed1c56bebb8dfd2c9f91c1f11c2c9fbdc416de21cd3d5d448142110c14da8d6a0760f5450f61880718"
         }
       });
-
       const dataEntries = data?.threaded_conversation_with_injections_v2?.instructions[0]?.entries;
       const entriesArr = [];
       const quotedArr = [];
