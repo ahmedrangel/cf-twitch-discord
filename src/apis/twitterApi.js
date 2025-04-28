@@ -1,6 +1,7 @@
 import { randUA } from "@ahmedrangel/rand-user-agent";
 import { $fetch } from "ofetch";
-import { ClientTransaction, handleXMigration } from "@lami/x-client-transaction-id";
+import { ClientTransaction } from "@lami/x-client-transaction-id";
+import { parseHTML } from "linkedom";
 
 class twitterApi {
   constructor (twitter_bearer_token, x_cookie) {
@@ -9,8 +10,20 @@ class twitterApi {
   }
 
   async getTweet (url) {
-    const document = await handleXMigration();
-    const transaction = await ClientTransaction.create(document);
+    const html = await $fetch("https://x.com", {
+      query: { prefetchTimestamp: Date.now() },
+      headers: {
+        "cookie": this.x_cookie,
+        "user-agent": randUA({ device: "desktop" }),
+        "sec-fetch-site": "same-origin",
+        "Accept": "*/*"
+      },
+      responseType: "text"
+    });
+    const dom = parseHTML(html);
+    const document = dom.window.document;
+    const transaction = new ClientTransaction(document);
+    await transaction.initialize();
     const graphqlPath = "/i/api/graphql/_8aYOgEDz35BrBcBal1-_w/TweetDetail";
     const transactionId = await transaction.generateTransactionId("GET", graphqlPath);
 
