@@ -88,6 +88,7 @@ class twitterApi {
           "X-Twitter-Auth-Type": "OAuth2Session",
           "X-Twitter-Client-Language": "en",
           "X-Client-Transaction-Id": transactionId,
+          "X-Client-Uuid": "255acf8c-2354-472b-90f5-69b4a6751939",
           "X-Csrf-Token": "334134b5a792413c07a7e60e81e5061ca3fd297b55c626e03aa5c0ca67757d4bd4baeb0855ddc3ed1c56bebb8dfd2c9f91c1f11c2c9fbdc416de21cd3d5d448142110c14da8d6a0760f5450f61880718"
         }
       });
