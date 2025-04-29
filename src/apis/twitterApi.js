@@ -13,7 +13,7 @@ class twitterApi {
     const document = await handleXMigration();
     const transaction = await ClientTransaction.create(document);
     const graphqlPath = "/i/api/graphql/_8aYOgEDz35BrBcBal1-_w/TweetDetail";
-    const transactionId = await transaction.generateTransactionId("GET", "/graphql/_8aYOgEDz35BrBcBal1-_w/TweetDetail");
+    const transactionId = await transaction.generateTransactionId("GET", graphqlPath);
 
     const regex = /status\/(\d+)(?:\/video\/(\d+))?/;
     const match = url.match(regex);
@@ -31,8 +31,7 @@ class twitterApi {
         withCommunity: true,
         withQuickPromoteEligibilityTweetFields: true,
         withBirdwatchNotes: true,
-        withVoice: true,
-        withV2Timeline: true,
+        withVoice: true
       },
       features: {
         rweb_video_screen_enabled: false,
@@ -65,12 +64,8 @@ class twitterApi {
         longform_notetweets_rich_text_read_enabled: true,
         longform_notetweets_inline_media_enabled: true,
         responsive_web_grok_image_annotation_enabled: true,
-        responsive_web_enhance_cards_enabled: false },
-      fieldToggles: {
-        withArticleRichContentState: true,
-        withArticlePlainText: false,
-        withGrokAnalyze: false,
-        withDisallowedReplyControls: false }
+        responsive_web_enhance_cards_enabled: false
+      }
     };
     try {
       const { data } = await $fetch(graphql, {
