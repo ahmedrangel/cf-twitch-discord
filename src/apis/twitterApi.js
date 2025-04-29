@@ -13,7 +13,7 @@ class twitterApi {
     const document = await handleXMigration();
     const transaction = await ClientTransaction.create(document);
     const graphqlPath = "/i/api/graphql/_8aYOgEDz35BrBcBal1-_w/TweetDetail";
-    const transactionId = await transaction.generateTransactionId("POST", graphqlPath);
+    const transactionId = await transaction.generateTransactionId("GET", graphqlPath);
 
     const regex = /status\/(\d+)(?:\/video\/(\d+))?/;
     const match = url.match(regex);
