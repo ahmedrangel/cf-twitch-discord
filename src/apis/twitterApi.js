@@ -10,7 +10,7 @@ class twitterApi {
   }
 
   async getTweet (url) {
-    const html = await $fetch("https://x.com", {
+    const html = await $fetch("https://x.com/elonmusk", {
       query: { prefetchTimestamp: Date.now() },
       headers: {
         "cookie": this.x_cookie,
