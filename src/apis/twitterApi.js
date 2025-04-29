@@ -20,7 +20,7 @@ class twitterApi {
     const id = match ? match[1] : null;
     const videoNumber = match && match[2] ? Number(match[2]) - 1 : 0;
 
-    const graphql = `https://api.x.com${graphqlPath}`;
+    const graphql = `https://x.com/i/api${graphqlPath}`;
     const _userAgent = randUA({ device: "desktop" });
     const query = {
       variables: {
