@@ -75,7 +75,7 @@ class twitterApi {
           "cookie": this.x_cookie,
           "user-agent": _userAgent,
           "sec-fetch-site": "same-origin",
-          "Authorization": `Bearer ${this.twitter_bearer_token}`,
+          "Authorization": `Bearer AAAAAAAAAAAAAAAAAAAAANRILgAAAAAAnNwIzUejRCOuH5E6I8xnZz4puTs%3D1Zv7ttfk8LF81IUq16cHjhLTvJu4FA33AGWWjCpTnA`,
           "Referer": "https://x.com/",
           "Accept": "*/*",
           "Content-Type": "application/json",
