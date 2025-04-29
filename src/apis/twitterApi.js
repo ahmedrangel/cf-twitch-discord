@@ -12,15 +12,15 @@ class twitterApi {
   async getTweet (url) {
     const document = await handleXMigration();
     const transaction = await ClientTransaction.create(document);
-    const graphqlPath = "/graphql/_8aYOgEDz35BrBcBal1-_w/TweetDetail";
-    const transactionId = await transaction.generateTransactionId("GET", graphqlPath);
+    const graphqlPath = "/i/api/graphql/_8aYOgEDz35BrBcBal1-_w/TweetDetail";
+    const transactionId = await transaction.generateTransactionId("POST", graphqlPath);
 
     const regex = /status\/(\d+)(?:\/video\/(\d+))?/;
     const match = url.match(regex);
     const id = match ? match[1] : null;
     const videoNumber = match && match[2] ? Number(match[2]) - 1 : 0;
 
-    const graphql = `https://x.com/i/api${graphqlPath}`;
+    const graphql = `https://x.com${graphqlPath}`;
     const _userAgent = randUA({ device: "desktop" });
     const query = {
       variables: {
@@ -75,6 +75,7 @@ class twitterApi {
     try {
       const { data } = await $fetch(graphql, {
         query,
+        method: "POST",
         headers: {
           "cookie": this.x_cookie,
           "user-agent": _userAgent,
