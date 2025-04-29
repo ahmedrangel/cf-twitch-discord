@@ -1,6 +1,6 @@
 import { randUA } from "@ahmedrangel/rand-user-agent";
 import { $fetch } from "ofetch";
-import { ClientTransaction } from "@lami/x-client-transaction-id";
+import { ClientTransaction, handleXMigration } from "@lami/x-client-transaction-id";
 import { parseHTML } from "linkedom";
 
 class twitterApi {
@@ -10,20 +10,8 @@ class twitterApi {
   }
 
   async getTweet (url) {
-    const html = await $fetch("https://x.com/elonmusk", {
-      query: { prefetchTimestamp: Date.now() },
-      headers: {
-        "cookie": this.x_cookie,
-        "user-agent": randUA({ device: "desktop" }),
-        "sec-fetch-site": "same-origin",
-        "Accept": "*/*"
-      },
-      responseType: "text"
-    });
-    const dom = parseHTML(html);
-    const document = dom.window.document;
-    const transaction = new ClientTransaction(document);
-    await transaction.initialize();
+    const document = await handleXMigration();
+    const transaction = await ClientTransaction.create(document);
     const graphqlPath = "/i/api/graphql/_8aYOgEDz35BrBcBal1-_w/TweetDetail";
     const transactionId = await transaction.generateTransactionId("GET", graphqlPath);
 
@@ -43,7 +31,9 @@ class twitterApi {
         withCommunity: true,
         withQuickPromoteEligibilityTweetFields: true,
         withBirdwatchNotes: true,
-        withVoice: true },
+        withVoice: true,
+        withV2Timeline: true,
+      },
       features: {
         rweb_video_screen_enabled: false,
         profile_label_improvements_pcf_label_in_post_enabled: true,
@@ -90,14 +80,13 @@ class twitterApi {
           "user-agent": _userAgent,
           "sec-fetch-site": "same-origin",
           "Authorization": `Bearer ${this.twitter_bearer_token}`,
-          "Referer": url,
+          "Referer": "https://x.com/",
           "Accept": "*/*",
           "Content-Type": "application/json",
           "X-Twitter-Active-User": "yes",
           "X-Twitter-Auth-Type": "OAuth2Session",
           "X-Twitter-Client-Language": "en",
           "X-Client-Transaction-Id": transactionId,
-          "X-Client-Uuid": "255acf8c-2354-472b-90f5-69b4a6751939",
           "X-Csrf-Token": "334134b5a792413c07a7e60e81e5061ca3fd297b55c626e03aa5c0ca67757d4bd4baeb0855ddc3ed1c56bebb8dfd2c9f91c1f11c2c9fbdc416de21cd3d5d448142110c14da8d6a0760f5450f61880718"
         }
       });
