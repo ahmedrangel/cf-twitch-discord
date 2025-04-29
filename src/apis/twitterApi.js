@@ -75,7 +75,7 @@ class twitterApi {
     try {
       const { data } = await $fetch(graphql, {
         query,
-        method: "POST",
+        method: "GET",
         headers: {
           "cookie": this.x_cookie,
           "user-agent": _userAgent,
