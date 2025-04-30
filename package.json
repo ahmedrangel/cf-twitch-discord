@@ -29,5 +29,6 @@
     "linkedom": "^0.18.10",
     "uncrypto": "^0.1.3",
     "wrangler": "^4.13.2"
-  }
+  },
+  "packageManager": "pnpm@10.10.0"
 }

@@ -1,6 +1,6 @@
 import { randUA } from "@ahmedrangel/rand-user-agent";
 import { $fetch } from "ofetch";
-import { ClientTransaction } from "@lami/x-client-transaction-id";
+import { ClientTransaction, handleXMigration } from "@lami/x-client-transaction-id";
 import { parseHTML } from "linkedom";
 
 class twitterApi {
@@ -10,24 +10,8 @@ class twitterApi {
   }
 
   async getTweet (url) {
-    const _userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36";
-    const html = await $fetch("https://x.com", {
-      headers: {
-        "Authority": "x.com",
-        "Accept-Language": "en-US,en;q=0.9",
-        "Cache-Control": "no-cache",
-        "Cookie": this.x_cookie,
-        "Referer": "https://x.com",
-        "User-Agent": _userAgent,
-        "X-Twitter-Active-User": "yes",
-        "X-Twitter-Client-Language": "en"
-      },
-      responseType: "text"
-    });
-    const dom = parseHTML(html);
-    const document = dom.window.document;
-    const transaction = new ClientTransaction(document);
-    await transaction.initialize();
+    const document = await handleXMigration();
+    const transaction = await ClientTransaction.create(document);
     const graphqlPath = "/i/api/graphql/_8aYOgEDz35BrBcBal1-_w/TweetDetail";
     const transactionId = await transaction.generateTransactionId("GET", graphqlPath);
 
@@ -46,7 +30,8 @@ class twitterApi {
         withCommunity: true,
         withQuickPromoteEligibilityTweetFields: true,
         withBirdwatchNotes: true,
-        withVoice: true },
+        withVoice: true
+      },
       features: {
         rweb_video_screen_enabled: false,
         profile_label_improvements_pcf_label_in_post_enabled: true,
@@ -78,22 +63,18 @@ class twitterApi {
         longform_notetweets_rich_text_read_enabled: true,
         longform_notetweets_inline_media_enabled: true,
         responsive_web_grok_image_annotation_enabled: true,
-        responsive_web_enhance_cards_enabled: false },
-      fieldToggles: {
-        withArticleRichContentState: true,
-        withArticlePlainText: false,
-        withGrokAnalyze: false,
-        withDisallowedReplyControls: false }
+        responsive_web_enhance_cards_enabled: false
+      }
     };
     try {
       const { data } = await $fetch(graphql, {
         query,
+        method: "GET",
         headers: {
-          "cookie": this.x_cookie,
           "user-agent": _userAgent,
           "sec-fetch-site": "same-origin",
           "Authorization": `Bearer ${this.twitter_bearer_token}`,
-          "Referer": url,
+          "Referer": "https://x.com/",
           "Accept": "*/*",
           "Content-Type": "application/json",
           "X-Twitter-Active-User": "yes",
