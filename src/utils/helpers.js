@@ -228,3 +228,5 @@ export const mimeType = {
   json: "application/json; charset=utf-8",
   js: "application/javascript; charset=utf-8"
 };
+
+export const userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36";
