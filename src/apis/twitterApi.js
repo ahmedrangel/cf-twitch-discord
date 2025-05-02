@@ -17,7 +17,7 @@ class twitterApi {
     const { tweetID, text, media_extended } = data;
     if (!media_extended?.length) return null;
     const id = tweetID;
-    const caption = text;
+    const caption = text?.replace(/https:\/\/t\.co\/\w+/g, "").trim();
     const short_url = `https://x.com/i/status/${id}`;
     const video = media_extended.find(media => media.type === "video" && (media.url.includes("avc1") || media.url.includes("/pu/vid/") || media.url.includes(".mp4?tag=12") || media.url.includes("/tweet_video/")));
     if (!video?.url) {

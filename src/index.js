@@ -1866,7 +1866,6 @@ router.get("/dc/x-video-scrapper?", async (req, env, ctx) => {
     console.log("es link de X");
     const twitter = new twitterApi(env.twitter_bearer_token, env.x_cookie);
     const tco = url.includes("t.co/") ? (await $fetch(url, { headers: { "User-Agent": randUA("desktop") } }).catch(() => null)).match(/location\.replace\("([^"]+)"\)/)[1] : null;
-    console.log(tco);
     const fixedUrl = tco ? tco.replace(/\\/g, "") : url;
     const result = (await twitter.getTweetGraphql(fixedUrl)) || (await twitter.getTweet(fixedUrl));
     if (!result) return new ErrorResponse(Error.NOT_FOUND);
