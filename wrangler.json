@@ -18,8 +18,8 @@
     { "binding": "SPANK", "id": "394ddc0e32e14ad1a9ac0e1ad911ea61" }
   ],
   "r2_buckets": [
-    { "binding": "R2gpt", "bucket_name": "gpt", "preview_bucket_name": "" },
-    { "binding": "R2cdn", "bucket_name": "assets", "preview_bucket_name": "" }
+    { "binding": "R2gpt", "bucket_name": "gpt" },
+    { "binding": "R2cdn", "bucket_name": "assets" }
   ],
   "triggers": {
     "crons": []
