@@ -30,6 +30,7 @@ import twitchGQL from "./apis/twitchGQL";
 import redditApi from "./apis/redditApi";
 import ytsavetubeApi from "./apis/ytsavetube";
 import ytproxyApi from "./apis/ytproxyApi";
+import { vueTrackerUpdate } from "./crons/vuetracker";
 
 const router = IttyRouter();
 // educar
@@ -2288,6 +2289,9 @@ export default {
     switch (event.cron) {
       case "*/3 * * * *":
         await lolChampTagAdder(env);
+        break;
+      case "0 */2 * * *":
+        await vueTrackerUpdate(env);
         break;
     }
   }

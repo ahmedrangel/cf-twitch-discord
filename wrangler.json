@@ -22,7 +22,9 @@
     { "binding": "R2cdn", "bucket_name": "assets" }
   ],
   "triggers": {
-    "crons": []
+    "crons": [
+      "0 */2 * * *"
+    ]
   },
   "d1_databases": [
     { "binding": "ImgurDiscord", "database_name": "imgur", "database_id": "d987199f-3513-4bc2-b0ea-6576e1e0bc32" },
