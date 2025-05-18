@@ -2,8 +2,11 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "twitch",
   "main": "src/index.js",
-  "compatibility_date": "2025-03-23",
+  "compatibility_date": "2025-05-07",
   "compatibility_flags": ["nodejs_compat"],
+  "limits": {
+    "cpu_ms": 300000
+  },
   "kv_namespaces": [
     { "binding": "AUTH_USERS", "id": "f995852ab9c34f74a9f21d5ea86451f9" },
     { "binding": "CUM", "id": "10609ec1a1024baa833e5f0987640f15" },
@@ -25,5 +28,6 @@
     { "binding": "ImgurDiscord", "database_name": "imgur", "database_id": "d987199f-3513-4bc2-b0ea-6576e1e0bc32" },
     { "binding": "NB", "database_name": "nightbot", "database_id": "584dd3e0-b9f8-40ed-b8a9-d4598da372de" },
     { "binding": "KB", "database_name": "kickbot", "database_id": "7b308ca8-f878-4608-bfe7-9ab76ba437ce" },
+    { "binding": "VueTracker", "database_name": "vuetracker", "database_id": "b2e68ee0-ec60-48e1-9d52-99b516e35f74"}
   ]
 }
