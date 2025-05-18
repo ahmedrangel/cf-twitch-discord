@@ -4,6 +4,9 @@
   "main": "src/index.js",
   "compatibility_date": "2025-05-07",
   "compatibility_flags": ["nodejs_compat"],
+  "observability": {
+    "enabled": true
+  },
   "limits": {
     "cpu_ms": 300000
   },
