@@ -186,7 +186,6 @@ class twitchApi {
         },
         body: JSON.stringify({ tags: tags })
       });
-      console.log(await set_tags.json());
       return set_tags;
     } catch (e) {
       console.log(e);

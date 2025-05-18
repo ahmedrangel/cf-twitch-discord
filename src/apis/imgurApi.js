@@ -17,7 +17,6 @@ class imgurApi {
       body: `client_id=${this.imgur_client_id}&client_secret=${this.imgur_client_secret}&grant_type=${this.grant_type_code}&code=${code}`
     });
     const response = await data.json();
-    console.log(response);
     return await response;
   }
 
@@ -31,7 +30,6 @@ class imgurApi {
       body: `client_id=${this.imgur_client_id}&client_secret=${this.imgur_client_secret}&grant_type=${this.grant_type_refresh}&refresh_token=${refresh_token}`
     });
     const response = await data.json();
-    console.log(response);
     return await response;
   }
 
