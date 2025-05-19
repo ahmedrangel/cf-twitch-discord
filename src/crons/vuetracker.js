@@ -1,3 +1,5 @@
+import { $fetch } from "ofetch";
+
 export const vueTrackerUpdate = async (env) => {
   const { url, updated_at } = await env.VueTracker.prepare("SELECT url, updated_at FROM sites ORDER BY updated_at ASC LIMIT 1").first();
   const today = Date.now();
