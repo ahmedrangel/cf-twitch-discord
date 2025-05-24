@@ -5,9 +5,9 @@ export const vueTrackerUpdate = async (env) => {
   const today = Date.now();
   const diff = today - updated_at;
   if (diff < 1 * 24 * 60 * 60 * 1000) {
-    console.info(`${url} is up to date`);
+    console.info(`${input_url} is up to date`);
     return;
   }
-  console.info(`${url} is outdated, updating...`);
+  console.info(`${input_url} is outdated, updating...`);
   return await $fetch("https://vuetracker.pages.dev/api/lookup", { query: { url: input_url } });
 };
