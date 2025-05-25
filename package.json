@@ -18,17 +18,17 @@
     "itty-router": "^5.0.18",
     "jsonpath": "^1.1.1",
     "ofetch": "^1.4.1",
-    "openai": "^4.100.0",
-    "snapsave-media-downloader": "^2.1.1",
+    "openai": "^4.103.0",
+    "snapsave-media-downloader": "^2.2.0",
     "ufo": "^1.6.1"
   },
   "devDependencies": {
-    "@stylistic/eslint-plugin": "^4.2.0",
+    "@stylistic/eslint-plugin": "^4.4.0",
     "eslint": "^9.27.0",
     "eslint-plugin-import": "^2.31.0",
     "linkedom": "^0.18.10",
     "uncrypto": "^0.1.3",
-    "wrangler": "^4.15.2"
+    "wrangler": "^4.16.1"
   },
   "packageManager": "pnpm@10.11.0"
 }
