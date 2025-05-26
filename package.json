@@ -19,7 +19,7 @@
     "jsonpath": "^1.1.1",
     "ofetch": "^1.4.1",
     "openai": "^4.103.0",
-    "snapsave-media-downloader": "^2.2.0",
+    "snapsave-media-downloader": "^2.2.1",
     "ufo": "^1.6.1"
   },
   "devDependencies": {
