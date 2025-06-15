@@ -13,22 +13,22 @@
     "@ahmedrangel/rand-user-agent": "^2.0.23",
     "@lami/x-client-transaction-id": "npm:@jsr/lami__x-client-transaction-id@^0.1.7",
     "buffer": "^6.0.3",
-    "cheerio": "1.0.0",
+    "cheerio": "1.1.0",
     "detectlanguage": "^2.1.0",
     "itty-router": "^5.0.18",
     "jsonpath": "^1.1.1",
     "ofetch": "^1.4.1",
-    "openai": "^4.103.0",
+    "openai": "^4.104.0",
     "snapsave-media-downloader": "^2.2.1",
     "ufo": "^1.6.1"
   },
   "devDependencies": {
-    "@stylistic/eslint-plugin": "^4.4.0",
-    "eslint": "^9.27.0",
+    "@stylistic/eslint-plugin": "^4.4.1",
+    "eslint": "^9.29.0",
     "eslint-plugin-import": "^2.31.0",
-    "linkedom": "^0.18.10",
+    "linkedom": "^0.18.11",
     "uncrypto": "^0.1.3",
-    "wrangler": "^4.16.1"
+    "wrangler": "^4.20.0"
   },
-  "packageManager": "pnpm@10.11.0"
+  "packageManager": "pnpm@10.12.1"
 }
