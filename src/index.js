@@ -1403,7 +1403,7 @@ router.get("/lol/profile/:region/:name/:tag", async (req, env) => {
     route: route,
     titleName: titleName
   };
-  const ranked_data = await riot.RankedData(summoner.id, route);
+  const ranked_data = await riot.RankedData(puuid, route);
   ranked_data.forEach((rankedData) => {
     if (rankedData.queueType !== "CHERRY") {
       const tier = riot.tierCase(rankedData.tier).full;

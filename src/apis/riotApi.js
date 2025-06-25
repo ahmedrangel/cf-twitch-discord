@@ -96,8 +96,8 @@ class riotApi {
     return data;
   }
 
-  async RankedData (summoner_id, region) {
-    const response = await fetch(`https://${region}.${this.domain}/lol/league/v4/entries/by-summoner/${summoner_id}?api_key=${this.riot_token}`);
+  async RankedData (puuid, region) {
+    const response = await fetch(`https://${region}.${this.domain}/lol/league/v4/entries/by-puuid/${puuid}?api_key=${this.riot_token}`);
     const data = await response.json();
     return data;
   }
@@ -132,14 +132,14 @@ class riotApi {
     return data;
   }
 
-  async getChampionMasteriesByPUUID (summoner_puuid, region, count) {
-    const response = await fetch(`https://${region}.${this.domain}/lol/champion-mastery/v4/champion-masteries/by-puuid/${summoner_puuid}/top?count=${count}&api_key=${this.riot_token}`);
+  async getChampionMasteriesByPUUID (puuid, region, count) {
+    const response = await fetch(`https://${region}.${this.domain}/lol/champion-mastery/v4/champion-masteries/by-puuid/${puuid}/top?count=${count}&api_key=${this.riot_token}`);
     const data = await response.json();
     return data;
   }
 
-  async getChampionMasteryScoreByPUUID (summoner_puuid, region) {
-    const response = await fetch(`https://${region}.${this.domain}/lol/champion-mastery/v4/scores/by-puuid/${summoner_puuid}?api_key=${this.riot_token}`);
+  async getChampionMasteryScoreByPUUID (puuid, region) {
+    const response = await fetch(`https://${region}.${this.domain}/lol/champion-mastery/v4/scores/by-puuid/${puuid}?api_key=${this.riot_token}`);
     const data = await response.json();
     return data;
   }
