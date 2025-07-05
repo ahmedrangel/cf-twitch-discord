@@ -3,24 +3,22 @@ import { load } from "cheerio";
 
 class threadsApi {
   constructor () {}
-  async getFinalURL (url) {
+  async getMedia (url) {
     const regex = /\/@([^/]+)\/post\/([^/?]+)/;
     const match = url.match(regex);
     const username = match?.[1];
     const post_id = match?.[2];
+
     if (!username || !post_id) return null;
-    return `https://www.threads.com/@${username}/post/${post_id}/media`;
-  }
-  async getMedia (url) {
-    const postURL = await this.getFinalURL(url);
-    if (!postURL) return null;
+
+    const postURL = `https://www.threads.com/@${username}/post/${post_id}/media`;
     const post = await $fetch(postURL, {
       headers: {
         "Accept": "text/html",
         "Sec-Fetch-Dest": "document",
         "Sec-Fetch-Mode": "navigate",
         "Sec-Fetch-Site": "same-origin",
-        "User-Agent": "Cloudflare Workers (dev.ahmedrangel.com)"
+        "User-Agent": "Cloudflare Workers/dev.ahmedrangel.com"
       }
     }).catch(() => null);
 
