@@ -10,6 +10,7 @@ class tiktokApi {
   }
 
   async getMedia (url) {
+    if (!url?.includes("tiktok.com/")) return null;
     const method_1 = async () => {
       try {
         const html = await $fetch(url, { headers: { "User-Agent": randUA("desktop") } });

@@ -21,7 +21,7 @@ class twitterApi {
     const short_url = `https://x.com/i/status/${id}`;
     const video = media_extended.find(media => media.type === "video" && (media.url.includes("avc1") || media.url.includes("/pu/vid/") || media.url.includes(".mp4?tag=12") || media.url.includes("/tweet_video/")));
     if (!video?.url) {
-      return { id, is_photo: true, status: 200, short_url };
+      return { id, short_url, is_photo: true, status: 200 };
     }
     const video_url = video.url;
     console.log("Retrieving video from VxTwitter API");
@@ -88,7 +88,7 @@ class twitterApi {
       const quotedEntries = quotedArr.length ? quotedArr[0] : null;
       if (!entries && !quotedEntries) return null;
       if (entries?.extended_entities?.media[videoNumber]?.type === "photo" || quotedEntries?.extended_entities?.media[videoNumber]?.type === "photo")
-        return { id, is_photo: true, status: 200, short_url: `https://x.com/x/status/${id}` };
+        return { id, short_url: `https://x.com/x/status/${id}`, is_photo: true, status: 200 };
 
       if (!entries?.extended_entities?.media[videoNumber]?.video_info && !quotedEntries?.extended_entities?.media[videoNumber]?.video_info) return null;
       const videos = entries?.extended_entities?.media[videoNumber]?.video_info?.variants || quotedEntries?.extended_entities?.media[videoNumber]?.video_info?.variants;
@@ -105,6 +105,16 @@ class twitterApi {
       console.info(error);
       return null;
     }
+  }
+  async getMedia (url) {
+    if (url.includes("twitter.com/") || url.includes("x.com/") || url.includes("t.co/")) {
+      const tco = url.includes("t.co/") ? (await $fetch(url, { headers: { "User-Agent": randUA("desktop") } }).catch(() => null)).match(/location\.replace\("([^"]+)"\)/)[1] : null;
+      const fixedUrl = tco ? tco.replace(/\\/g, "") : url;
+      const result = (await this.getTweetGraphql(fixedUrl)) || (await this.getTweet(fixedUrl));
+      if (result) return result;
+      return null;
+    }
+    return null;
   }
 }
 

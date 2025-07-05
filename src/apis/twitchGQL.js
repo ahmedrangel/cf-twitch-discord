@@ -1,5 +1,6 @@
 import { $fetch } from "ofetch";
 import { withQuery } from "ufo";
+import { obtenerIDDesdeURL } from "../utils/helpers";
 
 class twitchGQL {
 
@@ -7,7 +8,9 @@ class twitchGQL {
     this.baseURL = "https://gql.twitch.tv/gql";
   }
 
-  async getClip (id) {
+  async getMedia (url) {
+    const id = obtenerIDDesdeURL(url);
+    if (!id) return null;
     const query = [
       {
         operationName: "ShareClipRenderStatus",
@@ -25,7 +28,7 @@ class twitchGQL {
       method: "POST",
       headers: { "Client-Id": "kimne78kx3ncx6brgo4mv6wki5h1ko" },
       body: query
-    }).catch((e) => console.log(e));
+    }).catch((e) => null);
 
     if (!data) return null;
 

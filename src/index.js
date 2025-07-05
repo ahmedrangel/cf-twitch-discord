@@ -17,8 +17,6 @@ import { nbCum, nbFuck, nbFuckAngar, nbHug, nbHugAngar, nbKiss, nbKissAngar, nbK
 import youtubeApi from "./apis/youtubeApi";
 import igApi from "./apis/igApi";
 import mp3youtubeApi from "./apis/mp3youtubeApi";
-import y2mateApi from "./apis/y2mateApi";
-import crossclipApi from "./apis/crossclipApi";
 import fdownloaderApi from "./apis/fdownloaderApi";
 import twitterApi from "./apis/twitterApi";
 import tiktokApi from "./apis/tiktokApi";
@@ -28,8 +26,6 @@ import ErrorResponse from "./responses/ErrorResponse";
 import { Error } from "./utils/errors";
 import twitchGQL from "./apis/twitchGQL";
 import redditApi from "./apis/redditApi";
-import ytsavetubeApi from "./apis/ytsavetube";
-import ytproxyApi from "./apis/ytproxyApi";
 import { vueTrackerUpdate } from "./crons/vuetracker";
 import threadsApi from "./apis/threadsApi";
 
@@ -1642,21 +1638,6 @@ router.get("/d1/insert-imgurdiscord?", async (req, env) => {
   }
 });
 
-router.get("/dc/instagram-video-scrapper?", async (req, env, ctx) => {
-  const cacheKey = new Request(req.url, req);
-  const cache = caches.default;
-  const cachedResponse = await cache.match(cacheKey);
-  if (cachedResponse) return cachedResponse;
-  const { query } = req;
-  const url = decodeURIComponent(query.url);
-  const instagram = new igApi(env.ig_proxy_host);
-  const data = await instagram.getMedia(url);
-  if (!data) return new ErrorResponse(Error.NOT_FOUND);
-  const response = new JsonResponse(data, { cache: `max-age=${socialsCache.instagram}` });
-  ctx.waitUntil(cache?.put(cacheKey, response.clone()));
-  return response;
-});
-
 router.get("/dc/youtube/mp3?", async (req, env) => {
   const { url, filter } = req.query;
   const youtube = new youtubeApi(env.youtube_token);
@@ -1690,134 +1671,6 @@ router.get("/dc/youtube/mp3?", async (req, env) => {
     console.log(e);
     return new ErrorResponse(Error.NOT_FOUND);
   }
-});
-
-router.get("/dc/youtube-video-scrapper?", async (req, env, ctx) => {
-  const { url } = req.query;
-
-  const cacheKey = new Request(req.url, req);
-  const cache = caches.default;
-  const cachedResponse = await cache.match(cacheKey);
-  if (cachedResponse) return cachedResponse;
-
-  const youtube = new youtubeApi(env.youtube_token);
-  const ytsave = new ytsavetubeApi();
-  const y2mate = new y2mateApi();
-  const ytproxy = new ytproxyApi();
-  const regex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?|live)\/|\S*?[?&]v=|shorts\/)?|youtu\.be\/)([a-zA-Z0-9_-]+)/;
-  const videoUrl = decodeURIComponent(url);
-  const id = videoUrl.match(regex)[1];
-  try {
-    const { items } = await youtube.getVideoInfo(id);
-    const { snippet, contentDetails } = items[0];
-    const duration = timeToSeconds(contentDetails.duration);
-    const short_url = "https://youtu.be/" + id;
-    const video_url = await ytproxy.getVideo(videoUrl) || await ytsave.getVideo(id) || await y2mate.getVideo(id);
-    if (!video_url) {
-      return new ErrorResponse(Error.TOO_MANY_REQUESTS);
-    }
-    const data = {
-      id,
-      video_url: video_url,
-      caption: snippet.title,
-      short_url: short_url,
-      duration: duration,
-      status: 200
-    };
-
-    const response = new JsonResponse(data, { cache: `max-age=${socialsCache.youtube}` });
-    ctx.waitUntil(cache?.put(cacheKey, response.clone()));
-    return response;
-  } catch (e) {
-    console.log(e);
-    return new ErrorResponse(Error.NOT_FOUND);
-  }
-});
-
-router.get("/dc/facebook-video-scrapper?", async (req, env, ctx) => {
-  const { query } = req;
-  const cacheKey = new Request(req.url, req);
-  const cache = caches.default;
-  const cachedResponse = await cache.match(cacheKey);
-  if (cachedResponse) return cachedResponse;
-
-  const decodedURL = decodeURIComponent(query.url);
-  const fbFetch = await $fetch.raw(decodedURL, {
-    headers: {
-      "Accept": "*/*",
-      "User-Agent": "Cloudflare Workers/dev.ahmedrangel.com"
-    }
-  }).catch(() => null);
-  const url = fbFetch?.url ? fbFetch?.url : decodedURL;
-  const fdownloader = new fdownloaderApi();
-  let video_url;
-  const short_url = url.replace(/([&?](?!v=)[^=]+=[^&]*)/g, "").replace("&", "?").replace("www.", "");
-  const regex = /(?:watch\?v=|watch\/|gg\/|videos\/|reel\/|reels\/|share\/[\w+]\/)(\w+)/;
-  const match = short_url.match(regex);
-  const id = match ? match[1] : null;
-  let status;
-  let maxAttempts = 4;
-  while (!video_url && maxAttempts > 0) {
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    const data = await fdownloader.getMedia(url);
-    video_url = data?.video_url;
-    status = data?.status;
-    maxAttempts--;
-  }
-
-  if (!video_url) new ErrorResponse(Error.NOT_FOUND);
-
-  const data = { id, video_url, short_url, status };
-  const response = new JsonResponse(data, { cache: `max-age=${socialsCache.facebook}` });
-  ctx.waitUntil(cache?.put(cacheKey, response.clone()));
-  return new JsonResponse(data);
-});
-
-router.get("/dc/tiktok-video-scrapper?", async (req, env, ctx) => {
-  const { query } = req;
-
-  const cacheKey = new Request(req.url, req);
-  const cache = caches.default;
-  const cachedResponse = await cache.match(cacheKey);
-  if (cachedResponse) return cachedResponse;
-
-  const tiktok = new tiktokApi;
-  const url = decodeURIComponent(query.url);
-  if (url.includes("tiktok.com/")) {
-    const data = await tiktok.getMedia(url);
-    if (!data) return new ErrorResponse(Error.NOT_FOUND);
-    const testHead = await $fetch.raw(data.video_url, { method: "HEAD" }).catch(() => null);
-    if (!testHead || testHead.status !== 200) return new ErrorResponse(Error.INTERNAL_SERVER_ERROR);
-
-    const response = new JsonResponse(data, { cache: `max-age=${socialsCache.tiktok}` });
-    ctx.waitUntil(cache?.put(cacheKey, response.clone()));
-    return response;
-  } else {
-    return new JsResponse("Url no válida");
-  }
-});
-
-router.get("/dc/x-video-scrapper?", async (req, env, ctx) => {
-  const { query } = req;
-
-  const cacheKey = new Request(req.url, req);
-  const cache = caches.default;
-  const cachedResponse = await cache.match(cacheKey);
-  if (cachedResponse) return cachedResponse;
-
-  const url = decodeURIComponent(query.url);
-  if (url.includes("twitter.com/") || url.includes("x.com/") || url.includes("t.co/")) {
-    const twitter = new twitterApi(env.twitter_bearer_token, env.x_cookie);
-    const tco = url.includes("t.co/") ? (await $fetch(url, { headers: { "User-Agent": randUA("desktop") } }).catch(() => null)).match(/location\.replace\("([^"]+)"\)/)[1] : null;
-    const fixedUrl = tco ? tco.replace(/\\/g, "") : url;
-    const result = (await twitter.getTweetGraphql(fixedUrl)) || (await twitter.getTweet(fixedUrl));
-    if (!result) return new ErrorResponse(Error.NOT_FOUND);
-
-    const response = new JsonResponse(result, { cache: `max-age=${socialsCache.twitter}` });
-    ctx.waitUntil(cache?.put(cacheKey, response.clone()));
-    return response;
-  }
-  return new JsResponse("Url no válida");
 });
 
 // Nightbot command: Followage
@@ -1897,28 +1750,6 @@ router.get("/lol/masteries/:region/:name/:tag", async (req, env) => {
   });
   data.masteries = masteries;
   return new JsonResponse(data);
-});
-
-router.get("/dc/twitch-video-scrapper?", async (req, env, ctx) => {
-  const { query } = req;
-
-  const cacheKey = new Request(req.url, req);
-  const cache = caches.default;
-  const cachedResponse = await cache.match(cacheKey);
-  if (cachedResponse) return cachedResponse;
-
-  const url = decodeURIComponent(query.url);
-  const id = obtenerIDDesdeURL(url);
-  const twitch = new twitchGQL();
-  try {
-    const data = await twitch.getClip(id);
-    const response = new JsonResponse(data, { cache: `max-age=${socialsCache.twitch}` });
-    ctx.waitUntil(cache?.put(cacheKey, response.clone()));
-    return response;
-  } catch (e) {
-    console.log(e);
-    return new ErrorResponse(Error.NOT_FOUND);
-  }
 });
 
 router.get("/kick/clip?", async (req, env) => {
@@ -2025,53 +1856,58 @@ router.get("/twitch/subscribers/:user/total", async (req, env) => {
   return new JsonResponse({ total });
 });
 
-router.get("/dc/kick-video-scrapper?", async (req, env, ctx) => {
-  const { query } = req;
+router.get("/dc/video-scraper/:source", async (req, env, ctx) => {
+  const { query, params } = req;
+  const { url } = query;
+  const { source } = params;
+
+  if (!url) return new ErrorResponse(Error.BAD_REQUEST);
 
   const cacheKey = new Request(req.url, req);
   const cache = caches.default;
   const cachedResponse = await cache.match(cacheKey);
   if (cachedResponse) return cachedResponse;
 
-  const kick = new kickApi();
-  const data = await kick.getMedia(decodeURIComponent(query.url));
+  let apiInstance;
+
+  const social = source.toLowerCase();
+  const cacheDuration = socialsCache[social] || null;
+
+  switch (source.toLowerCase()) {
+    case "instagram":
+      apiInstance = new igApi(env.ig_proxy_host);
+      break;
+    case "youtube":
+      apiInstance = new youtubeApi(env.youtube_token);
+      break;
+    case "facebook":
+      apiInstance = new fdownloaderApi();
+      break;
+    case "tiktok":
+      apiInstance = new tiktokApi();
+      break;
+    case "x":
+      apiInstance = new twitterApi(env.twitter_bearer_token, env.x_cookie);
+      break;
+    case "twitch":
+      apiInstance = new twitchGQL();
+      break;
+    case "kick":
+      apiInstance = new kickApi();
+      break;
+    case "reddit":
+      apiInstance = new redditApi(env.reddit_token);
+      break;
+    case "threads":
+      apiInstance = new threadsApi();
+      break;
+    default:
+      return new ErrorResponse(Error.BAD_REQUEST);
+  }
+  const data = await apiInstance.getMedia(decodeURIComponent(url));
+  console.log("Data from video scraper:", data);
   if (!data) return new ErrorResponse(Error.NOT_FOUND);
-  const response = new JsonResponse(data, { cache: `max-age=${socialsCache.kick}` });
-
-  ctx.waitUntil(cache?.put(cacheKey, response.clone()));
-  return response;
-});
-
-router.get("/dc/reddit-video-scrapper?", async (req, env, ctx) => {
-  const { query } = req;
-
-  const cacheKey = new Request(req.url, req);
-  const cache = caches.default;
-  const cachedResponse = await cache.match(cacheKey);
-  if (cachedResponse) return cachedResponse;
-
-  const reddit = new redditApi(env.reddit_token);
-  const data = await reddit.getMedia(decodeURIComponent(query.url));
-  if (!data) return new ErrorResponse(Error.NOT_FOUND);
-  const response = new JsonResponse(data, { cache: `max-age=${socialsCache.reddit}` });
-
-  ctx.waitUntil(cache?.put(cacheKey, response.clone()));
-  return response;
-});
-
-router.get("/dc/threads-video-scrapper?", async (req, env, ctx) => {
-  const { query } = req;
-
-  const cacheKey = new Request(req.url, req);
-  const cache = caches.default;
-  const cachedResponse = await cache.match(cacheKey);
-  if (cachedResponse) return cachedResponse;
-
-  const threads = new threadsApi();
-  const data = await threads.getMedia(decodeURIComponent(query.url));
-  if (!data) return new ErrorResponse(Error.NOT_FOUND);
-  const response = new JsonResponse(data, { cache: `max-age=${socialsCache.threads}` });
-
+  const response = new JsonResponse(data, cacheDuration ? { cache: `max-age=${cacheDuration}` } : {});
   ctx.waitUntil(cache?.put(cacheKey, response.clone()));
   return response;
 });

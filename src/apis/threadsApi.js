@@ -50,7 +50,8 @@ class threadsApi {
       id: data?.id,
       video_url: data?.video_versions?.[0]?.url,
       short_url: `https://threads.com/@${data?.user?.username}/post/${data?.code}`,
-      caption: data?.caption?.text
+      caption: data?.caption?.text,
+      status: 200
     };
   }
 }
