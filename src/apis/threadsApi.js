@@ -51,7 +51,7 @@ class threadsApi {
     return {
       id: data?.id,
       video_url: data?.video_versions?.[0]?.url,
-      short_url: `https://threads.com/@${data?.user?.username}/post/${data?.id}`,
+      short_url: `https://threads.com/@${data?.user?.username}/post/${data?.code}`,
       caption: data?.caption?.text
     };
   }
