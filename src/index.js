@@ -31,6 +31,7 @@ import redditApi from "./apis/redditApi";
 import ytsavetubeApi from "./apis/ytsavetube";
 import ytproxyApi from "./apis/ytproxyApi";
 import { vueTrackerUpdate } from "./crons/vuetracker";
+import threadsApi from "./apis/threadsApi";
 
 const router = IttyRouter();
 // educar
@@ -2053,6 +2054,23 @@ router.get("/dc/reddit-video-scrapper?", async (req, env, ctx) => {
   const data = await reddit.getMedia(decodeURIComponent(query.url));
   if (!data) return new ErrorResponse(Error.NOT_FOUND);
   const response = new JsonResponse(data, { cache: `max-age=${socialsCache.reddit}` });
+
+  ctx.waitUntil(cache?.put(cacheKey, response.clone()));
+  return response;
+});
+
+router.get("/dc/threads-video-scrapper?", async (req, env, ctx) => {
+  const { query } = req;
+
+  const cacheKey = new Request(req.url, req);
+  const cache = caches.default;
+  const cachedResponse = await cache.match(cacheKey);
+  if (cachedResponse) return cachedResponse;
+
+  const threads = new threadsApi();
+  const data = await threads.getMedia(decodeURIComponent(query.url));
+  if (!data) return new ErrorResponse(Error.NOT_FOUND);
+  const response = new JsonResponse(data, { cache: `max-age=${socialsCache.threads}` });
 
   ctx.waitUntil(cache?.put(cacheKey, response.clone()));
   return response;

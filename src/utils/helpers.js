@@ -205,7 +205,8 @@ export const socialsCache = {
   youtube: 21116,
   twitch: 1209600,
   reddit: 86400,
-  facebook: 2592000
+  facebook: 2592000,
+  threads: 1209600
 };
 
 export const mimeType = {
