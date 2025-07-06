@@ -7,7 +7,7 @@ class fdownloaderApi {
 
   async getMedia (url) {
     const short_url = url.replace(/([&?](?!v=)[^=]+=[^&]*)/g, "").replace("&", "?").replace("www.", "");
-    const regex = /(?:watch\?v=|watch\/|gg\/|videos\/|reel\/|reels\/|share\/[\w+]\/)(\w+)/;
+    const regex = /(?:watch\?v=|watch\/\?v=|watch\/|gg\/|videos\/|reel\/|reels\/|share\/[\w+]\/)(\w+)/;
     const match = short_url.match(regex);
     const id = match ? match[1] : null;
 
@@ -50,7 +50,7 @@ class fdownloaderApi {
         status: 200,
         id: data?.id,
         video_url,
-        short_url: media?.permalink_url || media?.url || short_url,
+        short_url: (media?.permalink_url || media?.url || short_url).replace("www.", ""),
         caption: metaDescription
       };
     };
