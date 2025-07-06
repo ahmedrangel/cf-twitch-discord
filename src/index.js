@@ -1859,7 +1859,7 @@ router.get("/twitch/subscribers/:user/total", async (req, env) => {
 router.get("/dc/video-scraper/:source", async (req, env, ctx) => {
   const { query, params } = req;
   const { url } = query;
-  const { source } = params;
+  const source = params.source?.toLowerCase();
 
   if (!url) return new ErrorResponse(Error.BAD_REQUEST);
 
@@ -1868,44 +1868,24 @@ router.get("/dc/video-scraper/:source", async (req, env, ctx) => {
   const cachedResponse = await cache.match(cacheKey);
   if (cachedResponse) return cachedResponse;
 
-  let apiInstance;
+  const apiMap = {
+    instagram: () => new igApi(env.ig_proxy_host),
+    youtube: () => new youtubeApi(env.youtube_token),
+    facebook: () => new fdownloaderApi(),
+    tiktok: () => new tiktokApi(),
+    x: () => new twitterApi(env.twitter_bearer_token, env.x_cookie),
+    twitch: () => new twitchGQL(),
+    kick: () => new kickApi(),
+    reddit: () => new redditApi(env.reddit_token),
+    threads: () => new threadsApi()
+  };
 
-  const social = source.toLowerCase();
-  const cacheDuration = socialsCache[social] || null;
-
-  switch (source.toLowerCase()) {
-    case "instagram":
-      apiInstance = new igApi(env.ig_proxy_host);
-      break;
-    case "youtube":
-      apiInstance = new youtubeApi(env.youtube_token);
-      break;
-    case "facebook":
-      apiInstance = new fdownloaderApi();
-      break;
-    case "tiktok":
-      apiInstance = new tiktokApi();
-      break;
-    case "x":
-      apiInstance = new twitterApi(env.twitter_bearer_token, env.x_cookie);
-      break;
-    case "twitch":
-      apiInstance = new twitchGQL();
-      break;
-    case "kick":
-      apiInstance = new kickApi();
-      break;
-    case "reddit":
-      apiInstance = new redditApi(env.reddit_token);
-      break;
-    case "threads":
-      apiInstance = new threadsApi();
-      break;
-    default:
-      return new ErrorResponse(Error.BAD_REQUEST);
-  }
+  const cacheDuration = socialsCache?.[source];
+  const apiFactory = apiMap?.[source];
+  if (!apiFactory) return new ErrorResponse(Error.NOT_FOUND);
+  const apiInstance = apiFactory();
   const data = await apiInstance.getMedia(decodeURIComponent(url));
-  console.log("Data from video scraper:", data);
+  console.log(data);
   if (!data) return new ErrorResponse(Error.NOT_FOUND);
   const testHead = await $fetch.raw(data?.video_url, { method: "HEAD" }).catch(() => null);
   if (!testHead || testHead.status !== 200) return new ErrorResponse(Error.INTERNAL_SERVER_ERROR);
