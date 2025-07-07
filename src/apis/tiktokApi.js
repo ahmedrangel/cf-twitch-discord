@@ -37,10 +37,10 @@ class tiktokApi {
           device_id: device_id,
           channel: "googleplay",
           app_name: "musical_ly",
-          version_code: "300904",
+          version_code: 350103,
           device_platform: "android",
           device_type: "ASUS_Z01QD",
-          os_version: "9"
+          os_version: 14
         };
 
         const headers = {
