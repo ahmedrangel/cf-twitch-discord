@@ -41,8 +41,9 @@ class fdownloaderApi {
         }
       }
 
+      const caption = data?.creation_story?.message?.text || metaDescription;
       const attachment = data?.story?.attachments?.find(item => item?.media?.id === data?.id);
-      const media = attachment?.media;
+      const media = attachment?.media || data.creation_story.short_form_video_context.playback_video;
       const delivery = media?.videoDeliveryLegacyFields;
       const video_url = delivery?.browser_native_hd_url || delivery?.browser_native_sd_url;
       if (!video_url) return null;
@@ -51,7 +52,7 @@ class fdownloaderApi {
         id: data?.id,
         video_url,
         short_url: (media?.permalink_url || media?.url || short_url).replace("www.", ""),
-        caption: metaDescription
+        caption
       };
     };
     const withSnapsave = async () => {
