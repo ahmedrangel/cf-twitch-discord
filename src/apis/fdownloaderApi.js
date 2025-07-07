@@ -1,6 +1,8 @@
 import { $fetch } from "ofetch";
 import { snapsave } from "snapsave-media-downloader";
 import { load } from "cheerio";
+import { getQuery } from "ufo";
+import { withQuery } from "ufo";
 
 class fdownloaderApi {
   constructor () {}
@@ -10,6 +12,18 @@ class fdownloaderApi {
     const regex = /(?:watch\?v=|watch\/\?v=|watch\/|gg\/|videos\/|reel\/|reels\/|share\/[\w+]\/)(\w+)/;
     const match = short_url.match(regex);
     const id = match ? match[1] : null;
+
+    if (url.includes("/share/")) {
+      const shareFetch = await $fetch.raw(url, {
+        method: "HEAD",
+        headers: {
+          "Accept": "*/*",
+          "User-Agent": "Cloudflare Workers/dev.ahmedrangel.com"
+        }
+      }).catch(() => null);
+      if (!shareFetch) return null;
+      url = !shareFetch.url.includes("login") ? shareFetch.url : url;
+    }
 
     const withScraper = async () => {
       console.log("Using FB scraper");
@@ -43,7 +57,7 @@ class fdownloaderApi {
 
       const caption = data?.creation_story?.message?.text || metaDescription;
       const attachment = data?.story?.attachments?.find(item => item?.media?.id === data?.id);
-      const media = attachment?.media || data.creation_story.short_form_video_context.playback_video;
+      const media = attachment?.media || data?.creation_story?.short_form_video_context?.playback_video;
       const delivery = media?.videoDeliveryLegacyFields;
       const video_url = delivery?.browser_native_hd_url || delivery?.browser_native_sd_url;
       if (!video_url) return null;
@@ -58,14 +72,7 @@ class fdownloaderApi {
     const withSnapsave = async () => {
       console.log("Using Snapsave for FB");
       try {
-        const fbFetch = await $fetch.raw(url, {
-          headers: {
-            "Accept": "*/*",
-            "User-Agent": "Cloudflare Workers/dev.ahmedrangel.com"
-          }
-        }).catch(() => null);
-        const postURL = fbFetch?.url ? fbFetch.url : url;
-        const { data } = await snapsave(postURL);
+        const { data } = await snapsave(url);
         if (!data) return null;
         return { id, video_url: data?.media[0]?.url, short_url, status: 200 };
       } catch (e) {
