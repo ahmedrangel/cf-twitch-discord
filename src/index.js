@@ -1887,8 +1887,10 @@ router.get("/dc/video-scraper/:source", async (req, env, ctx) => {
   const data = await apiInstance.getMedia(decodeURIComponent(url));
   console.log(data);
   if (!data) return new ErrorResponse(Error.NOT_FOUND);
-  const testHead = await $fetch.raw(data?.video_url, { method: "HEAD" }).catch(() => null);
-  if (!testHead || testHead.status !== 200) return new ErrorResponse(Error.INTERNAL_SERVER_ERROR);
+  if (data?.video_url) {
+    const testHead = await $fetch.raw(data?.video_url, { method: "HEAD" }).catch(() => null);
+    if (!testHead || testHead.status !== 200) return new ErrorResponse(Error.INTERNAL_SERVER_ERROR);
+  }
   const response = new JsonResponse(data, cacheDuration ? { cache: `max-age=${cacheDuration}` } : {});
   ctx.waitUntil(cache?.put(cacheKey, response.clone()));
   return response;
