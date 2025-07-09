@@ -55,8 +55,8 @@ importers:
         specifier: ^0.18.11
         version: 0.18.11
       media-scraper:
-        specifier: ^0.0.4
-        version: 0.0.4
+        specifier: ^0.0.5
+        version: 0.0.5
       uncrypto:
         specifier: ^0.1.3
         version: 0.1.3
@@ -1191,8 +1191,8 @@ packages:
     resolution: {integrity: sha512-/IXtbwEk5HTPyEwyKX6hGkYXxM9nbj64B+ilVJnC/R6B0pH5G4V3b0pVbL7DBj4tkhBAppbQUlf6F6Xl9LHu1g==}
     engines: {node: '>= 0.4'}
 
-  media-scraper@0.0.4:
-    resolution: {integrity: sha512-GeX733qVm0UUN9QB8tn04wkWUectd1xigONExX9GzQu7ScrHmA3IPpwU/tLUBnct3zsEzZoavJUtfiLpcdBc+g==}
+  media-scraper@0.0.5:
+    resolution: {integrity: sha512-ojo4BPNf+4RAQdL12SuCzlgsS/gYuuNUXb+zeeE+YKlIFRtB2+ZEecJimO2XfL3rbo/XU1dDSeUn/2u/M6xWEg==}
 
   mime-db@1.52.0:
     resolution: {integrity: sha512-sPU4uV7dYlvtWJxwwxHD0PuihVNiE7TyAbQ5SWxDCB9mUYvOgroQOwYQQOKPJ8CIbE+1ETVlOoK1UC2nU3gYvg==}
@@ -1631,6 +1631,9 @@ packages:
         optional: true
       utf-8-validate:
         optional: true
+
+  x-client-transaction-id@0.1.8:
+    resolution: {integrity: sha512-0wYNIEKj124pKBHGWYb8Ux8CwtcUPAeUiqwM0KjW+NxGnuHQ3CnJF9k8rf1KekjbY8rVz37wXnKzrRPfaqnBMQ==}
 
   yocto-queue@0.1.0:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
@@ -2803,13 +2806,13 @@ snapshots:
 
   math-intrinsics@1.1.0: {}
 
-  media-scraper@0.0.4:
+  media-scraper@0.0.5:
     dependencies:
-      '@lami/x-client-transaction-id': '@jsr/lami__x-client-transaction-id@0.1.8'
       cheerio: 1.1.0
       linkedom: 0.18.11
       ofetch: 1.4.1
       ufo: 1.6.1
+      x-client-transaction-id: 0.1.8
 
   mime-db@1.52.0: {}
 
@@ -3356,6 +3359,10 @@ snapshots:
       - utf-8-validate
 
   ws@8.18.0: {}
+
+  x-client-transaction-id@0.1.8:
+    dependencies:
+      linkedom: 0.18.11
 
   yocto-queue@0.1.0: {}
 
