@@ -28,6 +28,7 @@ import twitchGQL from "./apis/twitchGQL";
 import redditApi from "./apis/redditApi";
 import { vueTrackerUpdate } from "./crons/vuetracker";
 import threadsApi from "./apis/threadsApi";
+import { jimenailartAgendaNotificate } from "./crons/jimenailartAgendaNotifications";
 
 const router = IttyRouter();
 // educar
@@ -1951,6 +1952,8 @@ export default {
       case "0 */2 * * *":
         await vueTrackerUpdate(env);
         break;
+      case "*/30 * * * *":
+        await jimenailartAgendaNotificate(env);
     }
   }
 };
