@@ -10,7 +10,7 @@ class igApi {
     const edgeSideCar = data.carousel_media || [];
     const id = data.code;
     if (edgeSideCar.length) {
-      const media = edgeSideCar[igsh ? img_index : Number(img_index) - 1 || 0] || null;
+      const media = edgeSideCar[igsh ? img_index || 0 : Number(img_index) - 1 || 0] || null;
       const mediaId = img_index > 1 ? `${id}-${igsh ? "m" : "w"}${Number(img_index)}` : id;
       console.log(media, img_index);
       if (!media) return null;
