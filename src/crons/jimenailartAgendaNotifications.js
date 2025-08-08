@@ -26,8 +26,8 @@ export const jimenailartAgendaNotificate = async (env) => {
   const appointment = await DB.prepare(`
     SELECT id, date_start, client_id, final_price, description
     FROM citas 
-    WHERE date_start BETWEEN ? AND ? AND client_id IS NOT 0
-      AND notified = 0 
+    WHERE date_start BETWEEN ? AND ?
+      AND notified = 0  AND client_id IS NOT 0
     ORDER BY date_start ASC
   `).bind(now, now + 3600000).first();
 
