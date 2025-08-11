@@ -1945,7 +1945,7 @@ export default {
       case "*/3 * * * *":
         await lolChampTagAdder(env);
         break;
-      case "0 */2 * * *":
+      case "0 */3 * * *":
         await vueTrackerUpdate(env);
         break;
       case "*/30 * * * *":
