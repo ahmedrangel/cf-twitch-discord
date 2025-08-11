@@ -1906,7 +1906,7 @@ router.get("/dc/fx?", async (req, env, ctx) => {
     }
 
     const video_url = withQuery(query.video_url, { t: Date.now() });
-    const checkCdn = await $fetch.raw(video_url).catch(() => null);
+    const checkCdn = await $fetch.raw(video_url, { method: "HEAD" }).catch(() => null);
     if (!checkCdn?.ok) return new ErrorResponse(Error.NOT_FOUND);
 
     const html = `
