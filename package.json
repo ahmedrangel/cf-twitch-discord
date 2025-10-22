@@ -11,7 +11,6 @@
   },
   "dependencies": {
     "@ahmedrangel/rand-user-agent": "^2.0.23",
-    "@lami/x-client-transaction-id": "npm:@jsr/lami__x-client-transaction-id@^0.1.8",
     "buffer": "^6.0.3",
     "cheerio": "1.1.2",
     "detectlanguage": "^2.1.0",
@@ -19,18 +18,19 @@
     "jsonpath": "^1.1.1",
     "ofetch": "^1.4.1",
     "openai": "^4.104.0",
-    "snapsave-media-downloader": "^2.2.1",
-    "ufo": "^1.6.1"
+    "snapsave-media-downloader": "^2.3.1",
+    "ufo": "^1.6.1",
+    "x-client-transaction-id": "^0.1.8"
   },
   "devDependencies": {
-    "@stylistic/eslint-plugin": "^5.4.0",
-    "discord-api-types": "^0.38.26",
-    "eslint": "^9.36.0",
+    "@stylistic/eslint-plugin": "^5.5.0",
+    "discord-api-types": "^0.38.30",
+    "eslint": "^9.38.0",
     "eslint-plugin-import": "^2.32.0",
     "linkedom": "^0.18.12",
     "media-scraper": "^0.0.8",
     "uncrypto": "^0.1.3",
-    "wrangler": "^4.38.0"
+    "wrangler": "^4.44.0"
   },
-  "packageManager": "pnpm@10.17.0"
+  "packageManager": "pnpm@10.19.0"
 }

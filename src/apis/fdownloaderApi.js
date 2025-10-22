@@ -1,6 +1,7 @@
 import { $fetch } from "ofetch";
 import { snapsave } from "snapsave-media-downloader";
 import scrape from "media-scraper/facebook";
+import { defaultRetry } from "../utils/helpers";
 
 class fdownloaderApi {
   constructor () {}
@@ -38,7 +39,7 @@ class fdownloaderApi {
     const withSnapsave = async () => {
       console.log("Using Snapsave for FB");
       try {
-        const { data } = await snapsave(url);
+        const { data } = await snapsave(url, { ...defaultRetry });
         if (!data) return null;
         return { id, video_url: data?.media[0]?.url, short_url, status: 200 };
       } catch (e) {
