@@ -1885,6 +1885,7 @@ router.get("/dc/video-scraper/:source", async (req, env, ctx) => {
   const apiFactory = apiMap?.[source];
   if (!apiFactory) return new ErrorResponse(Error.NOT_FOUND);
   const apiInstance = apiFactory();
+  console.log(url);
   const data = await apiInstance.getMedia(decodeURIComponent(url));
   if (!data) return new ErrorResponse(Error.NOT_FOUND);
   console.log(data);
