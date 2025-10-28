@@ -24,13 +24,13 @@
   },
   "devDependencies": {
     "@stylistic/eslint-plugin": "^5.5.0",
-    "discord-api-types": "^0.38.30",
+    "discord-api-types": "^0.38.31",
     "eslint": "^9.38.0",
     "eslint-plugin-import": "^2.32.0",
     "linkedom": "^0.18.12",
-    "media-scraper": "^0.0.8",
+    "media-scraper": "^0.0.9",
     "uncrypto": "^0.1.3",
-    "wrangler": "^4.44.0"
+    "wrangler": "^4.45.0"
   },
   "packageManager": "pnpm@10.19.0"
 }
