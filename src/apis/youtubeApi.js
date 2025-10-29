@@ -28,7 +28,7 @@ class youtubeApi {
     const id = match[1];
     const { items } = await this.getVideoInfo(id);
     const { snippet, contentDetails } = items[0];
-    const channelInfo = (await this.getChannelInfo(snippet.channelId))?.[0];
+    const channelInfo = (await this.getChannelInfo(snippet.channelId))?.items?.[0];
     const duration = timeToSeconds(contentDetails.duration);
     const short_url = "https://youtu.be/" + id;
     const ytsave = new ytsavetubeApi();
