@@ -16,7 +16,7 @@ class redditApi {
         name: data?.author?.name,
         username: data?.author?.username,
         avatar_url: data?.author?.avatar_url,
-        url: data?.author?.username ? `https://www.reddit.com/user/${data.author.username}` : undefined
+        url: data?.author?.url
       }
     };
   }

@@ -33,7 +33,13 @@ class fdownloaderApi {
         id: data.id,
         caption: data.caption,
         video_url: data.video.hd_url || data.video.sd_url,
-        short_url: data.permalink_url
+        short_url: data.permalink_url,
+        owner: {
+          name: data?.author?.name,
+          username: data?.author?.username,
+          avatar_url: data?.author?.avatar_url,
+          url: data?.author?.url
+        }
       };
     };
     const withSnapsave = async () => {

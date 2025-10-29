@@ -14,7 +14,7 @@ class threadsApi {
         name: data?.author?.name,
         username: data?.author?.username,
         avatar_url: data?.author?.avatar_url,
-        url: data?.author?.username ? `https://www.threads.net/@${data.author.username}` : undefined
+        url: data?.author?.url
       }
     };
   }

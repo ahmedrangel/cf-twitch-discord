@@ -13,7 +13,7 @@ class igApi {
       name: data?.author?.name,
       username: data?.author?.username,
       avatar_url: data?.author?.avatar_url,
-      url: data?.author?.username ? `https://www.instagram.com/${data.author.username}` : undefined
+      url: data?.author?.url
     };
     if (edgeSideCar.length) {
       const media = edgeSideCar[igsh ? img_index || 0 : Number(img_index) - 1 || 0] || null;
