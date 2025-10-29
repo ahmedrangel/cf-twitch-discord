@@ -12,7 +12,13 @@ class twitchGQL {
       id: data.slug,
       caption: data.caption,
       video_url: data.video_versions[0].url,
-      short_url: data.permalink_url
+      short_url: data.permalink_url,
+      owner: {
+        name: data?.broadcaster.name,
+        username: data?.broadcaster.username,
+        avatar_url: data?.broadcaster.avatar_url,
+        url: data?.broadcaster?.username ? `https://www.twitch.tv/${data.broadcaster.username}` : undefined
+      }
     };
   }
 }

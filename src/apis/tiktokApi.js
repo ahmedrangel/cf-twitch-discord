@@ -11,7 +11,13 @@ class tiktokApi {
       id: data.id,
       caption: data.caption,
       video_url: data.video?.url || data.video?.watermark_url,
-      short_url: `https://m.tiktok.com/v/${data.id}`
+      short_url: `https://m.tiktok.com/v/${data.id}`,
+      owner: {
+        name: data?.author?.name,
+        username: data?.author?.username,
+        avatar_url: data?.author?.avatar_url,
+        url: data?.author?.username ? `https://www.tiktok.com/@${data.author.username}` : undefined
+      }
     };
   }
 }

@@ -11,7 +11,13 @@ class redditApi {
       id: data.id,
       caption: data.caption,
       video_url: data.video.url,
-      short_url: data.short_url
+      short_url: data.short_url,
+      owner: {
+        name: data?.author?.name,
+        username: data?.author?.username,
+        avatar_url: data?.author?.avatar_url,
+        url: data?.author?.username ? `https://www.reddit.com/user/${data.author.username}` : undefined
+      }
     };
   }
 }

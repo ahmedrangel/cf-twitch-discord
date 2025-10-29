@@ -12,9 +12,6 @@ class kickApi {
       if (!match) return null;
       const id = match[1];
       const short_url = `https://kickbot.com/clip/${id}`;
-      const test = await $fetch(`https://clips.kickbotcdn.com/kickbot-hls/${id}/${id}.mp4`, {
-        responseType: "blob"
-      }).catch(() => null);
       return { id, video_url: `https://clips.kickbotcdn.com/kickbot-hls/${id}/${id}.mp4`, short_url, status: 200 };
     }
 
@@ -41,7 +38,19 @@ class kickApi {
     const short_url = `https://kick.com/${slug || "u"}/clips/${id}`;
 
     if (!video_url) return null;
-    return { id, video_url, short_url, caption, status: 200 };
+    return {
+      status: 200,
+      id,
+      video_url,
+      short_url,
+      caption,
+      owner: {
+        name: data?.clip?.channel?.username,
+        username: data?.clip?.channel?.slug,
+        avatar_url: data?.clip?.channel?.profile_picture,
+        url: slug ? `https://kick.com/${slug}` : undefined
+      }
+    };
   }
 }
 

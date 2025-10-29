@@ -25,7 +25,19 @@ class twitterApi {
     }
     const video_url = video.url;
     console.log("Retrieving video from VxTwitter API");
-    return { id, video_url, short_url, caption, status: 200 };
+    return {
+      status: 200,
+      id,
+      video_url,
+      short_url,
+      caption,
+      owner: {
+        name: data?.user_name,
+        username: data?.user_screen_name,
+        avatar_url: data?.user_profile_image_url,
+        url: data?.user_screen_name ? `https://x.com/${data.user_screen_name}` : undefined
+      }
+    };
   }
 
   async getTweetGraphql (url) {
@@ -74,12 +86,14 @@ class twitterApi {
       const dataEntries = data?.threaded_conversation_with_injections_v2?.instructions.find(instruction => instruction.type === "TimelineAddEntries")?.entries;
       const entriesArr = [];
       const quotedArr = [];
+      const userArr = [];
 
       for (const en of dataEntries) {
         if (en?.entryId === `tweet-${id}`) {
           const result = en?.content?.itemContent?.tweet_results?.result;
           entriesArr.push(result?.legacy || result?.tweet?.legacy);
           quotedArr.push(result?.quoted_status_result?.result?.legacy || result?.quoted_status_result?.result?.tweet?.legacy);
+          userArr.push(result?.core?.user_results?.result);
           break;
         }
       }
@@ -100,7 +114,19 @@ class twitterApi {
       const short_url = `https://x.com/i/status/${id}`;
       const caption = entries?.full_text?.replace(/https:\/\/t\.co\/\w+/g, "").trim();
       console.log("Retrieving video from GraphQL API");
-      return { id, video_url, short_url, caption, status: 200 };
+      return {
+        status: 200,
+        id,
+        video_url,
+        short_url,
+        caption,
+        owner: {
+          name: userArr?.[0]?.legacy?.name,
+          username: userArr?.[0]?.legacy?.screen_name,
+          avatar_url: userArr?.[0]?.legacy?.profile_image_url_https,
+          url: userArr?.[0]?.legacy?.screen_name ? `https://x.com/${userArr[0].legacy.screen_name}` : undefined
+        }
+      };
     } catch (error) {
       console.info(error);
       return null;

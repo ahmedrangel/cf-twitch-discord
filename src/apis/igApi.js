@@ -9,6 +9,12 @@ class igApi {
     const { img_index, igsh } = getQuery(url);
     const edgeSideCar = data.carousel_media || [];
     const id = data.code;
+    const owner = {
+      name: data?.author?.name,
+      username: data?.author?.username,
+      avatar_url: data?.author?.avatar_url,
+      url: data?.author?.username ? `https://www.instagram.com/${data.author.username}` : undefined
+    };
     if (edgeSideCar.length) {
       const media = edgeSideCar[igsh ? img_index || 0 : Number(img_index) - 1 || 0] || null;
       const mediaId = img_index > 0 ? `${id}-${igsh ? "m" : "w"}${Number(img_index)}` : id;
@@ -26,7 +32,8 @@ class igApi {
         id: mediaId,
         caption: data.caption,
         video_url: media.video.url,
-        short_url: data.permalink_url
+        short_url: data.permalink_url,
+        owner
       };
     }
     return {
@@ -34,7 +41,8 @@ class igApi {
       id,
       caption: data.caption,
       video_url: data.video.url,
-      short_url: data.permalink_url
+      short_url: data.permalink_url,
+      owner
     };
   }
 }
