@@ -1949,7 +1949,7 @@ export default {
       case "0 */3 * * *":
         await vueTrackerUpdate(env);
         break;
-      case "*/30 * * * *":
+      case "0 * * * *":
         await jimenailartAgendaNotificate(env);
     }
   }
