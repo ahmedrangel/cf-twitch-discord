@@ -1755,13 +1755,14 @@ router.get("/lol/masteries/:region/:name/:tag", async (req, env) => {
 
 router.get("/kick/clip?", async (req, env) => {
   const { url } = req.query;
+  const fixedUrl = url.replace(/(\?|\&)t=(?:\d+|)/g, "");
   const idRegex = /^https?:\/\/kick\.com\/[^\\/]+(?:\/clips\/(clip_\w+)|\?clip=(clip_\w+))$/;
-  const match = idRegex.exec(url);
+  const match = idRegex.exec(fixedUrl);
   if (!match) return new ErrorResponse(Error.NOT_FOUND);
   const id = match[1] || match[2];
   const data = await $fetch(`${env.kick_3rd_base}/clip`, {
     method: "POST",
-    body: { url }
+    body: { url: fixedUrl }
   }).catch(() => null);
   if (!data?.success) return new ErrorResponse(Error.NOT_FOUND);
   const video = `https://clips.kick.com/tmp/${id}.mp4`;
