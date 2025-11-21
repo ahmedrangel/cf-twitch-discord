@@ -16,21 +16,21 @@
     "detectlanguage": "^2.1.0",
     "itty-router": "^5.0.22",
     "jsonpath": "^1.1.1",
-    "ofetch": "^1.5.0",
-    "openai": "^4.104.0",
-    "snapsave-media-downloader": "^2.3.1",
+    "ofetch": "^1.5.1",
+    "openai": "^5.23.2",
+    "snapsave-media-downloader": "^2.3.3",
     "ufo": "^1.6.1",
-    "x-client-transaction-id": "^0.1.8"
+    "x-client-transaction-id": "^0.1.9"
   },
   "devDependencies": {
-    "@stylistic/eslint-plugin": "^5.5.0",
-    "discord-api-types": "^0.38.31",
-    "eslint": "^9.38.0",
+    "@stylistic/eslint-plugin": "^5.6.1",
+    "discord-api-types": "^0.38.34",
+    "eslint": "^9.39.1",
     "eslint-plugin-import": "^2.32.0",
     "linkedom": "^0.18.12",
     "media-scraper": "^0.1.0",
     "uncrypto": "^0.1.3",
-    "wrangler": "^4.45.2"
+    "wrangler": "^4.50.0"
   },
-  "packageManager": "pnpm@10.20.0"
+  "packageManager": "pnpm@10.23.0"
 }
