@@ -1,9 +1,11 @@
 import scrape from "media-scraper/tiktok";
+import { snapsave } from "snapsave-media-downloader";
+import { obtenerIDDesdeURL } from "../utils/helpers";
 
 class tiktokApi {
   constructor () {}
 
-  async getMedia (url) {
+  async scrape1 (url) {
     const data = await scrape(url).catch(() => null);
     if (!data) return;
     return {
@@ -19,6 +21,24 @@ class tiktokApi {
         url: data?.author?.url
       }
     };
+  }
+
+  async scrape2 (url) {
+    const resp = await snapsave(url).catch(() => null);
+    if (!resp) return;
+    const id = obtenerIDDesdeURL(url);
+    const { data } = resp;
+    return {
+      status: 200,
+      id: id,
+      caption: data?.description,
+      video_url: data?.media[0]?.url,
+      short_url: url
+    };
+  }
+
+  async getMedia (url) {
+    return (await this.scrape1(url)) || (await this.scrape2(url));
   }
 }
 
