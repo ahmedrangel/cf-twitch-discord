@@ -1191,7 +1191,7 @@ router.get("/lol/live?", async (req, env) => {
   async function AdjustParticipants (participants, team, game_type, team_color, champion_data, route) {
     participants.championName = (String(jp.query(champion_data.data, `$..[?(@.key==${participants.championId})].name`)));
     let riotId = participants.riotId;
-    const ranked_data = await riot.RankedData(participants.summonerId, route);
+    const ranked_data = await riot.RankedData(participants.puuid, route);
     const current_rank_type = (String(jp.query(ranked_data, `$..[?(@.queueType=="${game_type}")].queueType`)));
     if (ranked_data.length != 0 && game_type == current_rank_type) {
       for (let i = 0; i < ranked_data.length; i++) {
@@ -1433,17 +1433,17 @@ router.get("/lol/profile/:region/:name/:tag", async (req, env) => {
       const gameEndTimestamp = match_data?.info?.gameEndTimestamp;
       const queueId = match_data?.info?.queueId;
       const queueName = riot.queueCase(queueId);
-      const participantId = jp.query(match_data, `$..[?(@.summonerId=="${summoner_id}")].summonerId`)[0];
-      const championId = jp.query(match_data, `$..[?(@.summonerId=="${summoner_id}")].championId`)[0];
+      const participantId = jp.query(match_data, `$..[?(@.puuid=="${puuid}")].puuid`)[0];
+      const championId = jp.query(match_data, `$..[?(@.puuid=="${puuid}")].championId`)[0];
       const championName = jp.query(champion_data.data, `$..[?(@.key==${championId})].name`)[0];
-      const kills = jp.query(match_data, `$..[?(@.summonerId=="${summoner_id}")].kills`)[0];
-      const deaths = jp.query(match_data, `$..[?(@.summonerId=="${summoner_id}")].deaths`)[0];
-      const assists = jp.query(match_data, `$..[?(@.summonerId=="${summoner_id}")].assists`)[0];
-      const summoner1Id = jp.query(match_data, `$..[?(@.summonerId=="${summoner_id}")].summoner1Id`)[0];
-      const summoner2Id = jp.query(match_data, `$..[?(@.summonerId=="${summoner_id}")].summoner2Id`)[0];
-      const remake = jp.query(match_data, `$..[?(@.summonerId=="${summoner_id}")].gameEndedInEarlySurrender`)[0];
-      const win = jp.query(match_data, `$..[?(@.summonerId=="${summoner_id}")].win`)[0];
-      if (summoner_id == participantId) {
+      const kills = jp.query(match_data, `$..[?(@.puuid=="${puuid}")].kills`)[0];
+      const deaths = jp.query(match_data, `$..[?(@.puuid=="${puuid}")].deaths`)[0];
+      const assists = jp.query(match_data, `$..[?(@.puuid=="${puuid}")].assists`)[0];
+      const summoner1Id = jp.query(match_data, `$..[?(@.puuid=="${puuid}")].summoner1Id`)[0];
+      const summoner2Id = jp.query(match_data, `$..[?(@.puuid=="${puuid}")].summoner2Id`)[0];
+      const remake = jp.query(match_data, `$..[?(@.puuid=="${puuid}")].gameEndedInEarlySurrender`)[0];
+      const win = jp.query(match_data, `$..[?(@.puuid=="${puuid}")].win`)[0];
+      if (puuid == participantId) {
         match_history.push({
           orderId: i,
           gameEndTimestamp: gameEndTimestamp,
