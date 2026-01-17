@@ -8,7 +8,7 @@ class threadsApi {
       status: 200,
       id: data.code,
       caption: data.caption,
-      video_url: data.video_versions[0].url,
+      video_url: data?.video_versions?.[0]?.url || data?.carousel_media?.[0]?.video_versions?.[0]?.url,
       short_url: data.permalink_url,
       owner: {
         name: data?.author?.name,
