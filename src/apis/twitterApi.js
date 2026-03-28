@@ -19,7 +19,7 @@ class twitterApi {
     const id = tweetID;
     const caption = text?.replace(/https:\/\/t\.co\/\w+/g, "").trim();
     const short_url = `https://x.com/i/status/${id}`;
-    const video = media_extended.find(media => media.type === "video" && (media.url.includes("avc1") || media.url.includes("/pu/vid/") || media.url.includes(".mp4?tag=12") || media.url.includes("/tweet_video/")));
+    const video = media_extended.find(media => (media.type === "video" && (media.url.includes("avc1") || media.url.includes("/pu/vid/") || media.url.includes(".mp4?tag=12") || media.url.includes("/tweet_video/"))) || media.type === "gif");
     if (!video?.url) {
       return { id, short_url, is_photo: true, status: 200 };
     }
@@ -106,7 +106,7 @@ class twitterApi {
 
       if (!entries?.extended_entities?.media[videoNumber]?.video_info && !quotedEntries?.extended_entities?.media[videoNumber]?.video_info) return null;
       const videos = entries?.extended_entities?.media[videoNumber]?.video_info?.variants || quotedEntries?.extended_entities?.media[videoNumber]?.video_info?.variants;
-      const filteredVideos = videos.filter(video => video.content_type === "video/mp4" && (video.url.includes("avc1") || video.url.includes("/pu/vid/") || video.url.includes(".mp4?tag=12") || video.url.includes("/tweet_video/")));
+      const filteredVideos = videos.filter(video => (video.content_type === "video/mp4" && (video.url.includes("avc1") || video.url.includes("/pu/vid/") || video.url.includes(".mp4?tag=12") || video.url.includes("/tweet_video/"))) || video.content_type === "image/gif");
       const maxBitrate = Math.max(...filteredVideos.map(video => video.bitrate));
       const video = filteredVideos.find(video => video.bitrate === maxBitrate);
 
