@@ -58,8 +58,8 @@ importers:
         specifier: ^0.18.13
         version: 0.18.13
       media-scraper:
-        specifier: ^0.1.2
-        version: 0.1.2
+        specifier: ^0.1.3
+        version: 0.1.3
       uncrypto:
         specifier: ^0.1.3
         version: 0.1.3
@@ -1211,8 +1211,8 @@ packages:
     resolution: {integrity: sha512-/IXtbwEk5HTPyEwyKX6hGkYXxM9nbj64B+ilVJnC/R6B0pH5G4V3b0pVbL7DBj4tkhBAppbQUlf6F6Xl9LHu1g==}
     engines: {node: '>= 0.4'}
 
-  media-scraper@0.1.2:
-    resolution: {integrity: sha512-MBxJGLVA+EGGD0yCGsI61/WQ6A2aVpy8nC01fU7PryU2A/cVeeSJjjvjIvQYQ6HNm3s6HMGvwPE+msgCjiZ5og==}
+  media-scraper@0.1.3:
+    resolution: {integrity: sha512-vkAgY16yzRFedhGWQqDcm0r2e85H0Jz01SHzL6i8ZeNMeeDRWoyb/F91GpfUH4yYGusvhUS3DUl5K9dGUqTDTQ==}
 
   miniflare@4.20260722.0:
     resolution: {integrity: sha512-LW6ABMhCx/yIEFBLC/DO4yAhdm2T/G7jp7pr5T2kj895+CCIaHZqpMXdW9O6YE48LcYcCJChwWc8aEs1vpbTXw==}
@@ -1510,6 +1510,9 @@ packages:
   ufo@1.6.1:
     resolution: {integrity: sha512-9a4/uxlTWJ4+a5i0ooc1rU7C7YOw3wT+UGqdeNNHWnOF9qcMBgLRS+4IYUqbczewFx4mLEig6gawh7X6mFlEkA==}
 
+  ufo@1.6.4:
+    resolution: {integrity: sha512-JFNbkD1Svwe0KvGi8GOeLcP4kAWQ609twvCdcHxq1oSL8svv39ZuSvajcD8B+5D0eL4+s1Is2D/O6KN3qcTeRA==}
+
   uhyphen@0.2.0:
     resolution: {integrity: sha512-qz3o9CHXmJJPGBdqzab7qAYuW8kQGKNEuoHFYrBwV6hWIMcpAmxDLXojcHfFr9US1Pe6zUswEIJIbLI610fuqA==}
 
@@ -1601,9 +1604,6 @@ packages:
         optional: true
       utf-8-validate:
         optional: true
-
-  x-client-transaction-id@0.1.9:
-    resolution: {integrity: sha512-CES4zgkJ0wbfFWm0qgdKphthyb+L7lVHymgOY15v6ivcWSx5p9lp5kzAed+BuqJSP7bS0GbQyJ16ONkRthgsUw==}
 
   x-client-transaction-id@0.3.1:
     resolution: {integrity: sha512-fD9YtDswTL3VyG/z7FbZUfMu5CUsvGmKk33fM3b9eOXe0Wnmj8W55UKLPA5Z/cuq6WrWTxXQhLcV3GGCD6mKaQ==}
@@ -2776,13 +2776,13 @@ snapshots:
 
   math-intrinsics@1.1.0: {}
 
-  media-scraper@0.1.2:
+  media-scraper@0.1.3:
     dependencies:
       cheerio: 1.2.0
       linkedom: 0.18.13
       ofetch: 1.5.1
-      ufo: 1.6.1
-      x-client-transaction-id: 0.1.9
+      ufo: 1.6.4
+      x-client-transaction-id: 0.3.1
     transitivePeerDependencies:
       - canvas
 
@@ -3177,6 +3177,8 @@ snapshots:
 
   ufo@1.6.1: {}
 
+  ufo@1.6.4: {}
+
   uhyphen@0.2.0: {}
 
   unbox-primitive@1.1.0:
@@ -3282,12 +3284,6 @@ snapshots:
       - utf-8-validate
 
   ws@8.21.0: {}
-
-  x-client-transaction-id@0.1.9:
-    dependencies:
-      linkedom: 0.18.13
-    transitivePeerDependencies:
-      - canvas
 
   x-client-transaction-id@0.3.1:
     dependencies:
