@@ -2,7 +2,7 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "twitch",
   "main": "src/index.js",
-  "compatibility_date": "2025-05-07",
+  "compatibility_date": "2026-07-27",
   "compatibility_flags": ["nodejs_compat"],
   "observability": {
     "enabled": true
