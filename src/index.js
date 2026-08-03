@@ -1948,7 +1948,7 @@ export default {
         await lolChampTagAdder(env);
         break;
       case "0 */3 * * *":
-        await vueTrackerUpdate(env);
+        // await vueTrackerUpdate(env);
         break;
       case "0 * * * *":
         await jimenailartAgendaNotificate(env);
