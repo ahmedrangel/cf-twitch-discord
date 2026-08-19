@@ -7,7 +7,7 @@ class tiktokApi {
 
   async scrape1 (url) {
     const data = await scrape(url).catch(() => null);
-    if (!data) return;
+    if (!data || !data?.video?.url) return;
     return {
       status: 200,
       id: data.id,
@@ -28,6 +28,7 @@ class tiktokApi {
     if (!resp) return;
     const id = obtenerIDDesdeURL(url);
     const { data } = resp;
+    if (!data || !data?.media || !data?.media?.[0]?.url) return;
     return {
       status: 200,
       id: id,
