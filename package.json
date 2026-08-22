@@ -14,8 +14,8 @@
     "buffer": "^6.0.3",
     "cheerio": "1.2.0",
     "detectlanguage": "^2.1.0",
-    "itty-router": "^5.0.22",
-    "jsonpath": "^1.1.1",
+    "itty-router": "^5.0.24",
+    "jsonpath": "^1.3.0",
     "ofetch": "^1.5.1",
     "openai": "^5.23.2",
     "snapsave-media-downloader": "^2.4.1",
@@ -28,9 +28,9 @@
     "eslint": "^9.39.1",
     "eslint-plugin-import": "^2.32.0",
     "linkedom": "^0.18.13",
-    "media-scraper": "^0.1.3",
+    "media-scraper": "^0.2.0",
     "uncrypto": "^0.1.3",
-    "wrangler": "^4.114.0"
+    "wrangler": "^4.125.0"
   },
   "packageManager": "pnpm@10.24.0"
 }

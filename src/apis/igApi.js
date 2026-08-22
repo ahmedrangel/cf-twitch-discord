@@ -34,17 +34,17 @@ class igApi {
         status: 200,
         id: mediaId,
         caption: data.caption,
-        video_url: media.video.url,
+        video_url: media.video_versions?.[0]?.url,
         short_url: data.permalink_url,
         owner
       };
     }
-    if (!data?.video?.url) return null;
+    if (!data?.video_versions?.[0]?.url) return null;
     return {
       status: 200,
       id,
       caption: data.caption,
-      video_url: data.video.url,
+      video_url: data.video_versions?.[0]?.url,
       short_url: data.permalink_url,
       owner
     };
