@@ -1951,7 +1951,7 @@ export default {
         // await vueTrackerUpdate(env);
         break;
       case "0 * * * *":
-        await jimenailartAgendaNotificate(env);
+        // await jimenailartAgendaNotificate(env);
     }
   }
 };

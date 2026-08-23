@@ -58,8 +58,8 @@ importers:
         specifier: ^0.18.13
         version: 0.18.13
       media-scraper:
-        specifier: ^0.2.2
-        version: 0.2.2
+        specifier: ^0.2.3
+        version: 0.2.3
       uncrypto:
         specifier: ^0.1.3
         version: 0.1.3
@@ -997,6 +997,9 @@ packages:
     resolution: {integrity: sha512-ZUKRh6/kUFoAiTAtTYPZJ3hw9wNxx+BIBOijnlG9PnrJsCcSjs1wyyD6vJpaYtgnzDrKYRSqf3OO6Rfa93xsRg==}
     engines: {node: '>= 0.4'}
 
+  gql-payload@2.1.0:
+    resolution: {integrity: sha512-9m1dX7bIjJkhBs03MxplUfG1KsQ5S6al5DnzrZrjARF6jWCtRC1DmjGaozbNxe+L1eIZ7k6wLcR0GOQM1+vpzw==}
+
   has-bigints@1.1.0:
     resolution: {integrity: sha512-R3pbpkcIqv2Pm3dUwgjclDRVmWpTJW2DcMzcIhEXEx1oh/CEMObMm3KLmRJOdvhM7o4uQBnwr8pzRK2sJWIqfg==}
     engines: {node: '>= 0.4'}
@@ -1194,8 +1197,8 @@ packages:
     resolution: {integrity: sha512-/IXtbwEk5HTPyEwyKX6hGkYXxM9nbj64B+ilVJnC/R6B0pH5G4V3b0pVbL7DBj4tkhBAppbQUlf6F6Xl9LHu1g==}
     engines: {node: '>= 0.4'}
 
-  media-scraper@0.2.2:
-    resolution: {integrity: sha512-dxZIPb47IWnpgfDS/QzczHo5Z1cSId0Iekq5L+h+FH/4fr21gEtN+HTcamBqT+87u6JBbkl2nrYDJcWuG18lPA==}
+  media-scraper@0.2.3:
+    resolution: {integrity: sha512-LEwyT2P1fFh9Z48ofnx4Qa6X8Ln+VU9H0mglYROe04XHjqlYR8v/OgPMoO3IngCLNdnka+Bge4qg90BQK11GMQ==}
 
   miniflare@5.20260820.0-alpha:
     resolution: {integrity: sha512-Bv1j2kcKKNwXLWuCx+j0xGt7z318mqQkJmEN6ellM9sCESbPBDTM9ofZMbKqx47jSnoGA3CiaUkAmzGVXUa/wQ==}
@@ -2500,6 +2503,8 @@ snapshots:
 
   gopd@1.2.0: {}
 
+  gql-payload@2.1.0: {}
+
   has-bigints@1.1.0: {}
 
   has-property-descriptors@1.0.2:
@@ -2698,9 +2703,10 @@ snapshots:
 
   math-intrinsics@1.1.0: {}
 
-  media-scraper@0.2.2:
+  media-scraper@0.2.3:
     dependencies:
       cheerio: 1.2.0
+      gql-payload: 2.1.0
       ofetch: 1.5.1
       ufo: 1.6.4
       x-client-transaction-id: 0.3.1
