@@ -3,10 +3,7 @@ import scrape from "media-scraper/x";
 import { userAgent } from "../utils/helpers";
 
 class twitterApi {
-  constructor (twitter_bearer_token, x_cookie) {
-    this.twitter_bearer_token = twitter_bearer_token;
-    this.x_cookie = x_cookie;
-  }
+  constructor () {}
 
   async getTweet (url) {
     const vxtwitter = "api.vxtwitter.com" ;

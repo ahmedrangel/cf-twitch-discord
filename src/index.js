@@ -1871,14 +1871,14 @@ router.get("/dc/video-scraper/:source", async (req, env, ctx) => {
   if (cachedResponse) return cachedResponse;
 
   const apiMap = {
-    instagram: () => new igApi(env.ig_proxy_host),
+    instagram: () => new igApi(),
     youtube: () => new youtubeApi(env.youtube_token),
     facebook: () => new fdownloaderApi(),
     tiktok: () => new tiktokApi(),
-    x: () => new twitterApi(env.twitter_bearer_token, env.x_cookie),
+    x: () => new twitterApi(),
     twitch: () => new twitchGQL(),
     kick: () => new kickApi(),
-    reddit: () => new redditApi(env.reddit_token),
+    reddit: () => new redditApi(),
     threads: () => new threadsApi()
   };
 
