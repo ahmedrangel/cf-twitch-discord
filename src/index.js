@@ -1936,6 +1936,45 @@ router.get("/dc/fx?", async (req, env, ctx) => {
   return new ErrorResponse(Error.BAD_REQUEST);
 });
 
+router.get("/kick/soychinno/vip", async (req, env) => {
+  const { query } = req;
+  const { to, token } = query;
+  if (!to || token !== env.soychinno_kickbot_token) return new ErrorResponse(Error.BAD_REQUEST);
+  const kickResponse = await $fetch(`https://kick.com/api/internal/v1/channels/soychinno/community/vips`, {
+    method: "POST",
+    headers: {
+      "User-Agent": "Soychinno (Cloudflare Workers)",
+      "Authorization": `Bearer ${env.soychinno_kick_token}`
+    },
+    body: { username: to }
+  }).catch((e) => {
+    return e.data;
+  });
+  const status = kickResponse?.status;
+  if (status?.message === "USER_ALREADY_VIP") return new JsResponse(`${to} ya es VIP.`);
+  if (!status) return new ErrorResponse(Error.NOT_FOUND);
+  return new JsResponse(`${to} Ha sido agregado como VIP.`);
+});
+
+router.get("/kick/soychinno/unvip", async (req, env) => {
+  const { query } = req;
+  const { to, token } = query;
+  if (!to || token !== env.soychinno_kickbot_token) return new ErrorResponse(Error.BAD_REQUEST);
+  const kickResponse = await $fetch(`https://kick.com/api/internal/v1/channels/soychinno/community/vips/${to}`, {
+    method: "DELETE",
+    headers: {
+      "User-Agent": "Soychinno (Cloudflare Workers)",
+      "Authorization": `Bearer ${env.soychinno_kick_token}`
+    }
+  }).catch((e) => {
+    return e.data;
+  });
+  const status = kickResponse?.status;
+  if (status?.message === "USER_NOT_VIP") return new JsResponse(`${to} no es VIP.`);
+  if (!status) return new ErrorResponse(Error.NOT_FOUND);
+  return new JsResponse(`${to} Ha sido removido como VIP.`);
+});
+
 router.all("*", () => new ErrorResponse(Error.NOT_FOUND));
 
 export default {
