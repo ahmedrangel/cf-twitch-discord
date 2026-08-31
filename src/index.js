@@ -1975,6 +1975,23 @@ router.get("/kick/soychinno/unvip", async (req, env) => {
   return new JsResponse(`${to} Ha sido removido como VIP.`);
 });
 
+router.get("/kick/soychinno/vips", async (req, env) => {
+  const kickResponse = await $fetch(`https://kick.com/api/internal/v1/channels/soychinno/community/vips`, {
+    method: "GET",
+    headers: {
+      "User-Agent": "Soychinno (Cloudflare Workers)",
+      "Authorization": `Bearer ${env.soychinno_kick_token}`
+    }
+  }).catch((e) => {
+    return e.data;
+  });
+  const status = kickResponse?.status;
+  if (!status) return new ErrorResponse(Error.NOT_FOUND);
+  const vips = kickResponse?.data?.vips?.filter(vip => vip.username)?.map(vip => vip.username)?.sort((a, b) => a.localeCompare(b)) || [];
+  if (vips.length === 0) return new JsResponse("No hay VIPs.");
+  return new JsResponse(`Lista de VIPs: ${vips.join(", ")}`);
+});
+
 router.all("*", () => new ErrorResponse(Error.NOT_FOUND));
 
 export default {
