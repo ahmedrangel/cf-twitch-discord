@@ -26,7 +26,7 @@
     "discord-api-types": "^0.38.53",
     "eslint": "^10.9.1",
     "eslint-plugin-import": "^2.32.0",
-    "media-scraper": "^0.2.6",
+    "media-scraper": "^0.2.7",
     "uncrypto": "^0.1.3",
     "wrangler": "^4.125.0"
   },

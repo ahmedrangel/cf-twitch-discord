@@ -52,8 +52,8 @@ importers:
         specifier: ^2.32.0
         version: 2.32.0(eslint@10.9.1(supports-color@10.2.2))(supports-color@10.2.2)
       media-scraper:
-        specifier: ^0.2.6
-        version: 0.2.6
+        specifier: ^0.2.7
+        version: 0.2.7
       uncrypto:
         specifier: ^0.1.3
         version: 0.1.3
@@ -1192,8 +1192,8 @@ packages:
     resolution: {integrity: sha512-/IXtbwEk5HTPyEwyKX6hGkYXxM9nbj64B+ilVJnC/R6B0pH5G4V3b0pVbL7DBj4tkhBAppbQUlf6F6Xl9LHu1g==}
     engines: {node: '>= 0.4'}
 
-  media-scraper@0.2.6:
-    resolution: {integrity: sha512-tG+kMOhzFRZug9jOGZplC14rswOe3S04quUtKCPpqINN4Qu6aqfI4r9CY5Y9Tb0GFtKean4ReMMcpw+QgGoBFw==}
+  media-scraper@0.2.7:
+    resolution: {integrity: sha512-V+O5BvO0BjxRUOnNFTVZk+5I1gPNMrlnBv9RmLY9ruf1ZBwiAhyBzYuAXjEFiFFEQctdARXFAhHDTq1abEQh4g==}
 
   miniflare@5.20260820.0-alpha:
     resolution: {integrity: sha512-Bv1j2kcKKNwXLWuCx+j0xGt7z318mqQkJmEN6ellM9sCESbPBDTM9ofZMbKqx47jSnoGA3CiaUkAmzGVXUa/wQ==}
@@ -1554,8 +1554,8 @@ packages:
       utf-8-validate:
         optional: true
 
-  x-client-transaction-id@0.3.1:
-    resolution: {integrity: sha512-fD9YtDswTL3VyG/z7FbZUfMu5CUsvGmKk33fM3b9eOXe0Wnmj8W55UKLPA5Z/cuq6WrWTxXQhLcV3GGCD6mKaQ==}
+  x-client-transaction-id@0.3.2:
+    resolution: {integrity: sha512-DpX8C4wF8S54cSE9X1MJkJbNElhSg5337iW0UMFDJVAVCj+cHePCvS6tj2EQw85UGVf1ywBSTGVckncBONUdDg==}
 
   yocto-queue@0.1.0:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
@@ -2694,13 +2694,13 @@ snapshots:
 
   math-intrinsics@1.1.0: {}
 
-  media-scraper@0.2.6:
+  media-scraper@0.2.7:
     dependencies:
       cheerio: 1.2.0
       gql-payload: 2.1.0
       ofetch: 1.5.1
       ufo: 1.6.4
-      x-client-transaction-id: 0.3.1
+      x-client-transaction-id: 0.3.2
     transitivePeerDependencies:
       - canvas
 
@@ -3176,7 +3176,7 @@ snapshots:
 
   ws@8.21.0: {}
 
-  x-client-transaction-id@0.3.1:
+  x-client-transaction-id@0.3.2:
     dependencies:
       linkedom: 0.18.13
     transitivePeerDependencies:
